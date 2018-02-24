@@ -11,7 +11,7 @@ var gulp  = require('gulp'),
 // Modify these variables to match your project needs   
 
 // Set local URL if using Browser-Sync
-const LOCAL_URL = 'http://jointswp-github.dev/';
+const LOCAL_URL = 'http://jasonskinner.local/';
 
 // Set path to Foundation files
 const FOUNDATION = 'node_modules/foundation-sites';
