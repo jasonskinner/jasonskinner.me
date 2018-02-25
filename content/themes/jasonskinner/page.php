@@ -8,7 +8,7 @@
 get_header(); ?>
 	
 	<div class="content">
-	
+
 		<div class="inner-content grid-x grid-margin-x grid-padding-x">
 	
 		    <main class="main small-12 large-8 medium-8 cell" role="main">

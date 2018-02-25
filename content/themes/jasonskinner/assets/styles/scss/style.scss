@@ -65,4 +65,13 @@ CSS file.
 @include foundation-float-classes;
 
 // Import your custom styles
+@import "header";
+@import "animations";
 @import "global";
+@import "font-awesome/fontawesome";
+@import "variables";
+@import "main";
+@import "home";
+@import "page";
+@import "footer";
+

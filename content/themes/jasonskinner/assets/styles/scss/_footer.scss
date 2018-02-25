@@ -1,0 +1,12 @@
+footer.footer{
+  padding-top: $global-padding*2;
+  .copyright-holder {
+    position: relative;
+
+    p.copyright {
+      margin-bottom: 0;
+      @include vertical-center();
+      position: relative;
+    }
+  }
+}

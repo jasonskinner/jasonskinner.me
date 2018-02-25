@@ -9,30 +9,23 @@
 
 get_header(); ?>
 			
-	<div class="content">
+	<div class="content grid-container">
 	
 		<div class="inner-content grid-x grid-margin-x grid-padding-x">
 	
-		    <main class="main small-12 medium-8 large-8 cell" role="main">
+		    <main class="main small-12 medium-12 large-12 cell" role="main">
 		    
-			    <?php if (have_posts()) : while (have_posts()) : the_post(); ?>
-			 
-					<!-- To see additional archive styles, visit the /parts directory -->
-					<?php get_template_part( 'parts/loop', 'archive' ); ?>
-				    
-				<?php endwhile; ?>	
+			    <?php if (have_posts()) : ?>
+			        <div class="grid-x grid-padding-x small-up-1 medium-up-3 large-up-3">
+					    <?php while (have_posts()) : the_post(); ?>
 
-					<?php joints_page_navi(); ?>
-					
-				<?php else : ?>
-											
-					<?php get_template_part( 'parts/content', 'missing' ); ?>
-						
+						    <?php get_template_part( 'parts/journal/loop', 'journal' ); ?>
+
+						<?php endwhile; ?>
+			        </div><!--.grid-x-->
 				<?php endif; ?>
 																								
 		    </main> <!-- end #main -->
-		    
-		    <?php get_sidebar(); ?>
 
 		</div> <!-- end #inner-content -->
 

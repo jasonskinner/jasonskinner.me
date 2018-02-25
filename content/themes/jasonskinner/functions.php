@@ -23,7 +23,11 @@ require_once(get_template_directory().'/functions/sidebar.php');
 require_once(get_template_directory().'/functions/comments.php'); 
 
 // Replace 'older/newer' post links with numbered navigation
-require_once(get_template_directory().'/functions/page-navi.php'); 
+require_once(get_template_directory().'/functions/page-navi.php');
+
+// Instagram API
+require_once(get_template_directory().'/functions/instagram-api.php');
+
 
 // Adds support for multiple languages
 require_once(get_template_directory().'/functions/translation/translation.php'); 
@@ -44,4 +48,20 @@ require_once(get_template_directory().'/functions/translation/translation.php');
 // require_once(get_template_directory().'/functions/login.php'); 
 
 // Customize the WordPress admin
-// require_once(get_template_directory().'/functions/admin.php'); 
+// require_once(get_template_directory().'/functions/admin.php');
+
+
+/**
+ * @param $classes
+ *
+ * @return array
+ * Add page slug to body class
+ */
+function jss_add_slug_body_class( $classes ) {
+	global $post;
+	if ( isset( $post ) ) {
+		$classes[] = $post->post_type . '-' . $post->post_name;
+	}
+	return $classes;
+}
+add_filter( 'body_class', 'jss_add_slug_body_class' );
