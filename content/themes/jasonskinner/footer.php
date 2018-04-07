@@ -55,7 +55,7 @@
 		</div> <!-- end .off-canvas-wrapper -->
 		
 		<?php wp_footer(); ?>
-		
+
 	</body>
 	
 </html> <!-- end page -->

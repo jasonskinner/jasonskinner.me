@@ -4,12 +4,25 @@ function site_scripts() {
         
     // Adding scripts file in the footer
     wp_enqueue_script( 'site-js', get_template_directory_uri() . '/assets/scripts/scripts.js', array( 'jquery' ), filemtime(get_template_directory() . '/assets/scripts/js'), true );
-   
+
     // Register main stylesheet
     wp_enqueue_style( 'site-css', get_template_directory_uri() . '/assets/styles/style.css', array(), filemtime(get_template_directory() . '/assets/styles/scss'), 'all' );
 
     // typekit
 	wp_enqueue_script( 'typekit', '//use.typekit.net/lxx0qmt.css', array(), '1.0.0' );
+
+	//typed
+	if ( is_front_page() ){
+		wp_enqueue_script( 'type-js', get_template_directory_uri() . '/assets/scripts/typed.min.js' , array( 'site-js' ), '2.0.6', true );
+	}
+
+	//waypoint
+	wp_enqueue_script( 'waypoint-js', get_template_directory_uri() . '/assets/scripts/waypoint.min.js' , array( 'site-js' ), '2.0.6', true );
+
+	//isotope
+	if ( is_page( 'work' ) ) {
+		wp_enqueue_script( 'isotope-js', get_template_directory_uri() . '/assets/scripts/isotope.min.js' , array( 'jquery', 'site-js' ), '2.0.6', true );
+	}
 
 	//font-awesome
 	wp_enqueue_style( 'font-awesome', get_template_directory_uri() . '/assets/styles/font-awesome/fontawesome.css', array(), '5.0.6' );
@@ -25,12 +38,12 @@ function site_scripts() {
 add_action('wp_enqueue_scripts', 'site_scripts', 999);
 
 
-add_action( 'wp_head', 'prefix_typekit_inline' );
+add_action( 'wp_head', 'jss_typekit_inline' );
 /**
  * Check to make sure the main script has been enqueued and then load the typekit
  * inline script.
  */
-function prefix_typekit_inline() {
+function jss_typekit_inline() {
 	if ( wp_script_is( 'typekit', 'enqueued' ) ) {
 		?>
 		<script>

@@ -1,0 +1,6 @@
+$global-animation-time: .3s;
+
+.animate-slide-up {
+  @include mui-animation(slide( in, up));
+  animation-duration: $global-animation-time;
+}

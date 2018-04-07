@@ -65,3 +65,15 @@ function jss_add_slug_body_class( $classes ) {
 	return $classes;
 }
 add_filter( 'body_class', 'jss_add_slug_body_class' );
+
+
+function jss_work_taxonomy_name(){
+	global $post;
+	//get terms for CPT
+	$terms = get_the_terms( $post->ID , 'work_type' );
+	//iterate through array
+	foreach ( $terms as $term ) {
+		//echo taxonomy name as class
+		echo ' '.strtolower ( $term->name );
+	}
+}

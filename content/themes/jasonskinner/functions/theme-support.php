@@ -13,7 +13,7 @@ function joints_theme_support() {
 	add_image_size( 'work-logo', 250, 125, false );
 
 	//journal listing image size
-	add_image_size( 'journal-listing', 500, 350, false );
+	add_image_size( 'journal-listing', 650, 400, true );
 
 	// Add RSS Support
 	add_theme_support( 'automatic-feed-links' );

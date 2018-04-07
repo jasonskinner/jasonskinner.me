@@ -1,4 +1,9 @@
-<?php get_header(); ?>
+<?php
+/**
+ * The template for displaying all single posts and attachments
+ */
+
+get_header(); ?>
 
 	<div class="content grid-container">
 
@@ -8,11 +13,13 @@
 
 				<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
 
-					<?php get_template_part( 'parts/home/content', 'intro' ); ?>
+					<?php get_template_part( 'parts/journal/loop', 'single' ); ?>
 
-					<?php get_template_part( 'parts/journal/loop', 'journal' ); ?>
+				<?php endwhile; else : ?>
 
-				<?php endwhile; endif; ?>
+					<?php get_template_part( 'parts/content', 'missing' ); ?>
+
+				<?php endif; ?>
 
 			</main> <!-- end #main -->
 

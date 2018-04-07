@@ -11,7 +11,7 @@ if ( function_exists( 'jss_instagram_feed' ) ) {
 	if ( $feed !== false ) {
 		//var_dump ( $feed );
 		?>
-		<div class="grid-x grid-margin-x grid-padding-x">
+		<div class="grid-x grid-padding-x">
 			<?php
 			$images = $feed->data;
 
@@ -21,7 +21,7 @@ if ( function_exists( 'jss_instagram_feed' ) ) {
 				$imagewidth  = $image->images->standard_resolution->width;
 				$imageheight = $image->images->standard_resolution->height;
 				?>
-				<div class="large-3 cell">
+				<div class="large-3 medium-3 cell">
 					<a href="<?php echo $image->link; ?>" target="_blank">
 						<img src="<?php echo $imageurl; ?>" width="<?php echo $imagewidth; ?>"
 				     height="<?php echo $imageheight; ?>"/>

@@ -5,7 +5,7 @@ if ( have_rows( 'work_play_explore' ) ): ?>
 			$fa      = get_sub_field( 'workplayexplore_fa' );
 			$content = get_sub_field( 'workplayexplore_content' );
 			?>
-			<div class="large-4 cell">
+			<div class="large-4 medium-4 cell">
 				<?php
 				if ( $fa ) {
 					echo $fa;

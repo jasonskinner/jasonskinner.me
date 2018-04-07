@@ -8,15 +8,15 @@
  */
 
 get_header(); ?>
-			
+
 	<div class="content grid-container">
-	
+
 		<div class="inner-content grid-x grid-margin-x grid-padding-x">
-	
+
 		    <main class="main small-12 medium-12 large-12 cell" role="main">
-		    
+
 			    <?php if (have_posts()) : ?>
-			        <div class="grid-x grid-padding-x small-up-1 medium-up-3 large-up-3">
+			        <div class="grid-x grid-padding-x small-up-1 medium-up-2 large-up-2">
 					    <?php while (have_posts()) : the_post(); ?>
 
 						    <?php get_template_part( 'parts/journal/loop', 'journal' ); ?>
@@ -24,7 +24,7 @@ get_header(); ?>
 						<?php endwhile; ?>
 			        </div><!--.grid-x-->
 				<?php endif; ?>
-																								
+
 		    </main> <!-- end #main -->
 
 		</div> <!-- end #inner-content -->

@@ -1,4 +1,31 @@
 <?php
+$count = 0;
+$terms = get_terms( [ 'taxonomy' => 'work_type', ] );
+?>
+<ul class="dropdown menu" id="work-options" data-dropdown-menu>
+	<li class="menu-text">Show me</li>
+	<li>
+		<?php
+			foreach ( $terms as $term ) {
+				if ( $count == 0 ) {
+					?>
+					<a href="#"><?php echo $term->name; ?></a>
+					<ul class="menu">
+					<?php
+				} else {
+					?>
+					<li><a href="#"><?php echo $term->name; ?></a></li>
+					<?php
+				}
+				$count++;
+			}
+		?>
+		</ul>
+	</li4545
+</ul>
+
+
+<?php
 // WP_Query arguments
 $args = array(
 	'post_type'              => array( 'work' ),
@@ -10,51 +37,15 @@ $the_query = new WP_Query( $args );
 // The Loop
 if ( $the_query->have_posts() ) {
 	?>
-	<div class="grid-x grid-padding-x small-up-1 medium-up-3 large-up-3 work">
+	<div class="grid-x grid-padding-x grid-margin-x small-up-1 medium-up-2 large-up-2 work">
 		<?php
 		while ( $the_query->have_posts() ) {
 			$the_query->the_post();
 			?>
-			<div class="cell">
+			<div class="cell<?php if( function_exists('jss_work_taxonomy_name')){ jss_work_taxonomy_name(); }?>">
 				<a href="<?php the_permalink(); ?>">
-					<div class="hover">
-						<?php
-							$background_image = get_field( 'work_listing_background' );
-							if ( !empty ( $background_image ) ){
-								$background_render = 'style="background-image: url(' . $background_image['sizes']['journal-listing'] . ');"';
-							} else {
-								$background_render = 'style="background-color: #292929;"';
-							}
-						?>
-
-						<div class="workbox" <?php echo $background_render; ?>>
-							<?php
-							//get category
-							$terms = get_the_term_list( $post->ID, 'work_type', '', ',  ');
-							$terms = strip_tags( $terms );
-							?>
-							<?php echo $terms; ?>
-							<?php
-
-							//get logo
-							$logo = get_field( 'work_logo' );
-							$size = 'work-logo';
-
-							if( !empty($logo) ) {
-								?>
-								<div class="logo">
-									<img src="<?php echo $logo['url']; ?>" alt="<?php echo $logo['alt']; ?>" />
-								</div>
-								<?php
-							}
-							?>
-
-						</div>
-						<div class="overlay">
-							<?php the_title(); ?>
-						</div>
-
-					</div>
+					<img src="http://via.placeholder.com/650x450">
+					<h2 class="text-center"><?php the_title(); ?></h2>
 				</a>
 			</div><!--.cell-->
 			<?php

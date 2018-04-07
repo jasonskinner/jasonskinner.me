@@ -85,6 +85,50 @@ Work
   }
 }
 
+/*----------------------------------------------------------------------------------------------------------------------
+Journal
+----------------------------------------------------------------------------------------------------------------------*/
+.journal-post{
+  margin-bottom: $global-margin;
+
+  .journal-image{
+    figure{
+      overflow: hidden;
+      -webkit-transform: scale(1);
+      transform: scale(1);
+      -webkit-transition: $global-animation-time ease-in-out;
+      transition: $global-animation-time ease-in-out;
+
+      margin-bottom: $global-margin;
+
+      &:hover{
+        -webkit-transform: scale(0.98);
+        transform: scale(0.98);
+      }
+
+      img{
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        -webkit-transition: $global-animation-time ease-in-out;
+        transition: $global-animation-time ease-in-out;
+
+        &:hover{
+          -webkit-transform: scale(1.08);
+          transform: scale(1.08);
+        }
+      }
+    }
+  }//.journal-image
+
+  .summary{
+    .time{
+      color: $light-gray;
+    }
+    ul.menu{
+      margin-bottom: $global-margin/2;
+    }
+  }//.summary
+}//.journal-post
 
 /*----------------------------------------------------------------------------------------------------------------------
 WPFORMS
