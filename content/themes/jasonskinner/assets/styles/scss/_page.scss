@@ -25,12 +25,11 @@ img.personalphoto{
     right: -5px;
     bottom: -10px;
     display: block;
-    padding: $global-padding;
+    padding: $global-padding/4 $global-padding/3;
     border: $border-width solid $white;
     background: $dark-gray;
 
     i{
-      font-size: 1.8rem;
     }
   }
 }
