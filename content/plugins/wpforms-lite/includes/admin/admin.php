@@ -12,7 +12,15 @@
 /**
  * Helper function to determine if viewing an WPForms related admin page.
  *
+ * Here we determine if the current administration page is owned/created by
+ * WPForms. This is done in compliance with WordPress best practices for
+ * development, so that we only load required WPForms CSS and JS files on pages
+ * we create. As a result we do not load our assets admin wide, where they might
+ * conflict with other plugins needlessly, also leading to a better, faster user
+ * experience for our users.
+ *
  * @since 1.3.9
+ *
  * @return boolean
  */
 function wpforms_is_admin_page() {
@@ -35,6 +43,8 @@ function wpforms_admin_styles() {
 	if ( ! wpforms_is_admin_page() ) {
 		return;
 	}
+
+	$min = wpforms_get_min_suffix();
 
 	// jQuery confirm.
 	wp_enqueue_style(
@@ -63,7 +73,7 @@ function wpforms_admin_styles() {
 	// Main admin styles.
 	wp_enqueue_style(
 		'wpforms-admin',
-		WPFORMS_PLUGIN_URL . 'assets/css/admin.css',
+		WPFORMS_PLUGIN_URL . "assets/css/admin{$min}.css",
 		array(),
 		WPFORMS_VERSION
 	);
@@ -81,6 +91,8 @@ function wpforms_admin_scripts() {
 	if ( ! wpforms_is_admin_page() ) {
 		return;
 	}
+
+	$min = wpforms_get_min_suffix();
 
 	wp_enqueue_media();
 
@@ -111,14 +123,10 @@ function wpforms_admin_scripts() {
 		false
 	);
 
-	// TODO: we should use wpforms_get_min_suffix() here.
-	$dir    = wpforms_debug() ? '/src' : '';
-	$suffix = wpforms_debug() ? '' : '.min';
-
 	// Main admin script.
 	wp_enqueue_script(
 		'wpforms-admin',
-		WPFORMS_PLUGIN_URL . "assets/js{$dir}/admin{$suffix}.js",
+		WPFORMS_PLUGIN_URL . "assets/js/admin{$min}.js",
 		array( 'jquery' ),
 		WPFORMS_VERSION,
 		false
@@ -158,6 +166,7 @@ function wpforms_admin_scripts() {
 		'provider_delete_confirm'         => esc_html__( 'Are you sure you want to disconnect this account?', 'wpforms' ),
 		'provider_auth_error'             => esc_html__( 'Could not authenticate with the provider.', 'wpforms' ),
 		'save_refresh'                    => esc_html__( 'Save and Refresh', 'wpforms' ),
+		'testing'                         => esc_html__( 'Testing', 'wpforms' ),
 		'upgrade_completed'               => esc_html__( 'Upgrade was successfully completed!', 'wpforms' ),
 		'upload_image_title'              => esc_html__( 'Upload or Choose Your Image', 'wpforms' ),
 		'upload_image_button'             => esc_html__( 'Use Image', 'wpforms' ),
