@@ -1,27 +1,20 @@
 <?php
-$count = 0;
 $terms = get_terms( [ 'taxonomy' => 'work_type', ] );
 ?>
-<ul class="dropdown menu" id="work-options" data-dropdown-menu>
+<ul class="dropdown menu option-set" id="work-options" data-option-key="filter" data-dropdown-menu>
 	<li class="menu-text">Show me</li>
-	<li>
+	<li><a href="#filter" data-option-value="*">All the Things</a>
+		<ul class="menu">
+			<li><a href="#filter" data-option-value="*">All the Things</a></li>
 		<?php
 			foreach ( $terms as $term ) {
-				if ( $count == 0 ) {
-					?>
-					<a href="#"><?php echo $term->name; ?></a>
-					<ul class="menu">
-					<?php
-				} else {
-					?>
-					<li><a href="#"><?php echo $term->name; ?></a></li>
-					<?php
-				}
-				$count++;
+				?>
+					<li><a href="#filter" data-option-value="<?php echo '.' . strtolower ( $term->name ); ?>"><?php echo $term->name; ?></a></li>
+				<?php
 			}
 		?>
 		</ul>
-	</li4545
+	</li>
 </ul>
 
 
@@ -29,6 +22,7 @@ $terms = get_terms( [ 'taxonomy' => 'work_type', ] );
 // WP_Query arguments
 $args = array(
 	'post_type'              => array( 'work' ),
+	'posts_per_page'	=>	-1,
 );
 
 // The Query

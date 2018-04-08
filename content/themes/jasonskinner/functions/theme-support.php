@@ -12,8 +12,9 @@ function joints_theme_support() {
 	// Work logo size
 	add_image_size( 'work-logo', 250, 125, false );
 
-	//journal listing image size
+	//journal
 	add_image_size( 'journal-listing', 650, 400, true );
+	add_image_size( 'journal-single', 900, 400, true );
 
 	// Add RSS Support
 	add_theme_support( 'automatic-feed-links' );

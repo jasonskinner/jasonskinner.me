@@ -7,9 +7,9 @@ get_header(); ?>
 
 	<div class="content grid-container">
 
-		<div class="inner-content grid-x">
+		<div class="inner-content grid-x journal-single">
 
-			<main class="main large-12 cell" role="main">
+			<main class="main large-8 large-offset-2 cell" role="main">
 
 				<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
 

@@ -38,8 +38,8 @@ img.personalphoto{
 Work
 ----------------------------------------------------------------------------------------------------------------------*/
 .work{
+
   .cell{
-    margin-bottom: $global-margin*2;
   }
 
   .hover{
@@ -128,6 +128,16 @@ Journal
     }
   }//.summary
 }//.journal-post
+
+.journal-single{
+  .byline{
+    margin-bottom: $global-margin;
+  }
+
+  .single-post-image{
+    margin-bottom: $global-margin;
+  }
+}//.journal-single
 
 /*----------------------------------------------------------------------------------------------------------------------
 WPFORMS

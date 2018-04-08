@@ -13,15 +13,17 @@ function site_scripts() {
 
 	//typed
 	if ( is_front_page() ){
-		wp_enqueue_script( 'type-js', get_template_directory_uri() . '/assets/scripts/typed.min.js' , array( 'site-js' ), '2.0.6', true );
+		//wp_enqueue_script( 'type-js', get_template_directory_uri() . '/assets/scripts/typed.min.js' , array( 'site-js' ), '2.0.6', true );
 	}
 
 	//waypoint
-	wp_enqueue_script( 'waypoint-js', get_template_directory_uri() . '/assets/scripts/waypoint.min.js' , array( 'site-js' ), '2.0.6', true );
+	//wp_enqueue_script( 'waypoint-js', get_template_directory_uri() . '/assets/scripts/waypoint.min.js' , array( 'site-js' ), '2.0.6', true );
 
 	//isotope
 	if ( is_page( 'work' ) ) {
-		wp_enqueue_script( 'isotope-js', get_template_directory_uri() . '/assets/scripts/isotope.min.js' , array( 'jquery', 'site-js' ), '2.0.6', true );
+		wp_enqueue_script( 'imagesloaded-js', get_template_directory_uri() . '/assets/scripts/imagesloaded.min.js', array( 'isotope-init-js' ), '4.1.4', true );
+		wp_enqueue_script( 'isotope-init-js', get_template_directory_uri() . '/assets/scripts/init-isotope.js', array( 'isotope-js' ), filemtime(get_template_directory() . '/assets/scripts/init-isotope.js'), true );
+		wp_enqueue_script( 'isotope-js', get_template_directory_uri() . '/assets/scripts/isotope.min.js' , array( 'site-js' ), '3.0.5', true );
 	}
 
 	//font-awesome

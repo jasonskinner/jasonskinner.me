@@ -11,6 +11,14 @@
 		<?php get_template_part( 'parts/content', 'byline' ); ?>
 	</header> <!-- end article header -->
 
+	<div class="single-post-image">
+		<?php
+			if ( has_post_thumbnail() ) {
+				the_post_thumbnail( 'journal-single', ['class' => 'journal-single-image'] );
+			}
+		?>
+	</div>
+
 	<section class="entry-content" itemprop="articleBody">
 		<?php //the_post_thumbnail('full'); ?>
 		<?php the_content(); ?>
@@ -21,6 +29,6 @@
 		<p class="tags"><?php the_tags('<span class="tags-title">' . __( 'Tags:', 'jointswp' ) . '</span> ', ', ', ''); ?></p>
 	</footer> <!-- end article footer -->
 
-	<?php //comments_template(); ?>
+	<?php comments_template(); ?>
 
 </article> <!-- end article -->
