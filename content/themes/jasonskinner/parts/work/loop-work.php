@@ -7,11 +7,13 @@ $terms = get_terms( [ 'taxonomy' => 'work_type', ] );
 		<ul class="menu">
 			<li><a href="#filter" data-option-value="*">All the Things</a></li>
 		<?php
-			foreach ( $terms as $term ) {
-				?>
-					<li><a href="#filter" data-option-value="<?php echo '.' . strtolower ( $term->name ); ?>"><?php echo $term->name; ?></a></li>
-				<?php
-			}
+			if ( !empty ( $terms ) ):
+				foreach ( $terms as $term ) {
+					?>
+						<li><a href="#filter" data-option-value="<?php echo '.' . strtolower ( $term->name ); ?>"><?php echo $term->name; ?></a></li>
+					<?php
+				}
+			endif;
 		?>
 		</ul>
 	</li>
@@ -23,6 +25,8 @@ $terms = get_terms( [ 'taxonomy' => 'work_type', ] );
 $args = array(
 	'post_type'              => array( 'work' ),
 	'posts_per_page'	=>	-1,
+	'orderby'   => 'date',
+	'order' => 'DESC',
 );
 
 // The Query
@@ -38,8 +42,29 @@ if ( $the_query->have_posts() ) {
 			?>
 			<div class="cell<?php if( function_exists('jss_work_taxonomy_name')){ jss_work_taxonomy_name(); }?>">
 				<a href="<?php the_permalink(); ?>">
-					<img src="http://via.placeholder.com/650x450">
-					<h2 class="text-center"><?php the_title(); ?></h2>
+					<div class="imghover">
+						<figure>
+							<?php
+							if ( has_post_thumbnail() ) {
+								the_post_thumbnail( 'work-listing', ['class' => 'work-listing-image'] );
+							}
+							?>
+						</figure>
+					</div>
+					<h2 class="h3 text-center"><?php the_title(); ?></h2>
+					<?php
+						if ( ! empty ( $terms ) ):
+							$term_result = array();
+							foreach ( $terms as $term ) {
+								$term_result[] = $term->name;
+							}
+							?>
+							<div class="tags text-center">
+								<?php echo implode(', ', $term_result); ?>
+							</div>
+						<?php
+						endif;
+					?>
 				</a>
 			</div><!--.cell-->
 			<?php

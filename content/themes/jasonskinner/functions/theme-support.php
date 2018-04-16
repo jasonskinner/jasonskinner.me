@@ -10,7 +10,7 @@ function joints_theme_support() {
 	set_post_thumbnail_size(125, 125, true);
 
 	// Work logo size
-	add_image_size( 'work-logo', 250, 125, false );
+	add_image_size( 'work-listing', 650, 99999, true );
 
 	//journal
 	add_image_size( 'journal-listing', 650, 400, true );

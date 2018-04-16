@@ -40,46 +40,9 @@ Work
 .work{
 
   .cell{
-  }
-
-  .hover{
-    position: relative;
-    
-    &:hover{
-      .overlay{
-        display: inline-block;
-      }
-    }
-
-    .logo{
+    a{
       display: block;
-      @include absolute-center();
-      width: 250px;
-      height: 125px;
-
-      img{
-        @include absolute-center();
-      }
-    }
-
-    .workbox{
-      //background: $dark-gray;
-      height: 350px;
-      display: block;
-      padding: $global-padding;
-      color: $white;
-    }
-
-    .overlay{
-      padding: $global-padding;
-      display: none;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: $primary-color;
-
+      overflow: hidden;
     }
   }
 }
@@ -91,32 +54,7 @@ Journal
   margin-bottom: $global-margin;
 
   .journal-image{
-    figure{
-      overflow: hidden;
-      -webkit-transform: scale(1);
-      transform: scale(1);
-      -webkit-transition: $global-animation-time ease-in-out;
-      transition: $global-animation-time ease-in-out;
 
-      margin-bottom: $global-margin;
-
-      &:hover{
-        -webkit-transform: scale(0.98);
-        transform: scale(0.98);
-      }
-
-      img{
-        -webkit-transform: scale(1);
-        transform: scale(1);
-        -webkit-transition: $global-animation-time ease-in-out;
-        transition: $global-animation-time ease-in-out;
-
-        &:hover{
-          -webkit-transform: scale(1.08);
-          transform: scale(1.08);
-        }
-      }
-    }
   }//.journal-image
 
   .summary{

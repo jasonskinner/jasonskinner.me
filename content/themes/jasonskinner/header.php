@@ -44,9 +44,13 @@
 			<div class="off-canvas-content" data-off-canvas-content>
 				
 				<header class="header" role="banner">
-							
-					 <!-- This navs will be applied to the topbar, above all content 
-						  To see additional nav styles, visit the /parts directory -->
-					 <?php get_template_part( 'parts/nav', 'title-bar' ); ?>
-	 	
+					<div class="grid-container">
+						<div class="grid-x grid-margin-x grid-padding-x">
+							<div class="cell">
+							    <!-- This navs will be applied to the topbar, above all content
+								  To see additional nav styles, visit the /parts directory -->
+							    <?php get_template_part( 'parts/nav', 'title-bar' ); ?>
+							</div>
+						</div>
+					</div>
 				</header> <!-- end .header -->

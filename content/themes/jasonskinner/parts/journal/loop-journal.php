@@ -1,5 +1,5 @@
 <div class="cell journal-post">
-	<a href="<?php the_permalink(); ?>" class="journal-image">
+	<a href="<?php the_permalink(); ?>" class="journal-image imghover">
 		<figure>
 			<?php
 				if ( has_post_thumbnail() ) {

@@ -2,18 +2,17 @@
 
 	<div class="content grid-container">
 
-		<div class="inner-content grid-x">
+		<div class="inner-content grid-x grid-padding-x grid-margin-x">
 
-			<main class="main large-12 cell" role="main">
+			<main class="main cell" role="main">
 
-				<?php if (have_posts()) : while (have_posts()) : the_post(); ?>
+				<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
 
 					<?php get_template_part( 'parts/home/content', 'intro' ); ?>
 
-					<?php get_template_part( 'parts/journal/loop', 'journal' ); ?>
+					<?php get_template_part( 'parts/home/content', 'journal' ); ?>
 
 				<?php endwhile; endif; ?>
-
 			</main> <!-- end #main -->
 
 
