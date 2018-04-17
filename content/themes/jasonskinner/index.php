@@ -16,15 +16,14 @@ get_header(); ?>
 		    <main class="main small-12 medium-12 large-12 cell" role="main">
 
 			    <?php if (have_posts()) : ?>
-			        <div class="grid-x grid-padding-x small-up-1 medium-up-2 large-up-2">
+			        <div class="grid-x grid-padding-x grid-margin-x small-up-1 medium-up-2 large-up-2">
 
-					    <?php
+					    <?php while (have_posts()) : the_post(); ?>
 
-					        while (have_posts()) : the_post(); ?>
-
-						    <?php get_template_part( 'parts/journal/loop', 'journal' ); ?>
+					    <?php get_template_part( 'parts/journal/loop', 'journal' ); ?>
 
 						<?php endwhile; ?>
+
 			        </div><!--.grid-x-->
 				<?php endif; ?>
 

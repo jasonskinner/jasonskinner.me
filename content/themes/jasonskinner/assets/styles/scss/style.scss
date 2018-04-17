@@ -65,6 +65,7 @@ CSS file.
 @include foundation-float-classes;
 
 // Import your custom styles
+@import "mixins";
 @import "header";
 @import "animations";
 @import "global";

@@ -1,12 +1,30 @@
 footer.footer{
-  padding-top: $global-padding*2;
+  padding-bottom: $global-padding/3;
+  padding-top: $global-padding/3;
+
   .copyright-holder {
     position: relative;
+    
+    @include breakpoint ( small down ) {
+      text-align: center;
+    }
 
     p.copyright {
       margin-bottom: 0;
       @include vertical-center();
       position: relative;
+
+      small{
+        color: $medium-gray;
+      }
+    }
+  }
+
+  ul.social {
+    float: right;
+
+    @include breakpoint (small down) {
+      float: inherit;
     }
   }
 }

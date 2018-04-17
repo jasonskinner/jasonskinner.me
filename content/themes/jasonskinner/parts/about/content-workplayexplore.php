@@ -1,6 +1,6 @@
 <?php
 if ( have_rows( 'work_play_explore' ) ): ?>
-	<div class="grid-x grid-margin-x grid-padding-x text-center">
+	<div class="grid-x grid-margin-x grid-padding-x text-center work-play-explore">
 		<?php while ( have_rows( 'work_play_explore' ) ): the_row();
 			$fa      = get_sub_field( 'workplayexplore_fa' );
 			$content = get_sub_field( 'workplayexplore_content' );

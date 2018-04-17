@@ -9,28 +9,28 @@
 		</figure>
 	</a>
 		<div class="summary">
-			<p class="time"><?php the_time('M j, Y') ?></p>
+			<p class="time"><small><?php the_time('M j, Y') ?></small></p>
 			<ul class="menu simple">
 				<?php
-					$categories = get_the_category();
-					if ( ! empty( $categories ) ) {
-						foreach ( $categories as $category ) {
-							$category_link = get_category_link( $category->cat_ID );
-							?>
-							<li>
-								<a href="<?php echo $category_link; ?>">
-									<span class="label primary"><?php echo $category->name; ?></span>
-								</a>
-							</li>
-							<?php
-						}
+				$categories = get_the_category();
+				if ( ! empty( $categories ) ) {
+					foreach ( $categories as $category ) {
+
+						$category_link = get_category_link( $category->cat_ID );
+						?>
+						<li>
+							<a href="<?php echo $category_link; ?>">
+								<?php echo $category->name; ?>
+							</a>
+						</li>
+						<?php
 					}
+				}
 				?>
 			</ul>
-
-			<h2><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
+			<h2 class="h3"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
 			<p><?php the_excerpt(); ?>
-			<a href="<?php the_permalink(); ?>">Read More</a>
+			<a class="read-more" href="<?php the_permalink(); ?>"><i class="fas fa-angle-right"></i> Read More</a>
 		</div>
 	</a>
 </div><!--.cell-->

@@ -75,17 +75,17 @@ $foundation-palette: (
   warning: #ffae00,
   alert: #cc4b37,
 );
-$light-gray: #ccc;
-$medium-gray: #cacaca;
-$dark-gray: #292929;
+$light-gray: #DCDCDD;
+$medium-gray: #898f97;
+$dark-gray: #46494C;
 $black: #000000;
 $white: #fff;
 $body-background: $white;
 $body-font-color: $black;
-$body-font-family: "proxima-nova",sans-serif;
+$body-font-family: 'Open Sans', sans-serif;
 $body-antialiased: true;
-$global-margin: 3rem;
-$global-padding: 3rem;
+$global-margin: 4rem;
+$global-padding: 4rem;
 $global-position: 1rem;
 $global-weight-normal: normal;
 $global-weight-bold: bold;
@@ -312,7 +312,7 @@ $buttongroup-radius-on-each: true;
 // 13. Callout
 // -----------
 
-$callout-background: $white;
+$callout-background: $light-gray;
 $callout-background-fade: 85%;
 $callout-border: 1px solid rgba($black, 0.25);
 $callout-margin: 0 0 1rem 0;

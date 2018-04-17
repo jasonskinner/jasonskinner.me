@@ -14,7 +14,7 @@ Image Hover
     -webkit-transition: $global-animation-time ease-in-out;
     transition: $global-animation-time ease-in-out;
 
-    margin-bottom: $global-margin;
+    margin-bottom: $global-margin/2;
 
     &:hover{
       -webkit-transform: scale(0.98);

@@ -9,7 +9,11 @@ function site_scripts() {
     wp_enqueue_style( 'site-css', get_template_directory_uri() . '/assets/styles/style.css', array(), filemtime(get_template_directory() . '/assets/styles/scss'), 'all' );
 
     // typekit
-	wp_enqueue_script( 'typekit', '//use.typekit.net/lxx0qmt.css', array(), '1.0.0' );
+	//wp_enqueue_script( 'typekit', '//use.typekit.net/lxx0qmt.css', array(), '1.0.0' );
+
+	// google font api
+	wp_enqueue_style( 'google-font-api', 'https://fonts.googleapis.com/css?family=Lora|Open+Sans:400,400i,700,700i', false );
+
 
 	//typed
 	if ( is_front_page() ){
@@ -40,24 +44,24 @@ function site_scripts() {
 add_action('wp_enqueue_scripts', 'site_scripts', 999);
 
 
-add_action( 'wp_head', 'jss_typekit_inline' );
+//add_action( 'wp_head', 'jss_typekit_inline' );
 /**
  * Check to make sure the main script has been enqueued and then load the typekit
  * inline script.
  */
-function jss_typekit_inline() {
-	if ( wp_script_is( 'typekit', 'enqueued' ) ) {
-		?>
-		<script>
-			(function(d) {
-				var config = {
-						kitId: 'lxx0qmt',
-						scriptTimeout: 3000,
-						async: true
-					},
-					h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
-			})(document);
-		</script>
-		<?php
-	}
-}
+//function jss_typekit_inline() {
+//	if ( wp_script_is( 'typekit', 'enqueued' ) ) {
+//		?>
+<!--		<script>-->
+<!--			(function(d) {-->
+<!--				var config = {-->
+<!--						kitId: 'lxx0qmt',-->
+<!--						scriptTimeout: 3000,-->
+<!--						async: true-->
+<!--					},-->
+<!--					h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)-->
+<!--			})(document);-->
+<!--		</script>-->
+<!--		--><?php
+//	}
+//}

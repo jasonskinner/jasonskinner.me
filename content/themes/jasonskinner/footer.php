@@ -11,9 +11,8 @@
 				<footer class="footer" role="contentinfo">
 						<div class="grid-x grid-margin-x grid-padding-x">
 							<div class="small-12 medium-6 cell copyright-holder">
-								<p class="source-org copyright">Copyright &copy; <?php echo date('Y'); ?> <?php bloginfo('name'); ?>.</p>
+								<p class="source-org copyright">Copyright &copy; <?php echo date('Y'); ?> <?php bloginfo('name'); ?> <small>v2.13</small></p>
 							</div>
-
 							<?php
 								/*
 								 * Social Icons
@@ -23,7 +22,7 @@
 									if ( have_rows( 'social_links', 11 ) ) {
 										?>
 										<div class="small-12 medium-6 cell">
-											<ul class="menu align-right social">
+											<ul class="menu social align-center">
 												<?php
 												// loop through the rows of data
 												while ( have_rows( 'social_links', 11 ) ) : the_row();

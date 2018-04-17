@@ -1,38 +1,80 @@
+/*
+font-family: 'Lora', serif;
+font-family: 'Open Sans', sans-serif;
+ */
+
+/*----------------------------------------------------------------------------------------------------------------------
+GLOBAL PAGE
+----------------------------------------------------------------------------------------------------------------------*/
+h1,h2,h3,h4,h5,h6, h1 a, h2 a, h3 a, h4 a, h5 a, h6 a{
+  font-family: 'Lora', serif;
+}
 
 body.home, body.page-contact{
   h1{
     font-size: 5rem;
     font-weight: bold;
+    font-family: 'Open Sans', sans-serif;
   }
 }
-
 
 /*----------------------------------------------------------------------------------------------------------------------
 ABOUT
 ----------------------------------------------------------------------------------------------------------------------*/
-img.personalphoto{
-  -webkit-border-radius: 50%;
-  -moz-border-radius: 50%;
-  border-radius: 50%;
-}
+body.page-about {
 
-.resume{
-  border-bottom: $border-width solid $primary-color;
-  position: relative;
+  .about-intro {
+    margin-bottom: $global-margin;
+    img.personalphoto {
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      border-radius: 50%;
+      margin-bottom: $global-margin/2;
+    }
 
-  a{
-    position: absolute;
-    right: -5px;
-    bottom: -10px;
-    display: block;
-    padding: $global-padding/4 $global-padding/3;
-    border: $border-width solid $white;
-    background: $dark-gray;
-
-    i{
+    .about-social {
+      margin-bottom: $global-margin/2;
     }
   }
-}
+
+  .work-play-explore{
+    margin-bottom: $global-margin;
+    overflow: hidden;
+  }
+
+  .instagram{
+    margin-bottom: $global-margin;
+    overflow: hidden;
+    
+    .cell{
+      position: relative;
+    }
+
+    i.fas{
+      @include absolute-center;
+      font-size: 2em;
+      z-index: 2;
+    }
+  }
+
+  .resume {
+    border-bottom: $border-width solid $primary-color;
+    position: relative;
+
+    a {
+      position: absolute;
+      right: -5px;
+      bottom: -10px;
+      display: block;
+      padding: $global-padding/4 $global-padding/3;
+      border: $border-width solid $white;
+      background: $dark-gray;
+
+      i {
+      }
+    }
+  }
+}//body.page-about
 
 /*----------------------------------------------------------------------------------------------------------------------
 Work
@@ -52,19 +94,38 @@ Journal
 ----------------------------------------------------------------------------------------------------------------------*/
 .journal-post{
   margin-bottom: $global-margin;
+  position: relative;
+
 
   .journal-image{
 
   }//.journal-image
 
+  h2{
+    a {
+      color: $black;
+    }
+  }
+
   .summary{
+    p{
+      color: $dark-gray;
+    }
     .time{
-      color: $light-gray;
+      color: $medium-gray;
     }
     ul.menu{
-      margin-bottom: $global-margin/2;
+      margin-bottom: $global-margin/3;
     }
   }//.summary
+
+  a.read-more{
+
+    i{
+      vertical-align: middle;
+      margin-top: -2px;
+    }
+  }
 }//.journal-post
 
 .journal-single{
@@ -78,18 +139,52 @@ Journal
 }//.journal-single
 
 /*----------------------------------------------------------------------------------------------------------------------
-WPFORMS
+Contact Page
 ----------------------------------------------------------------------------------------------------------------------*/
-.wpforms-container-full{
-  .wpforms-submit{
-    background: $dark-gray;
-    color: $white;
+body.page-contact {
+  .intro{
+    margin-bottom: $global-margin/3;
   }
-}
 
-div.wpforms-container-full .wpforms-form input[type=date], div.wpforms-container-full .wpforms-form input[type=datetime], div.wpforms-container-full .wpforms-form input[type=datetime-local], div.wpforms-container-full .wpforms-form input[type=email], div.wpforms-container-full .wpforms-form input[type=month], div.wpforms-container-full .wpforms-form input[type=number], div.wpforms-container-full .wpforms-form input[type=password], div.wpforms-container-full .wpforms-form input[type=range], div.wpforms-container-full .wpforms-form input[type=search], div.wpforms-container-full .wpforms-form input[type=tel], div.wpforms-container-full .wpforms-form input[type=text], div.wpforms-container-full .wpforms-form input[type=time], div.wpforms-container-full .wpforms-form input[type=url], div.wpforms-container-full .wpforms-form input[type=week], div.wpforms-container-full .wpforms-form select, div.wpforms-container-full .wpforms-form textarea{
-  border: 2px solid #707070 !important;
-  border-radius: 0 !important;
-  padding: $global-padding $global-padding !important;
+  .available{
+    margin-bottom: $global-margin/3;
+
+    i{
+      margin-right: .3rem;
+    }
+    i.fa-check-circle{ color: #2ECC40;}
+    i.fa-times-circle{ color: #FF4136; }
+    .callout{
+      display: inline-block;
+    }
+
+    .available-true{
+      border-color: #2ECC40;
+      background: #cdffd3;
+    }
+
+    .available-false{
+      border-color: #FF4136;
+      background: #ffe2e0;
+    }
+  }
+
+
+  .wpforms-container-full {
+    .wpforms-submit {
+      background: $dark-gray;
+      color: $white;
+    }
+  }
+
+  div.wpforms-container-full .wpforms-form input[type=date], div.wpforms-container-full .wpforms-form input[type=datetime], div.wpforms-container-full .wpforms-form input[type=datetime-local], div.wpforms-container-full .wpforms-form input[type=email], div.wpforms-container-full .wpforms-form input[type=month], div.wpforms-container-full .wpforms-form input[type=number], div.wpforms-container-full .wpforms-form input[type=password], div.wpforms-container-full .wpforms-form input[type=range], div.wpforms-container-full .wpforms-form input[type=search], div.wpforms-container-full .wpforms-form input[type=tel], div.wpforms-container-full .wpforms-form input[type=text], div.wpforms-container-full .wpforms-form input[type=time], div.wpforms-container-full .wpforms-form input[type=url], div.wpforms-container-full .wpforms-form input[type=week], div.wpforms-container-full .wpforms-form select, div.wpforms-container-full .wpforms-form textarea {
+    border: 2px solid #707070 !important;
+    border-radius: 0 !important;
+    padding: $global-padding/2 $global-padding/2 !important;
+
+    &::placeholder{
+      color: $dark-gray;
+    }
+  }
 }
 
