@@ -82,6 +82,7 @@ Work
 .work{
 
   .cell{
+
     a{
       display: block;
       overflow: hidden;
@@ -137,6 +138,18 @@ Journal
     margin-bottom: $global-margin;
   }
 }//.journal-single
+
+.journal-related{
+  padding-top: $global-padding/2;
+
+  hr{ margin-bottom: $global-margin;}
+
+
+
+  .link-to-side{
+    margin-bottom: $global-margin/2;
+  }
+}
 
 /*----------------------------------------------------------------------------------------------------------------------
 Contact Page

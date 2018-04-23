@@ -1,4 +1,4 @@
-<div class="large-12 cell">
+<div class="large-12 cell home-intro">
 	<div class="grid-x grid-padding-x grid-margin-x">
 		<div class="large-8 cell">
 			<h1>

@@ -6,11 +6,10 @@ $j( document ).ready(function() {
 	 */
 	// var typed = new Typed('#typed-container', {
 	// 	stringsElement: '#typed-strings',
-	// 	typeSpeed: 60,
-	// 	backSpeed: 60,
+	// 	typeSpeed: 200,
+	// 	backSpeed: 200,
 	// 	loop: true,
 	// 	loopCount: Infinity,
-	// 	showCursor: false,
 	// });
 
 	/*

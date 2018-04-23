@@ -1,3 +1,44 @@
 header.header{
   margin-bottom: $global-margin;
+
+  .top-bar{
+    .top-bar-left{}
+
+    .top-bar-right{
+
+      ul.menu{
+        li{
+          a{
+          }//a
+        }//li
+      }//ul.menu
+    }//.top-bar-right
+  }
+}//header.header
+
+
+#off-canvas-menu{
+  padding-top: $global-padding/2;
+  padding-bottom: $global-padding/2;
+  background: $white;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+  border-bottom: 1px solid $light-gray;
+  top: 0;
+  height: auto;
+
+  .off-canvas-nav{
+    #menu-main-nav{
+      li{
+        a{
+          font-size: 2rem;
+          line-height: 2;
+          font-family: 'Lora', serif;
+          color: $black;
+        }
+      }
+    }
+  }
+
 }

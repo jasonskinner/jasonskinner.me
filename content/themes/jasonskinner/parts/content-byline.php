@@ -5,7 +5,7 @@
 ?>
 
 <div class="byline">
-	<p class="time"><?php the_time('M j, Y') ?></p>
+	<p class="time"><small><?php the_time('M j, Y') ?></small></p>
 	<ul class="menu simple align-center">
 		<?php
 		$categories = get_the_category();
@@ -15,7 +15,7 @@
 				?>
 				<li>
 					<a href="<?php echo $category_link; ?>">
-						<span class="label primary"><?php echo $category->name; ?></span>
+						<?php echo $category->name; ?>
 					</a>
 				</li>
 				<?php

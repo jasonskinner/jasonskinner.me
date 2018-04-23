@@ -40,14 +40,22 @@ Image Hover
 Titles with links next to them
  */
 .link-to-side{
-  h2{
+  h2, h3{
     display: inline-block;
   }
   a{
     position: relative;
     top: -2px;
-    margin-left: $global-margin/2;
-    font-size: $global-font-size*1.25;
+    margin-left: $global-margin/4;
+    font-size: $global-font-size;
+    font-style: italic;
+
+    &:before{
+      content: '[';
+    }
+    &:after{
+      content: ']';
+    }
   }
 }
 

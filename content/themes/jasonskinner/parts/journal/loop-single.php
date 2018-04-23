@@ -29,6 +29,10 @@
 		<p class="tags"><?php the_tags('<span class="tags-title">' . __( 'Tags:', 'jointswp' ) . '</span> ', ', ', ''); ?></p>
 	</footer> <!-- end article footer -->
 
+	<footer class="article-footer">
+		<?php get_template_part( 'parts/journal/content', 'relatedposts' ); ?>
+	</footer> <!-- end article footer -->
+
 	<?php comments_template(); ?>
 
 </article> <!-- end article -->
