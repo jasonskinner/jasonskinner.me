@@ -10,6 +10,10 @@ h1,h2,h3,h4,h5,h6, h1 a, h2 a, h3 a, h4 a, h5 a, h6 a{
   font-family: 'Lora', serif;
 }
 
+body{
+  border: 5px solid $medium-gray;
+}
+
 body.home, body.page-contact{
   h1{
     font-size: 5rem;
@@ -79,13 +83,23 @@ body.page-about {
 /*----------------------------------------------------------------------------------------------------------------------
 Work
 ----------------------------------------------------------------------------------------------------------------------*/
-.work{
+body.page-work {
+  ul.option-set{
+    padding-bottom: $global-padding;
+    font-size: 2rem;
+    .menu-text{
+      font-family: 'Lora', serif;
+    }
+  }
 
-  .cell{
+  .work {
 
-    a{
-      display: block;
-      overflow: hidden;
+    .cell {
+
+      a {
+        display: block;
+        overflow: hidden;
+      }
     }
   }
 }
@@ -159,6 +173,16 @@ body.page-contact {
     margin-bottom: $global-margin/3;
   }
 
+  .contact-social{
+    ul.menu{
+      li{
+        a{
+          font-size: 2rem;
+        }
+      }
+    }
+  }
+
   .available{
     margin-bottom: $global-margin/3;
 
@@ -184,9 +208,10 @@ body.page-contact {
 
 
   .wpforms-container-full {
-    .wpforms-submit {
-      background: $dark-gray;
+    .wpforms-submit-container button {
+      background: $primary-color;
       color: $white;
+
     }
   }
 

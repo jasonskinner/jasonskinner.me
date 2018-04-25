@@ -2,7 +2,7 @@
 $terms = get_terms( [ 'taxonomy' => 'work_type', ] );
 ?>
 <ul class="dropdown menu option-set" id="work-options" data-option-key="filter" data-dropdown-menu>
-	<li class="menu-text">Show me</li>
+	<li class="menu-text">Show me:</li>
 	<li><a href="#filter" data-option-value="*">All the Things</a>
 		<ul class="menu">
 			<li><a href="#filter" data-option-value="*">All the Things</a></li>

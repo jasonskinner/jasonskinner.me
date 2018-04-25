@@ -2,7 +2,17 @@ header.header{
   margin-bottom: $global-margin;
 
   .top-bar{
-    .top-bar-left{}
+    .top-bar-left{
+      ul.menu{
+        li{
+          a{
+            text-transform: uppercase;
+            font-weight: bold;
+          }
+        }
+      }
+
+    }
 
     .top-bar-right{
 
