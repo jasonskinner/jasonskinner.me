@@ -15,6 +15,7 @@ function joints_theme_support() {
 	//journal
 	add_image_size( 'journal-listing', 650, 400, true );
 	add_image_size( 'journal-single', 900, 400, true );
+	add_image_size( 'work-featured', 1260, 375, true );
 
 	// Add RSS Support
 	add_theme_support( 'automatic-feed-links' );

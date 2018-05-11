@@ -4,3 +4,7 @@ $global-animation-time: .2s;
   @include mui-animation(slide( in, up));
   animation-duration: $global-animation-time;
 }
+
+.logo-slide-in{
+  @include  mui-animation( slide(in, right ));
+}

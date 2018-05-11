@@ -6,12 +6,16 @@ font-family: 'Open Sans', sans-serif;
 /*----------------------------------------------------------------------------------------------------------------------
 GLOBAL PAGE
 ----------------------------------------------------------------------------------------------------------------------*/
+.no-js{
+  #typed-container{ display: none; }
+}
+
 h1,h2,h3,h4,h5,h6, h1 a, h2 a, h3 a, h4 a, h5 a, h6 a{
   font-family: 'Lora', serif;
 }
 
 body{
-  border: 5px solid $medium-gray;
+  //border: 5px solid $medium-gray;
 }
 
 body.home, body.page-contact{
@@ -19,6 +23,10 @@ body.home, body.page-contact{
     font-size: 5rem;
     font-weight: bold;
     font-family: 'Open Sans', sans-serif;
+
+    @include breakpoint ( small down ) {
+      font-size: 2.25rem;
+    }
   }
 }
 
@@ -44,6 +52,18 @@ body.page-about {
   .work-play-explore{
     margin-bottom: $global-margin;
     overflow: hidden;
+
+    .cell{
+      @include breakpoint ( small down ) {
+        margin-bottom: $global-margin/2;
+      }
+    }
+
+    .fas{
+      color: $medium-gray;
+      margin-bottom: 1rem;
+      font-size: 4em;
+    }
   }
 
   .instagram{
@@ -52,12 +72,17 @@ body.page-about {
     
     .cell{
       position: relative;
+
+      @include breakpoint ( small down ) {
+        margin-bottom: $global-margin/2;
+      }
     }
 
     i.fas{
       @include absolute-center;
       font-size: 2em;
       z-index: 2;
+      color: $white;
     }
   }
 
@@ -95,6 +120,12 @@ body.page-work {
   .work {
 
     .cell {
+      text-align: center;
+      line-height: 300px;
+
+      @include breakpoint ( small down ) {
+        line-height: 200px;
+      }
 
       a {
         display: block;
@@ -103,6 +134,28 @@ body.page-work {
     }
   }
 }
+
+/*----------------------------------------------------------------------------------------------------------------------
+Work Single
+----------------------------------------------------------------------------------------------------------------------*/
+body.single-work{
+  .work-intro-image{
+    margin-bottom: $global-margin;
+  }
+
+  header{
+    margin-bottom: $global-margin;
+  }
+
+  .services{
+    margin-bottom: $global-margin/2;
+  }
+
+  .work-single-logo{
+    text-align: center;
+  }
+}
+
 
 /*----------------------------------------------------------------------------------------------------------------------
 Journal
@@ -175,6 +228,13 @@ body.page-contact {
 
   .contact-social{
     ul.menu{
+      float: right;
+
+      @include breakpoint ( small down ) {
+        float: inherit;
+
+      }
+
       li{
         a{
           font-size: 2rem;
@@ -212,6 +272,19 @@ body.page-contact {
       background: $primary-color;
       color: $white;
 
+    }
+  }
+
+  .wpforms-one-half{
+    @include breakpoint ( small down ) {
+      width: 100%;
+      margin-left: 0;
+    }
+  }
+
+  button.wpforms-submit{
+    @include breakpoint ( small down ) {
+      width: 100%;
     }
   }
 

@@ -25,7 +25,7 @@
 					$imagetype = $image->type;
 
 					?>
-					<div class="large-3 medium-3 cell">
+					<div class="large-3 medium-3 small-6 cell">
 						<a href="<?php echo $image->link; ?>" target="_blank">
 							<?php
 								if ( $image->type === 'video' ) {

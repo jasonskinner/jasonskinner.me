@@ -494,10 +494,10 @@ $meter-fill-bad: $alert-color;
 // --------------
 
 $offcanvas-sizes: (
-  small: 250px,
+  small: 80vh,
 );
 $offcanvas-vertical-sizes: (
-  small: 250px,
+  small: 80vh,
 );
 $offcanvas-background: $white;
 $offcanvas-shadow: 0 0 10px rgba($black, 0.7);
@@ -510,7 +510,7 @@ $offcanvas-reveal-zindex: 12;
 $offcanvas-transition-length: 0.3s;
 $offcanvas-transition-timing: ease;
 $offcanvas-fixed-reveal: true;
-$offcanvas-exit-background: rgba($white, 0.5);
+$offcanvas-exit-background: rgba($white, 0.6);
 $maincontent-class: 'off-canvas-content';
 
 // 26. Orbit
@@ -820,10 +820,10 @@ $thumbnail-radius: $global-radius;
 // -------------
 
 $titlebar-background: $white;
-$titlebar-color: $white;
+$titlebar-color: $dark-gray;
 $titlebar-padding: 0.5rem;
 $titlebar-text-font-weight: bold;
-$titlebar-icon-color: $white;
+$titlebar-icon-color: $primary-color;
 $titlebar-icon-color-hover: $medium-gray;
 $titlebar-icon-spacing: 0.25rem;
 
@@ -845,12 +845,12 @@ $tooltip-radius: $global-radius;
 // 55. Top Bar
 // -----------
 
-$topbar-padding: 0.5rem;
+$topbar-padding: 0.2rem;
 $topbar-background: $white;
 $topbar-submenu-background: $topbar-background;
 $topbar-title-spacing: 0.5rem 1rem 0.5rem 0;
 $topbar-input-width: 200px;
-$topbar-unstack-breakpoint: medium;
+$topbar-unstack-breakpoint: small;
 
 // 56. Xy Grid
 // -----------

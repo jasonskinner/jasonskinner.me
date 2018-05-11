@@ -32,7 +32,7 @@
 							$url  = get_sub_field( 'social_link' );
 							?>
 							<li>
-								<a href="<?php echo $url; ?>">
+								<a target="_blank" href="<?php echo $url; ?>">
 									<?php echo $fa; ?>
 									<span><?php echo $text; ?></span>
 								</a>

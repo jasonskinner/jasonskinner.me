@@ -2,16 +2,31 @@ header.header{
   margin-bottom: $global-margin;
 
   .top-bar{
+    margin-right: 2px;
     .top-bar-left{
       ul.menu{
         li{
           a{
-            text-transform: uppercase;
-            font-weight: bold;
+            display: block;
+            position: relative;
+
+            svg{
+              height: 50px;
+            }
+            .hover-text{
+              color: $primary-color;
+              text-align: center;
+              font-weight: bold;
+              position: relative;
+              top: 30px;
+              left: -350px;
+              bottom: 0;
+              right: 0;
+              display: block;
+            }
           }
         }
       }
-
     }
 
     .top-bar-right{
@@ -19,6 +34,7 @@ header.header{
       ul.menu{
         li{
           a{
+            font-weight: bold;
           }//a
         }//li
       }//ul.menu
@@ -26,27 +42,113 @@ header.header{
   }
 }//header.header
 
+.title-bar{
+  .title-bar-title{
+    svg{
+      height: 50px;
+    }
+  }
+}
 
 #off-canvas-menu{
-  padding-top: $global-padding/2;
-  padding-bottom: $global-padding/2;
+  padding-top: $global-padding/1.5;
+  padding-bottom: $global-padding/1.5;
   background: $white;
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
   border-bottom: 1px solid $light-gray;
-  top: 0;
   height: auto;
+
+  .nav-close{
+    position: absolute;
+    right: 1rem;
+    top: -$global-padding/2;
+    cursor: pointer;
+  }
+
+  a:active, a:focus{
+    outline: 0;
+    border: none;
+    -moz-outline-style: none
+  }
+
+  .grid-container{
+    position: relative;
+  }
+
+  h6{
+    font-family: 'Open Sans', sans-serif;
+    color: #bbb;
+    
+    @include breakpoint ( small down ) {
+      display: none;
+    }
+
+    //@media only screen and (min-device-width: 480px)
+    //and (max-device-width: 820px)
+    //and (orientation: landscape) {
+    //  display: none;
+    //}
+  }
+
+  .off-canvas-social{
+    
+    @include breakpoint ( small down ) {
+      display: none;
+    }
+
+    //@media only screen and (min-device-width: 480px)
+    //and (max-device-width: 820px)
+    //and (orientation: landscape) {
+    //
+    //  display: none;
+    //}
+    
+    a{
+      padding: 0;
+      line-height: 2;
+    }
+  }
 
   .off-canvas-nav{
     #menu-main-nav{
       li{
+
+
         a{
           font-size: 2rem;
           line-height: 2;
           font-family: 'Lora', serif;
           color: $black;
+          padding: 0;
+
+          &:hover{
+            color: $medium-gray;
+          }
         }
+      }
+      li.current_page_item a{
+        background: none;
+      }
+    }
+  }
+
+  .off-canvas-journal{
+    @include breakpoint ( small down ) {
+      display: none;
+    }
+
+    //@media only screen and (min-device-width: 480px)
+    //and (max-device-width: 820px)
+    //and (orientation: landscape) {
+    //
+    //  display: none;
+    //}
+
+    .menu{
+      margin-left: -15px;
+      a{
       }
     }
   }

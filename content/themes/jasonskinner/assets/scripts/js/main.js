@@ -4,13 +4,14 @@ $j( document ).ready(function() {
 	/*
 	TYPED
 	 */
-	// var typed = new Typed('#typed-container', {
-	// 	stringsElement: '#typed-strings',
-	// 	typeSpeed: 200,
-	// 	backSpeed: 200,
-	// 	loop: true,
-	// 	loopCount: Infinity,
-	// });
+	var typed = new Typed('#typed', {
+		stringsElement: '#typed-strings',
+		typeSpeed: 80,
+		backSpeed: 70,
+		loop: true,
+		loopCount: Infinity,
+		cursorChar: "|",
+	});
 
 	/*
 	WOW
@@ -24,6 +25,33 @@ $j( document ).ready(function() {
 	// 	wow.init();
 	// });
 
+	/*
+	LOGO HOVER
+	 */
+	// $j( 'a#logo-trigger' ).hover(
+	// 	function () {
+	// 		//console.log('invisible');
+	// 		Foundation.Motion.animateOut( $j('.logo', this ), 'slide-out-left' );
+	// 		$j('.logo', this ).stop();
+	// 		//Foundation.Motion.animateIn( $j('.hover-text', this ), 'slide-in-left' );
+	// 		//First answer had this line coming first.
+	// 		//$j('.logo', this ).css("left", "-1000px");
+	// 		//$j( '.hover-text', this ).css("left", "0px");
+	// 		// It should actually probably be here
+	// 		// so the movement is still done invisibly
+	// 		//$j( 'a#logo-trigger .logo').prev().css("left", "-1000px");
+	// 	},
+	// 	function () {
+	// 		//console.log('visible');
+	// 		Foundation.Motion.animateIn( $j('.logo', this ), 'slide-in-left' );
+	// 		$j('.logo', this ).stop();
+	// 		//Foundation.Motion.animateOut( $j('.hover-text', this ), 'slide-out-left' );
+	// 		// $j( 'a#logo-trigger .logo').prev().css("left", "0px");
+	// 		// $j( 'a#logo-trigger .logo').prev().stop().animate({
+	// 		// 	opacity: 1
+	// 		// }, 500);
+	// 	}
+	// )
 });
 
 // $j(document).foundation();

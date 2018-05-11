@@ -8,8 +8,18 @@
 ?>
 
 <!doctype html>
+<!--
+__        ___               _   _      _ _         _____ _                   _
+\ \      / / |__  _   _    | | | | ___| | | ___   |_   _| |__   ___ _ __ ___| |
+ \ \ /\ / /| '_ \| | | |   | |_| |/ _ \ | |/ _ \    | | | '_ \ / _ \ '__/ _ \ |
+  \ V  V / | | | | |_| |_  |  _  |  __/ | | (_) |   | | | | | |  __/ | |  __/_|
+   \_/\_/  |_| |_|\__, ( ) |_| |_|\___|_|_|\___/    |_| |_| |_|\___|_|  \___(_)
+			      |___/|/
 
-  <html class="no-js"  <?php language_attributes(); ?>>
+This site will always be changing.
+If you have any questions about the code below, just ask me:  me [at] jasonskinner.me
+-->
+<html class="no-js"  <?php language_attributes(); ?>>
 
 	<head>
 		<meta charset="utf-8">
@@ -46,6 +56,6 @@
 				<header class="header" role="banner">
 							    <!-- This navs will be applied to the topbar, above all content
 								  To see additional nav styles, visit the /parts directory -->
-							    <?php get_template_part( 'parts/nav', 'title-bar' ); ?>
+							    <?php get_template_part( 'parts/nav', 'offcanvas' ); ?>
 
 				</header> <!-- end .header -->
