@@ -11,6 +11,7 @@ backupbuddy_temp/
 /db-sync
 _notes/
 wordfence-waf.php
+nginx.conf
 
 ##Custom Content Dir
 /content/upgrade/
