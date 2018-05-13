@@ -53,7 +53,7 @@
 
 			if ( $terms && !is_wp_error( $terms ) ) :
 				?>
-				<ul class="menu vertical services">
+				<ul class="">
 					<?php foreach ( $terms as $term ) { ?>
 						<li><?php echo $term->name; ?></li>
 					<?php } ?>

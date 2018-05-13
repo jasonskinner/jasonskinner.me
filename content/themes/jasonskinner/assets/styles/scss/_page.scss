@@ -288,10 +288,20 @@ body.page-contact {
     }
   }
 
+  .wpforms-confirmation-container p{
+    font-weight: bold;
+    color: #2ECC40;
+  }
+
+  .wpforms-container .wpforms-field{
+    position: inherit;
+  }
+
   div.wpforms-container-full .wpforms-form input[type=date], div.wpforms-container-full .wpforms-form input[type=datetime], div.wpforms-container-full .wpforms-form input[type=datetime-local], div.wpforms-container-full .wpforms-form input[type=email], div.wpforms-container-full .wpforms-form input[type=month], div.wpforms-container-full .wpforms-form input[type=number], div.wpforms-container-full .wpforms-form input[type=password], div.wpforms-container-full .wpforms-form input[type=range], div.wpforms-container-full .wpforms-form input[type=search], div.wpforms-container-full .wpforms-form input[type=tel], div.wpforms-container-full .wpforms-form input[type=text], div.wpforms-container-full .wpforms-form input[type=time], div.wpforms-container-full .wpforms-form input[type=url], div.wpforms-container-full .wpforms-form input[type=week], div.wpforms-container-full .wpforms-form select, div.wpforms-container-full .wpforms-form textarea {
     border: 2px solid #707070 !important;
     border-radius: 0 !important;
     padding: $global-padding/2 $global-padding/2 !important;
+
 
     &::placeholder{
       color: $dark-gray;
