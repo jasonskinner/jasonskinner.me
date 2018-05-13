@@ -3,8 +3,10 @@
 $args = array(
 	'post_type'              => array( 'work' ),
 	'posts_per_page'	=>	-1,
-	'orderby'   => 'date',
-	'order' => 'DESC',
+	'orderby' => array(
+		'date'      => 'DESC',
+		'menu_order' => 'ASC'
+	)
 );
 
 // The Query
