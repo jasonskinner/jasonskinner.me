@@ -14,6 +14,7 @@ wordfence-waf.php
 
 nginx.conf
 content/w3tc-config/master.php
+wp-config.php
 
 ##Custom Content Dir
 /content/upgrade/
