@@ -11,6 +11,7 @@ backupbuddy_temp/
 /db-sync
 _notes/
 wordfence-waf.php
+.gitkeep
 
 nginx.conf
 content/w3tc-config/master.php
