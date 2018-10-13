@@ -13,8 +13,7 @@ _notes/
 wordfence-waf.php
 .gitkeep
 content/plugins/crayon-syntax-highlighter/log.txt
-content/w3tc-config/index.html
-content/w3tc-config/master.php
+content/w3tc-config/
 
 nginx.conf
 content/w3tc-config/master.php
