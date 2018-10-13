@@ -21,7 +21,7 @@ $disabled = $stcrSubscriptionsCount ? '' : 'disabled="disabled"';
                             <i class="fas wc-hidden"></i>
                         </button>
                         <span class="import-progress">&nbsp;</span>
-                        <input type="hidden" name="stcr-subscriptions-count" value="<?php echo $stcrSubscriptionsCount; ?>" />                        
+                        <input type="hidden" name="stcr-subscriptions-count" value="<?php echo $stcrSubscriptionsCount; ?>" class="stcr-subscriptions-count" />
                         <input type="hidden" name="stcr-step" value="0" class="stcr-step"/>
                     </td>
                 </tr>

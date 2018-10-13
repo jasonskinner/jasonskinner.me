@@ -10,6 +10,7 @@
 		settings: {
 			spinner:          '<i class="fa fa-spinner fa-spin"></i>',
 			spinnerInline:    '<i class="fa fa-spinner fa-spin wpforms-loading-inline"></i>',
+			tinymceDefaults:  { tinymce: { toolbar1: 'bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,undo,redo,link' }, quicktags: true },
 			pagebreakTop:     false,
 			pagebreakBottom:  false,
 			upload_img_modal: false
@@ -25,10 +26,10 @@
 			wpforms_panel_switch = true;
 			s = this.settings;
 
-			// Document ready
+			// Document ready.
 			$(document).ready(WPFormsBuilder.ready);
 
-			// Page load
+			// Page load.
 			$(window).on('load', WPFormsBuilder.load);
 		},
 
@@ -39,11 +40,11 @@
 		 */
 		load: function() {
 
-			// Remove Loading overlay
+			// Remove Loading overlay.
 			$('#wpforms-builder-overlay').fadeOut();
 
-			// Maybe display informational informational modal
-			if ( wpforms_builder.template_modal_display == '1' && 'fields' == wpf.getQueryString('view') ) {
+			// Maybe display informational informational modal.
+			if ( wpforms_builder.template_modal_display == '1' && 'fields' === wpf.getQueryString('view') ) {
 				$.alert({
 					title: wpforms_builder.template_modal_title,
 					content: wpforms_builder.template_modal_msg,
@@ -73,7 +74,7 @@
 			// Bind all actions.
 			WPFormsBuilder.bindUIActions();
 
-			// Trigger initial save for new forms
+			// Trigger initial save for new forms.
 			var newForm = wpf.getQueryString('newform');
 			if (newForm) {
 				WPFormsBuilder.formSave(false);
@@ -87,10 +88,18 @@
 				valueNames: [ 'wpforms-template-name' ]
 			});
 
-			// If there is a section configured, display it. Otherwise
-			// we show the first panel by default.
+			// Disable implicit submission for every form inside the builder.
+			// All form values are managed by JS and should not be submitted by pressing Enter.
+			$builder.on( 'keypress', '#wpforms-builder-form input', function (e) {
+				if ( e.keyCode === 13 ) {
+					e.preventDefault();
+				}
+			});
+
+			// If there is a section configured, display it.
+			// Otherwise we show the first panel by default.
 			$('.wpforms-panel').each(function(index, el) {
-				var $this       = $(this);
+				var $this       = $(this),
 					$configured = $this.find('.wpforms-panel-sidebar-section.configured').first();
 
 				if ( $configured.length ) {
@@ -103,7 +112,7 @@
 				}
 			});
 
-			// Drag and drop sortable elements
+			// Drag and drop sortable elements.
 			WPFormsBuilder.fieldSortable();
 			WPFormsBuilder.fieldChoiceSortable('select');
 			WPFormsBuilder.fieldChoiceSortable('radio');
@@ -111,7 +120,7 @@
 			WPFormsBuilder.fieldChoiceSortable('payment-multiple');
 			WPFormsBuilder.fieldChoiceSortable('payment-select');
 
-			// Load match heights
+			// Load match heights.
 			$('.wpforms-setup-templates.core .wpforms-template-inner').matchHeight({
 				byRow: false
 			});
@@ -119,36 +128,39 @@
 				byRow: false
 			});
 
-			// Set field group visibility
+			// Set field group visibility.
 			$('.wpforms-add-fields-group').each(function(index, el) {
 				WPFormsBuilder.fieldGroupToggle($(this),'load');
 			});
 
-			// Trim long form titles
+
+			WPFormsBuilder.registerTemplates();
+
+			// Trim long form titles.
 			WPFormsBuilder.trimFormTitle();
 
-			// Load Tooltips
-			WPFormsBuilder.loadTooltips();
+			// Load Tooltips.
+			wpf.initTooltips();
 
-			// Load Tooltips
+			// Load Tooltips.
 			WPFormsBuilder.loadColorPickers();
 
-			// Hide/Show reCAPTCHA in form
+			// Hide/Show reCAPTCHA in form.
 			WPFormsBuilder.recaptchaToggle();
 
-			// Confirmation settings
-			WPFormsBuilder.confirmationToggle();
+			// Confirmations initial setup
+			WPFormsBuilder.confirmationsSetup();
 
-			// Notification settings
+			// Notification settings.
 			WPFormsBuilder.notificationToggle();
 
 			// Secret builder hotkeys.
 			WPFormsBuilder.builderHotkeys();
 
-			// Clone form title to setup page
+			// Clone form title to setup page.
 			$('#wpforms-setup-name').val($('#wpforms-panel-field-settings-form_title').val());
 
-			// jquery-confirmd defaults
+			// jquery-confirm defaults.
 			jconfirm.defaults = {
 				closeIcon: true,
 				backgroundDismiss: true,
@@ -168,22 +180,22 @@
 		 */
 		bindUIActions: function() {
 
-			// General Panels
+			// General Panels.
 			WPFormsBuilder.bindUIActionsPanels();
 
-			// Setup Panel
+			// Setup Panel.
 			WPFormsBuilder.bindUIActionsSetup();
 
-			// Fields Panel
+			// Fields Panel.
 			WPFormsBuilder.bindUIActionsFields();
 
-			// Settings Panel
+			// Settings Panel.
 			WPFormsBuilder.bindUIActionsSettings();
 
-			// Save and Exit
+			// Save and Exit.
 			WPFormsBuilder.bindUIActionsSaveExit();
 
-			// General/ global
+			// General/ global.
 			WPFormsBuilder.bindUIActionsGeneral();
 		},
 
@@ -198,13 +210,13 @@
 		 */
 		bindUIActionsPanels: function() {
 
-			// Panel switching
+			// Panel switching.
 			$builder.on('click', '#wpforms-panels-toggle button, .wpforms-panel-switch', function(e) {
 				e.preventDefault();
 				WPFormsBuilder.panelSwitch($(this).data('panel'));
 			});
 
-			// Panel sections switching
+			// Panel sections switching.
 			$builder.on('click', '.wpforms-panel .wpforms-panel-sidebar-section', function(e) {
 				WPFormsBuilder.panelSectionSwitch(this, e);
 			});
@@ -250,6 +262,10 @@
 				section         = $this.data('section'),
 				$sectionButtons = $panel.find('.wpforms-panel-sidebar-section'),
 				$sectionButton  = $panel.find('.wpforms-panel-sidebar-section-'+section);
+
+			if ( $this.hasClass( 'upgrade-modal' ) ) {
+				return;
+			}
 
 			if ( ! $sectionButton.hasClass('active') ) {
 				$sectionButtons.removeClass('active');
@@ -693,22 +709,24 @@
 					id    = $this.parent().data('field-id');
 				$('#wpforms-field-'+id).find('.format-selected').removeClass().addClass('format-selected format-selected-'+value);
 				$('#wpforms-field-option-'+id).find('.format-selected').removeClass().addClass('format-selected format-selected-'+value);
-			})
+			});
 
 			// Real-time updates specific for Address "Scheme" option
 			$builder.on('change', '.wpforms-field-option-row-scheme select', function(e) {
 				var $this = $(this),
 					value = $this.val(),
-					id    = $this.parent().data('field-id');
-				$('#wpforms-field-'+id).find('.wpforms-address-scheme').addClass('wpforms-hide');
-				$('#wpforms-field-'+id).find('.wpforms-address-scheme-'+value).removeClass('wpforms-hide');
+					id    = $this.parent().data('field-id'),
+					$field = $('#wpforms-field-'+id);
 
-				if ( $('#wpforms-field-'+id).find('.wpforms-address-scheme-'+value+' .wpforms-country' ).children().length == 0 ) {
+				$field.find('.wpforms-address-scheme').addClass('wpforms-hide');
+				$field.find('.wpforms-address-scheme-'+value).removeClass('wpforms-hide');
+
+				if ( $field.find('.wpforms-address-scheme-'+value+' .wpforms-country' ).children().length == 0 ) {
 					$('#wpforms-field-option-'+id).find('.wpforms-field-option-row-country').addClass('wpforms-hidden');
 				} else {
 					$('#wpforms-field-option-'+id).find('.wpforms-field-option-row-country').removeClass('wpforms-hidden');
 				}
-			})
+			});
 
 			// Real-time updates for Address, Date/Time, and Name "Placeholder" field options
 			$builder.on('input', '.wpforms-field-option .format-selected input.placeholder, .wpforms-field-option-address input.placeholder', function(e) {
@@ -1161,9 +1179,15 @@
 
 								// Copy over values
 								$fieldOptions.find(':input').each(function(index, el) {
-									var $this = $(this);
-										name    = $this.attr('name'),
-										newName = name.replace(regex_fieldID, 'fields['+newFieldID+']'),
+
+									var $this = $(this),
+										name    = $this.attr('name');
+
+									if ( ! name ) {
+										return 'continue';
+									}
+
+									var newName = name.replace(regex_fieldID, 'fields['+newFieldID+']'),
 										type    = $this.attr('type');
 
 									if ( type === 'checkbox' || type === 'radio' ) {
@@ -1178,8 +1202,10 @@
 											$newFieldOptions.find('[name="'+newName+'"]').find('[value="'+optionVal+'"]').prop('selected',true);
 										}
 									} else {
-										if ($this.val() != '') {
+										if ($this.val() !== '') {
 											$newFieldOptions.find('[name="'+newName+'"]').val( $this.val() );
+										} else if ( $this.hasClass( 'wpforms-money-input' ) ) {
+											$newFieldOptions.find('[name="'+newName+'"]').val( '0.00' );
 										}
 									}
 								});
@@ -1214,11 +1240,17 @@
 		 */
 		fieldAdd: function(type, options) {
 
+			var $btn = $( '#wpforms-add-fields-' + type );
+
+			if ( $btn.hasClass( 'upgrade-modal' ) ) {
+				return;
+			}
+
 			var defaults = {
 				position   : 'bottom',
 				placeholder: false,
 				scroll     : true,
-				defaults   : false,
+				defaults   : false
 			};
 			options = $.extend( {}, defaults, options);
 
@@ -1228,7 +1260,8 @@
 				type    : type,
 				defaults: options.defaults,
 				nonce   : wpforms_builder.nonce
-			}
+			};
+
 			return $.post(wpforms_builder.ajax_url, data, function(res) {
 				if (res.success) {
 
@@ -1299,7 +1332,7 @@
 					$('#wpforms-builder-form .no-fields, #wpforms-builder-form .no-fields-preview').hide();
 					$('#wpforms-field-id').val(res.data.field.id+1);
 
-					WPFormsBuilder.loadTooltips();
+					wpf.initTooltips();
 					WPFormsBuilder.loadColorPickers();
 
 					$builder.trigger('wpformsFieldAdd', [res.data.field.id, type ]);
@@ -1374,7 +1407,7 @@
 				receive: function(e, ui) {
 					fieldReceived = true;
 
-					var pos  = $(this).data('ui-sortable').currentItem.index();
+					var pos  = $(this).data('ui-sortable').currentItem.index(),
 						$el  = ui.helper,
 						type = $el.attr('data-field-type');
 
@@ -1428,8 +1461,9 @@
 			$choice.find( 'input.default').attr( 'name', 'fields['+fieldID+'][choices]['+id+'][default]' ).prop( 'checked', false );
 			$choice.find( '.preview' ).empty();
 			$choice.find( '.wpforms-image-upload-add' ).show();
+			$choice.find( '.wpforms-money-input' ).trigger( 'focusout' );
 
-			if ( checked == true ) {
+			if ( checked === true ) {
 				$parent.find( 'input.default' ).prop( 'checked', true );
 			}
 			id++;
@@ -1541,7 +1575,8 @@
 			if (type === 'select') {
 				$('#wpforms-field-'+id+' .primary-input option' ).not('.placeholder').remove();
 				new_choice = '<option>{label}</option>';
-			} else if (type === 'radio' || type === 'checkbox' ) {
+			} else if (type === 'radio' || type === 'checkbox' || type === 'gdpr-checkbox' ) {
+				type = 'gdpr-checkbox' === type ? 'checkbox' : type;
 				$('#wpforms-field-'+id+' .primary-input li' ).remove();
 				new_choice = '<li><input type="'+type+'" disabled>{label}</li>';
 			}
@@ -1587,7 +1622,7 @@
 
 				var importOptions = '<div class="bulk-add-display">';
 
-				importOptions += '<p class="heading">'+wpforms_builder.bulk_add_heading+' <a href="#" class="toggle-bulk-add-presets">'+wpforms_builder.bulk_add_presets_show+'</a></p>';
+				importOptions += '<p class="heading wpforms-clear">'+wpforms_builder.bulk_add_heading+' <a href="#" class="toggle-bulk-add-presets">'+wpforms_builder.bulk_add_presets_show+'</a></p>';
 				importOptions += '<ul>';
 					for(var key in wpforms_preset_choices) {
 						importOptions += '<li><a href="#" data-preset="'+key+'" class="bulk-add-preset-insert">'+wpforms_preset_choices[key].name+'</a></li>';
@@ -1698,9 +1733,9 @@
 					scroll: false,
 					defaults: {
 						position: 'top',
-						nav_align: 'left',
+						nav_align: 'left'
 					}
-				}
+				};
 				WPFormsBuilder.fieldAdd('pagebreak', options).done(function(res){
 					s.pagebreakTop = res.data.field.id;
 					var $preview = $('#wpforms-field-'+res.data.field.id),
@@ -1719,7 +1754,7 @@
 					defaults: {
 						position: 'bottom'
 					}
-				}
+				};
 				WPFormsBuilder.fieldAdd('pagebreak', options).done(function(res){
 					s.pagebreakBottom = res.data.field.id;
 					var $preview = $('#wpforms-field-'+res.data.field.id),
@@ -1858,7 +1893,7 @@
 					wpf.fieldOptionLoading($thisOption, true);
 
 					// Re-init tooltips for new field
-					WPFormsBuilder.loadTooltips();
+					wpf.initTooltips();
 
 					// Trigger Dynamic source updates
 					$('#wpforms-field-option-'+id+'-dynamic_'+value).find('option:first').prop('selected', true);
@@ -2207,8 +2242,8 @@
 			});
 
 			// Toggle form confirmation setting fields
-			$builder.on('change', '#wpforms-panel-field-settings-confirmation_type', function() {
-				WPFormsBuilder.confirmationToggle();
+			$builder.on('change', '.wpforms-panel-field-confirmations-type', function() {
+				WPFormsBuilder.confirmationFieldsToggle( $(this) );
 			});
 
 			// Toggle form notification setting fields
@@ -2216,55 +2251,58 @@
 				WPFormsBuilder.notificationToggle();
 			});
 
-			// Add New notification settings block
-			$builder.on('click', '.wpforms-notifications-add', function(e) {
+			// Add new settings block
+			$builder.on('click', '.wpforms-builder-settings-block-add', function(e) {
 				e.preventDefault();
-				WPFormsBuilder.notificationAdd();
+				if ( ! wpforms_builder.pro ) {
+					return;
+				}
+				WPFormsBuilder.settingsBlockAdd( $(this) );
 			});
 
-            // Edit notification settings block name
-            $builder.on('click', '.wpforms-notification-edit', function(e) {
+            // Edit settings block name
+            $builder.on('click', '.wpforms-builder-settings-block-edit', function(e) {
                 e.preventDefault();
 
                 var $el = $(this);
 
-                if ( $el.parents('.wpforms-notification-header').find('.wpforms-notification-name').hasClass('editing') ) {
-					WPFormsBuilder.notificationNameEditingHide( $el );
+                if ( $el.parents('.wpforms-builder-settings-block-header').find('.wpforms-builder-settings-block-name').hasClass('editing') ) {
+					WPFormsBuilder.settingsBlockNameEditingHide( $el );
 				} else {
-					WPFormsBuilder.notificationNameEditingShow( $el );
+					WPFormsBuilder.settingsBlockNameEditingShow( $el );
 				}
 			});
 
-            // Update notification settings block name and close editing interface
-            $builder.on('blur', '.wpforms-notification-name-edit input', function(e) {
+            // Update settings block name and close editing interface
+            $builder.on('blur', '.wpforms-builder-settings-block-name-edit input', function(e) {
 				// Do not fire if for onBlur user clicked on edit button - it has own event processing.
-            	if ( ! $(e.relatedTarget).hasClass('wpforms-notification-edit')) {
-					WPFormsBuilder.notificationNameEditingHide( $(this) );
+            	if ( ! $(e.relatedTarget).hasClass('wpforms-builder-settings-block-edit')) {
+					WPFormsBuilder.settingsBlockNameEditingHide( $(this) );
 				}
             });
 
-			// Close notifications editing interface with pressed Enter
-			$builder.on('keypress', '.wpforms-notification-name-edit input', function(e) {
+			// Close settings block editing interface with pressed Enter
+			$builder.on('keypress', '.wpforms-builder-settings-block-name-edit input', function(e) {
 				// On Enter - hide editing interface.
 				if (e.keyCode === 13) {
-					WPFormsBuilder.notificationNameEditingHide( $(this) );
+					WPFormsBuilder.settingsBlockNameEditingHide( $(this) );
 
 					// We need this preventDefault() to stop jumping to form name editing input.
 					e.preventDefault();
 				}
 			});
 
-			// Toggle notification settings block - slide up or down
-			$builder.on('click', '.wpforms-notification-toggle', function(e) {
+			// Toggle settings block - slide up or down
+			$builder.on('click', '.wpforms-builder-settings-block-toggle', function(e) {
 				e.preventDefault();
 
-				WPFormsBuilder.notificationPanelToggle($(this));
+				WPFormsBuilder.settingsBlockPanelToggle( $(this) );
 			});
 
-			// Remove notification settings block
-			$builder.on('click', '.wpforms-notification-delete', function(e) {
+			// Remove settings block
+			$builder.on('click', '.wpforms-builder-settings-block-delete', function(e) {
 				e.preventDefault();
-				WPFormsBuilder.notificationDelete($(this));
+				WPFormsBuilder.settingsBlockDelete( $(this) );
 			});
 		},
 
@@ -2287,20 +2325,44 @@
 		},
 
 		/**
+		 * Setup the Confirmation blocks.
+		 *
+		 * @since 1.4.8
+		 */
+		confirmationsSetup: function() {
+			// Toggle the setting fields in each confirmation block.
+			$('.wpforms-panel-field-confirmations-type').each( function () {
+				WPFormsBuilder.confirmationFieldsToggle($(this));
+			});
+
+			// Init TinyMCE in each confirmation block.
+			$('.wpforms-panel-field-confirmations-message').each( function () {
+				if (typeof wp.editor !== 'undefined') {
+					wp.editor.initialize($(this).attr('id'), s.tinymceDefaults);
+				}
+			});
+		},
+
+		/**
 		 * Toggle the different form Confirmation setting fields.
 		 *
-		 * @since 1.0.0
+		 * @since 1.4.8
 		 */
-		confirmationToggle: function() {
+		confirmationFieldsToggle: function($el) {
+			if ( ! $el.length ) {
+				return false;
+			}
 
-			var $confirmation = $('#wpforms-panel-field-settings-confirmation_type');
-			if ($confirmation.val()){
-				var type = $confirmation.val();
-				$confirmation.parent().parent().find('.wpforms-panel-field').not($confirmation.parent()).hide();
-				$('#wpforms-panel-field-settings-confirmation_'+type+'-wrap').show();
-				if (type === 'message') {
-					$('#wpforms-panel-field-settings-confirmation_message_scroll-wrap').show();
-				}
+			var type = $el.val();
+			var $block = $el.closest('.wpforms-builder-settings-block-content');
+
+			$block.find('.wpforms-panel-field')
+				.not($el.parent())
+				.not('.wpforms-conditionals-enable-toggle')
+				.hide();
+			$block.find('.wpforms-panel-field-confirmations-'+type).closest('.wpforms-panel-field').show();
+			if (type === 'message') {
+				$block.find('.wpforms-panel-field-confirmations-message_scroll').parent().show();
 			}
 		},
 
@@ -2313,26 +2375,28 @@
 		notificationToggle: function() {
 			var $notification = $('#wpforms-panel-field-settings-notification_enable');
 			if ( $notification.find('option:selected').val() === '0'){
-				$notification.parent().parent().find('.wpforms-notification').hide();
+				$notification.parent().parent().find('.wpforms-builder-settings-block').hide();
 			} else {
-				$notification.parent().parent().find('.wpforms-notification').show();
+				$notification.parent().parent().find('.wpforms-builder-settings-block').show();
 			}
 		},
 
 		/**
-		 * Add new notification.
+		 * Add new settings block.
 		 *
-		 * @since 1.2.3
+		 * @since 1.4.8
 		 */
-		notificationAdd: function() {
+		settingsBlockAdd: function($el) {
 
-			var nextID       = Number($('.wpforms-notifications-add').attr('data-next-id')),
-				namePrompt   = wpforms_builder.notification_prompt,
-				nameField    = '<input autofocus="" type="text" id="notification-name" placeholder="'+wpforms_builder.notification_ph+'">',
-				nameError    = '<p class="error">'+wpforms_builder.notification_error+'</p>',
+			var nextID       = Number($el.attr('data-next-id')),
+				blockType    = $el.data('block-type'),
+				namePrompt   = wpforms_builder[blockType + '_prompt'],
+				nameField    = '<input autofocus="" type="text" id="settings-block-name" placeholder="'+wpforms_builder[blockType + '_ph']+'">',
+				nameError    = '<p class="error">'+wpforms_builder[blockType + '_error']+'</p>',
 				modalContent = namePrompt + nameField + nameError;
 
 			var modal = $.confirm({
+				container: $builder,
 				title: false,
 				content: modalContent,
 				icon: 'fa fa-info-circle',
@@ -2343,19 +2407,20 @@
 						btnClass: 'btn-confirm',
 						keys: ['enter'],
 						action: function() {
-							var notification_name = $.trim(this.$content.find('input#notification-name').val()),
+							var settingsBlockName = $.trim(this.$content.find('input#settings-block-name').val()),
 								error = this.$content.find('.error');
 
-							if (notification_name === '') {
+							if (settingsBlockName === '') {
 								error.show();
 								return false;
 							} else {
-								var $firstNotification = $('.wpforms-notification').first(),
-									$newNotification   = $firstNotification.clone(),
-									newNotification;
+								var $firstSettingsBlock = $el.closest('.wpforms-panel-content-section').find('.wpforms-builder-settings-block').first(),
+									$newSettingsBlock   = $firstSettingsBlock.clone(),
+									newSettingsBlock;
 
-								$newNotification.find('.wpforms-notification-header span').text(notification_name);
-								$newNotification.find('input, textarea, select').each(function(index, el) {
+								$newSettingsBlock.attr('data-block-id', nextID);
+								$newSettingsBlock.find('.wpforms-builder-settings-block-header span').text(settingsBlockName);
+								$newSettingsBlock.find('input, textarea, select').each(function(index, el) {
 									if ($(this).attr('name')) {
 										$(this).val('').attr('name', $(this).attr('name').replace(/\[(\d+)\]/, '['+nextID+']'));
 										if ($(this).is('select')) {
@@ -2368,24 +2433,54 @@
 										}
 									}
 								});
-								$newNotification.find('.wpforms-notification-header input').val(notification_name).attr('value',notification_name);
-								$newNotification.find('.email-msg textarea').val('{all_fields}').attr('value','{all_fields}');
-								$newNotification.find('.email-recipient input').val('{admin_email}').attr('value','{admin_email}');
+								$newSettingsBlock.find('.wpforms-builder-settings-block-header input').val(settingsBlockName).attr('value',settingsBlockName);
 
-								// Conditional logic, if present
-								var $conditionalLogic = $newNotification.find('.wpforms-conditional-block');
-								if ($conditionalLogic.length) {
-									$conditionalLogic.find('.wpforms-conditionals-enable-toggle input').attr('data-name', 'settings[notifications]['+nextID+']');
-									$conditionalLogic.find('.wpforms-conditional-groups').remove();
+								if ( blockType === 'notification' ) {
+									$newSettingsBlock.find('.email-msg textarea').val('{all_fields}').attr('value', '{all_fields}');
+									$newSettingsBlock.find('.email-recipient input').val('{admin_email}').attr('value', '{admin_email}');
 								}
 
-								newNotification = $newNotification.wrap('<div>').parent().html();
-								newNotification = newNotification.replace( /wpforms-panel-field-notifications-(\d+)/g, 'wpforms-panel-field-notifications-'+nextID );
-								newNotification = newNotification.replace( /\[conditionals\]\[(\d+)\]\[(\d+)\]/g, '[conditionals][0][0]' );
+								if ( blockType === 'confirmation' ) {
+									$newSettingsBlock.removeClass('wpforms-confirmation-default');
+									$newSettingsBlock.find('.wp-editor-wrap').parent().remove();
+									if (typeof WPForms !== 'undefined') {
+										$newSettingsBlock.find('.wpforms-panel-field-confirmations-type-wrap')
+											.after(WPForms.Admin.Builder.Templates
+												.get('wpforms-builder-confirmations-message-field')({
+													id: nextID
+												})
+											);
+									}
+								}
 
-								$firstNotification.before( newNotification );
+								// Conditional logic, if present
+								var $conditionalLogic = $newSettingsBlock.find('.wpforms-conditional-block');
+								if ($conditionalLogic.length && typeof WPForms !== 'undefined') {
+									$conditionalLogic
+										.html(WPForms.Admin.Builder.Templates
+											.get('wpforms-builder-conditional-logic-toggle-field')({
+												id: nextID,
+												type: blockType,
+												actions: JSON.stringify($newSettingsBlock.find('.wpforms-panel-field-conditional_logic-checkbox').data('actions')),
+												actionDesc: $newSettingsBlock.find('.wpforms-panel-field-conditional_logic-checkbox').data('action-desc')
+											})
+										);
+								}
 
-								$('.wpforms-notifications-add').attr('data-next-id', nextID+1);
+								newSettingsBlock = $newSettingsBlock.wrap('<div>').parent().html();
+								newSettingsBlock = newSettingsBlock.replace( /\[conditionals\]\[(\d+)\]\[(\d+)\]/g, '[conditionals][0][0]' );
+
+								$firstSettingsBlock.before( newSettingsBlock );
+
+								if ( blockType === 'confirmation' ) {
+									WPFormsBuilder.confirmationFieldsToggle($('.wpforms-panel-field-confirmations-type').first());
+								}
+
+								if (typeof wp.editor !== 'undefined' && blockType === 'confirmation') {
+									wp.editor.initialize('wpforms-panel-field-confirmations-message-' + nextID, s.tinymceDefaults);
+								}
+
+								$el.attr('data-next-id', nextID+1);
 							}
 						}
 					},
@@ -2397,7 +2492,7 @@
 
 			// We need to process this event here, because we need a confirm modal object defined, so we can intrude into it.
 			// Pressing Enter will click the Ok button.
-			$builder.on('keypress', '#notification-name', function(e) {
+			$builder.on('keypress', '#settings-block-name', function(e) {
 				if (e.keyCode === 13) {
 					$(modal.buttons.confirm.el).trigger('click');
 				}
@@ -2405,39 +2500,40 @@
 		},
 
 		/**
-		 * Show notification editing interface.
+		 * Show settings block editing interface.
 		 *
-		 * @since 1.4.1
+		 * @since 1.4.8
 		 */
-		notificationNameEditingShow: function (el) {
+		settingsBlockNameEditingShow: function ($el) {
 
-			var header_holder = el.parents('.wpforms-notification-header'),
-				name_holder   = header_holder.find('.wpforms-notification-name');
+			var header_holder = $el.parents('.wpforms-builder-settings-block-header'),
+				name_holder   = header_holder.find('.wpforms-builder-settings-block-name');
 
 			name_holder
 				.addClass('editing')
 				.hide();
 
 			// Make the editing interface active and in focus
-			header_holder.find('.wpforms-notification-name-edit').addClass('active');
+			header_holder.find('.wpforms-builder-settings-block-name-edit').addClass('active');
 			wpf.focusCaretToEnd(header_holder.find('input'));
 		},
 
 		/**
-		 * Update notification name and hide editing interface.
+		 * Update settings block name and hide editing interface.
 		 *
-		 * @since 1.4.1
+		 * @since 1.4.8
 		 */
-		notificationNameEditingHide: function (el) {
+		settingsBlockNameEditingHide: function ($el) {
 
-			var header_holder = el.parents('.wpforms-notification-header'),
-				name_holder   = header_holder.find('.wpforms-notification-name'),
-				edit_holder   = header_holder.find('.wpforms-notification-name-edit'),
-				current_name  = edit_holder.find('input').val().trim();
+			var header_holder = $el.parents('.wpforms-builder-settings-block-header'),
+				name_holder   = header_holder.find('.wpforms-builder-settings-block-name'),
+				edit_holder   = header_holder.find('.wpforms-builder-settings-block-name-edit'),
+				current_name  = edit_holder.find('input').val().trim(),
+				blockType     = $el.closest('.wpforms-builder-settings-block').data('block-type');
 
-			// Provide a default value for empty notification name.
+			// Provide a default value for empty settings block name.
 			if (! current_name.length) {
-				current_name = wpforms_builder.notification_def_name;
+				current_name = wpforms_builder[blockType + '_def_name'];
 			}
 
 			// This is done for sanitizing.
@@ -2452,15 +2548,16 @@
 		},
 
 		/**
-		 * Show or hide notification panel content.
+		 * Show or hide settings block panel content.
 		 *
-		 * @since 1.4.1
+		 * @since 1.4.8
 		 */
-		notificationPanelToggle: function(el) {
+		settingsBlockPanelToggle: function($el) {
 
-			var $notification = el.closest('.wpforms-notification'),
-				notification_id = /settings\[notifications\]\[(\d+)\]\[notification_name\]/g.exec($notification.find('.wpforms-notification-name-edit input').attr('name'))[1],
-				$content = $notification.find('.wpforms-notification-content'),
+			var $settingsBlock = $el.closest('.wpforms-builder-settings-block'),
+				settingsBlockId = $settingsBlock.data('block-id'),
+				settingsBlockType = $settingsBlock.data('block-type'),
+				$content = $settingsBlock.find('.wpforms-builder-settings-block-content'),
 				is_visible = $content.is(':visible');
 
 			$content.slideToggle({
@@ -2469,35 +2566,37 @@
 					// Send early to save fast.
 					// It's animation start, so we should save the state for animation end (reversed).
 					$.post(wpforms_builder.ajax_url, {
-						action: 'wpforms_builder_notification_state_save',
+						action: 'wpforms_builder_settings_block_state_save',
 						state: is_visible ? 'closed' : 'opened',
 						form_id: s.formID,
-						notification_id: notification_id,
+						block_id: settingsBlockId,
+						block_type: settingsBlockType,
 						nonce : wpforms_builder.nonce
 					});
 				},
 				always: function() {
 					if ($content.is(':visible')) {
-						el.html('<i class="fa fa-chevron-up"></i>');
+						$el.html('<i class="fa fa-chevron-up"></i>');
 					} else {
-						el.html('<i class="fa fa-chevron-down"></i>');
+						$el.html('<i class="fa fa-chevron-down"></i>');
 					}
 				}
 			});
 		},
 
 		/**
-		 * Delete notification.
+		 * Delete settings block.
 		 *
-		 * @since 1.2.3
+		 * @since 1.4.8
 		 */
-		notificationDelete: function(el) {
+		settingsBlockDelete: function($el) {
 
-			var $this = $(el);
+			var $current_block = $el.closest('.wpforms-builder-settings-block'),
+				blockType      = $current_block.data('block-type');
 
 			$.confirm({
 				title: false,
-				content: wpforms_builder.notification_delete,
+				content: wpforms_builder[blockType + '_delete'],
 				icon: 'fa fa-exclamation-circle',
 				type: 'orange',
 				buttons: {
@@ -2506,12 +2605,12 @@
 						btnClass: 'btn-confirm',
 						keys: ['enter'],
 						action: function () {
-							var notifications = $('.wpforms-notification');
+							var settingsBlock = $el.closest('.wpforms-panel-content-section').find('.wpforms-builder-settings-block');
 
-							if ( notifications.length <= 1 ) {
+							if ( settingsBlock.length <= 1 ) {
 								$.alert({
 									title: false,
-									content: wpforms_builder.notification_error2,
+									content: wpforms_builder[blockType + '_error2'],
 									icon: 'fa fa-exclamation-circle',
 									type: 'orange',
 									buttons: {
@@ -2523,17 +2622,18 @@
 									}
 								});
 							} else {
-								var $current_notification = $this.closest('.wpforms-notification'),
-									notification_id = /settings\[notifications\]\[(\d+)\]\[notification_name\]/g.exec($current_notification.find('.wpforms-notification-name-edit input').attr('name'))[1];
+								var settingsBlockId = $current_block.data('block-id'),
+									settingsBlockType = $current_block.data('block-type');
 
-								$.post(wpforms_builder.ajax_url, {
-									action: 'wpforms_builder_notification_state_remove',
-									nonce: wpforms_builder.nonce,
-									notification_id: notification_id,
-									form_id: s.formID
+								$.post( wpforms_builder.ajax_url, {
+									action    : 'wpforms_builder_settings_block_state_remove',
+									nonce     : wpforms_builder.nonce,
+									block_id  : settingsBlockId,
+									block_type: settingsBlockType,
+									form_id   : s.formID,
 								} );
 
-								$current_notification.remove();
+								$current_block.remove();
 							}
 						}
 					},
@@ -2566,7 +2666,7 @@
 					columnClass: 'modal-wide',
 					title: false,
 					content: content,
-					boxWidth: '600px',
+					boxWidth: '650px',
 					buttons: {
 						confirm: {
 							text: wpforms_builder.close,
@@ -2620,6 +2720,7 @@
 					$label.text(text);
 					$icon.toggleClass('fa-check fa-cog fa-spin');
 					wpf.savedState = wpf.getFormState( '#wpforms-builder-form');
+					wpf.initialSave = false;
 					$builder.trigger('wpformsSaved');
 					if (true === redirect ) {
 						window.location.href = wpforms_builder.exit_url;
@@ -2828,6 +2929,14 @@
 				$container.find( '.source' ).val( '' );
 
 				$builder.trigger( 'wpformsImageUploadRemove', [ $( this ), $container ] );
+			});
+
+			// Validate email smart tags in Notifications fields.
+			$builder.on( 'blur', '.wpforms-notification .wpforms-panel-field-text input', function() {
+				WPFormsBuilder.validateEmailSmartTags( $( this ) );
+			});
+			$builder.on( 'blur', '.wpforms-notification .wpforms-panel-field-textarea textarea', function() {
+				WPFormsBuilder.validateEmailSmartTags( $( this ) );
 			});
 		},
 
@@ -3045,6 +3154,24 @@
 			});
 		},
 
+		/**
+		 * Validate email smart tags in Notifications fields.
+		 *
+		 * @since 1.4.9
+		 */
+		validateEmailSmartTags: function( $el ) {
+			var val = $el.val();
+			if ( ! val ) {
+				return;
+			}
+			// Turns '{email@domain.com}' into 'email@domain.com'
+			// Email RegEx inpired by http://emailregex.com
+			val = val.replace( /{(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))}/g, function ( x ) {
+				return x.slice( 1, -1 );
+			} );
+			$el.val( val );
+		},
+
 		//--------------------------------------------------------------------//
 		// Other functions
 		//--------------------------------------------------------------------//
@@ -3064,22 +3191,7 @@
 		},
 
 		/**
-		 * Load or refresh tooltips.
-		 *
-		 * @since 1.0.0
-		 */
-		loadTooltips: function() {
-
-			$('.wpforms-help-tooltip').tooltipster({
-				contentAsHTML: true,
-				position: 'right',
-				maxWidth: 300,
-				multiple: true
-			});
-		},
-
-		/**
-		 * Load or refresh tooltips.
+		 * Load or refresh color picker.
 		 *
 		 * @since 1.2.1
 		 */
@@ -3113,6 +3225,21 @@
 					ctrlDown = false;
 				}
 			});
+		},
+
+		/**
+		 * Register JS templates for various elements.
+		 *
+		 * @since 1.4.8
+		 */
+		registerTemplates: function () {
+			if (typeof WPForms === 'undefined') {
+				return;
+			}
+			WPForms.Admin.Builder.Templates.add([
+				'wpforms-builder-confirmations-message-field',
+				'wpforms-builder-conditional-logic-toggle-field'
+			]);
 		}
 	};
 

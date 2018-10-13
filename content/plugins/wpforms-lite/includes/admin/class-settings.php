@@ -53,7 +53,6 @@ class WPForms_Settings {
 			$this->view = isset( $_GET['view'] ) ? esc_html( $_GET['view'] ) : 'general';
 
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueues' ) );
-			add_action( 'wpforms_admin_settings_after', array( $this, 'captcha_addon_notice' ) );
 			add_action( 'wpforms_admin_page', array( $this, 'output' ) );
 
 			// Hook for addons.
@@ -277,7 +276,7 @@ class WPForms_Settings {
 					'no_label' => true,
 					'class'    => array( 'section-heading' ),
 				),
-				'license-key'        => array(
+				'license-key'     => array(
 					'id'   => 'license-key',
 					'name' => esc_html__( 'License Key', 'wpforms' ),
 					'type' => 'license',
@@ -306,6 +305,32 @@ class WPForms_Settings {
 					'id'   => 'global-assets',
 					'name' => esc_html__( 'Load Assets Globally', 'wpforms' ),
 					'desc' => esc_html__( 'Check this if you would like to load WPForms assets site-wide. Only check if your site is having compatibility issues or instructed to by support.', 'wpforms' ),
+					'type' => 'checkbox',
+				),
+				'gdpr-heading' => array(
+					'id'       => 'GDPR',
+					'content'  => '<h4>' . esc_html__( 'GDPR', 'wpforms' ) . '</h4>',
+					'type'     => 'content',
+					'no_label' => true,
+					'class'    => array( 'section-heading', 'no-desc' ),
+				),
+				'gdpr'               => array(
+					'id'   => 'gdpr',
+					'name' => esc_html__( 'GDPR Enhancements', 'wpforms' ),
+					'desc' => sprintf(
+						wp_kses(
+							/* translators: %s = WPForms.com GDPR documentation URL. */
+							__( 'Check this to turn on GDPR related features and enhancements. <a href="%s" target="_blank" rel="noopener noreferrer">Read our GDPR documentation</a> to learn more.', 'wpforms' ),
+							array(
+								'a' => array(
+									'href'   => array(),
+									'target' => array(),
+									'rel'    => array(),
+								),
+							)
+						),
+						'https://wpforms.com/docs/how-to-create-gdpr-compliant-forms/'
+					),
 					'type' => 'checkbox',
 				),
 			),
@@ -442,7 +467,7 @@ class WPForms_Settings {
 				),
 			),
 			// Misc. settings tab.
-			'misc'        => array(
+			'misc'         => array(
 				'misc-heading'       => array(
 					'id'       => 'misc-heading',
 					'content'  => '<h4>' . esc_html__( 'Misc', 'wpforms' ) . '</h4>',
@@ -456,7 +481,7 @@ class WPForms_Settings {
 					'desc' => esc_html__( 'Check this if you would like to hide plugin announcements and update details.', 'wpforms' ),
 					'type' => 'checkbox',
 				),
-				'uninstall-data'    => array(
+				'uninstall-data'      => array(
 					'id'   => 'uninstall-data',
 					'name' => esc_html__( 'Uninstall WPForms', 'wpforms' ),
 					'desc' => esc_html__( 'Check this if you would like to remove ALL WPForms data upon plugin deletion. All forms, entries, and uploaded files will be unrecoverable.', 'wpforms' ),
@@ -552,37 +577,5 @@ class WPForms_Settings {
 
 		<?php
 	}
-
-	/**
-	 * Let Lite users know a Custom Captcha addon is available.
-	 *
-	 * @since 1.3.9
-	 */
-	public function captcha_addon_notice() {
-
-		if ( 'recaptcha' !== $this->view ) {
-			return;
-		}
-
-		// Only display to Lite users.
-		if ( wpforms()->pro ) {
-			return;
-		}
-		?>
-
-		<div class="captcha-addon-notice wpforms-clear">
-			<img src="<?php echo WPFORMS_PLUGIN_URL; ?>assets/images/settings-captcha-addon.png">
-			<h5><?php esc_html_e( 'Want to better protect your contact forms from spam?', 'wpforms' ); ?></h5>
-			<p>
-				<?php esc_html_e( 'WPForms custom captcha addon allows you to add custom questions captcha or math questions captcha to your WordPress forms. Since we know spam is a huge problem for contact forms, WPForms goes above and beyond to help you protect your forms.', 'wpforms' ); ?>
-				<br><br>
-				<a href="<?php echo wpforms_admin_upgrade_link(); ?>" class="wpforms-btn wpforms-btn-md wpforms-btn-orange wpforms-upgrade-modal" target="_blank" rel="noopener noreferrer">
-					<?php esc_html_e( 'Click here to Upgrade', 'wpforms' ); ?>
-				</a>
-			</p>
-		</div>
-		<?php
-	}
 }
-
-new WPForms_Settings;
+new WPForms_Settings();

@@ -111,7 +111,7 @@ class WPForms_Admin_Menu {
 		add_submenu_page(
 			'wpforms-overview',
 			esc_html__( 'WPForms Addons', 'wpforms' ),
-			'<span style="color:#f18500">' . esc_html__( 'Addons', 'wpforms' ) . '<span>',
+			'<span style="color:#f18500">' . esc_html__( 'Addons', 'wpforms' ) . '</span>',
 			$menu_cap,
 			'wpforms-addons',
 			array( $this, 'admin_page' )
@@ -132,7 +132,7 @@ class WPForms_Admin_Menu {
 	 *
 	 * @since 1.3.9
 	 *
-	 * @param array $links
+	 * @param array $links Plugin row links.
 	 *
 	 * @return array $links
 	 */
@@ -156,5 +156,4 @@ class WPForms_Admin_Menu {
 		return $links;
 	}
 }
-
-new WPForms_Admin_Menu;
+new WPForms_Admin_Menu();

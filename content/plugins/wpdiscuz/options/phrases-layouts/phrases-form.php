@@ -16,6 +16,34 @@ if (!defined('ABSPATH')) {
                 <td colspan="3"><input type="text" value="<?php echo $this->optionsSerialized->phrases['wc_comment_join_text']; ?>" name="wc_comment_join_text" id="wc_comment_join_text" /></td>
             </tr>
             <tr valign="top">
+                <th scope="row"><label for="wc_comment_threads"><?php _e('Comment threads', 'wpdiscuz'); ?></label></th>
+                <td colspan="3"><input type="text" value="<?php echo $this->optionsSerialized->phrases['wc_comment_threads']; ?>" name="wc_comment_threads" id="wc_comment_threads" /></td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><label for="wc_thread_replies"><?php _e('Thread replies', 'wpdiscuz'); ?></label></th>
+                <td colspan="3"><input type="text" value="<?php echo $this->optionsSerialized->phrases['wc_thread_replies']; ?>" name="wc_thread_replies" id="wc_thread_replies" /></td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><label for="wc_followers"><?php _e('Followers', 'wpdiscuz'); ?></label></th>
+                <td colspan="3"><input type="text" value="<?php echo $this->optionsSerialized->phrases['wc_followers']; ?>" name="wc_followers" id="wc_followers" /></td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><label for="wc_most_reacted_comment"><?php _e('Most reacted comment', 'wpdiscuz'); ?></label></th>
+                <td colspan="3"><input type="text" value="<?php echo $this->optionsSerialized->phrases['wc_most_reacted_comment']; ?>" name="wc_most_reacted_comment" id="wc_most_reacted_comment" /></td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><label for="wc_hottest_comment_thread"><?php _e('Hottest comment thread', 'wpdiscuz'); ?></label></th>
+                <td colspan="3"><input type="text" value="<?php echo $this->optionsSerialized->phrases['wc_hottest_comment_thread']; ?>" name="wc_hottest_comment_thread" id="wc_hottest_comment_thread" /></td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><label for="wc_comment_authors"><?php _e('Comment authors', 'wpdiscuz'); ?></label></th>
+                <td colspan="3"><input type="text" value="<?php echo $this->optionsSerialized->phrases['wc_comment_authors']; ?>" name="wc_comment_authors" id="wc_comment_authors" /></td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><label for="wc_recent_comment_authors"><?php _e('Recent comment authors', 'wpdiscuz'); ?></label></th>
+                <td colspan="3"><input type="text" value="<?php echo $this->optionsSerialized->phrases['wc_recent_comment_authors']; ?>" name="wc_recent_comment_authors" id="wc_recent_comment_authors" /></td>
+            </tr>
+            <tr valign="top">
                 <th scope="row"><label for="wc_email_text"><?php _e('Email Field', 'wpdiscuz'); ?></label></th>
                 <td colspan="3"><input type="text" value="<?php echo $this->optionsSerialized->phrases['wc_email_text']; ?>" name="wc_email_text" id="wc_email_text" /></td>
             </tr>
@@ -36,12 +64,8 @@ if (!defined('ABSPATH')) {
                 <td colspan="3"><input type="text" value="<?php echo $this->optionsSerialized->phrases['wc_notify_on_all_new_reply']; ?>" name="wc_notify_on_all_new_reply" id="wc_notify_on_all_new_reply" /></td>
             </tr>
             <tr valign="top">
-                <th scope="row"><label for="wc_notify_on_new_reply_on"><?php _e('Notify on new replies (checkbox) - On', 'wpdiscuz'); ?></label></th>
-                <td colspan="3"><input type="text" value="<?php echo $this->optionsSerialized->phrases['wc_notify_on_new_reply_on']; ?>" name="wc_notify_on_new_reply_on" id="wc_notify_on_new_reply_on" /></td>
-            </tr>
-            <tr valign="top">
-                <th scope="row"><label for="wc_notify_on_new_reply_off"><?php _e('Notify on new replies (checkbox) - Off', 'wpdiscuz'); ?></label></th>
-                <td colspan="3"><input type="text" value="<?php echo $this->optionsSerialized->phrases['wc_notify_on_new_reply_off']; ?>" name="wc_notify_on_new_reply_off" id="wc_notify_on_new_reply_off" /></td>
+                <th scope="row"><label for="wc_notify_on_new_reply"><?php _e('Notify on new replies to this comment', 'wpdiscuz'); ?></label></th>
+                <td colspan="3"><input type="text" value="<?php echo $this->optionsSerialized->phrases['wc_notify_on_new_reply']; ?>" name="wc_notify_on_new_reply" id="wc_notify_on_new_reply" /></td>
             </tr>
             <tr valign="top">
                 <th scope="row"><label for="wc_sort_by"><?php _e('Sort by', 'wpdiscuz'); ?></label></th>
@@ -72,12 +96,12 @@ if (!defined('ABSPATH')) {
                 <td colspan="3"><textarea name="wc_subscribed_on_post" id="wc_subscribed_on_post"><?php echo $this->optionsSerialized->phrases['wc_subscribed_on_post']; ?></textarea></td>
             </tr>
             <tr valign="top">
-                <th scope="row"><label for="wc_connect_with"><?php _e('Connect with', 'wpdiscuz'); ?></label></th>
-                <td colspan="3"><input type="text" value="<?php echo $this->optionsSerialized->phrases['wc_connect_with']; ?>" name="wc_connect_with" id="wc_connect_with" /></td>
-            </tr>
-            <tr valign="top">
                 <th scope="row"><label for="wc_form_subscription_submit"><?php _e('Form subscription button', 'wpdiscuz'); ?></label></th>
                 <td colspan="3"><input type="text" value="<?php echo $this->optionsSerialized->phrases['wc_form_subscription_submit']; ?>" name="wc_form_subscription_submit" id="wc_form_subscription_submit" /></td>
+            </tr>
+            <tr valign="top">
+                <th scope="row"><label for="wc_invisible_antispam_note"><?php _e('Invisible Antispam Protection note', 'wpdiscuz'); ?></label></th>
+                <td colspan="3"><textarea name="wc_invisible_antispam_note" id="wc_invisible_antispam_note" ><?php echo $this->optionsSerialized->phrases['wc_invisible_antispam_note']; ?></textarea></td>
             </tr>
         </tbody>
     </table>

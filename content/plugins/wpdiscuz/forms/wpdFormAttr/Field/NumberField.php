@@ -98,9 +98,9 @@ class NumberField extends Field {
             $min = is_numeric($args['min']) ? 'min="' . $args['min'] . '"' : '';
             $max = is_numeric($args['max']) ? 'max="' . $args['max'] . '"' : '';
             ?>
-            <input <?php echo $required; ?> class="<?php echo $name; ?> wpd-field wpd-field-number" type="number" name="<?php echo $name; ?>" value="" placeholder="<?php _e($args['name'], 'wpdiscuz'); ?>"  <?php echo $min . ' ' . $max; ?>>
+            <input <?php echo $required; ?> class="<?php echo $name; ?> wpd-field wpd-field-number" type="number" name="<?php echo $name; ?>" value="" placeholder="<?php _e($args['name'], 'wpdiscuz'); echo !empty($args['required']) ? '*' : ''; ?>"  <?php echo $min . ' ' . $max; ?>>
             <?php if ($args['desc']) { ?>
-                <div class="wpd-field-desc"><i class="far fa-question-circle" aria-hidden="true"></i><span><?php echo esc_html($args['desc']); ?></span></div>
+                <div class="wpd-field-desc"><i class="far fa-question-circle" aria-hidden="true"></i><span><?php echo $args['desc']; ?></span></div>
                     <?php } ?>
         </div>
         <?php

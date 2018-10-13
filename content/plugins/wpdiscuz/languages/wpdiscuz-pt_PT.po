@@ -676,16 +676,16 @@ msgid "You've successfully confirmed your subscription."
 msgstr "A sua subscrição foi confirmada com sucesso."
 
 #: wpdiscuz/options/phrases-layout/phrases-email.php:92
-msgid "Subscribe Confirmation Email Subject"
+msgid "Subscription Confirmation Email Subject"
 msgstr "Assunto do email de confirmação da subscrição"
 
 #: wpdiscuz/options/phrases-layout/phrases-email.php:96
 #: wpdiscuz/options/wc-options-serialize.php:473 wpdiscuz/wc.php:945
-msgid "Subscribe Confirmation"
+msgid "Subscription Confirmation"
 msgstr "Confirmação de subscrição"
 
 #: wpdiscuz/options/phrases-layout/phrases-email.php:103
-msgid "Subscribe Confirmation Email Content"
+msgid "Subscription Confirmation Email Content"
 msgstr "Conteúdo do email sobre a confirmação da subscrição"
 
 #: wpdiscuz/options/phrases-layout/phrases-email.php:107

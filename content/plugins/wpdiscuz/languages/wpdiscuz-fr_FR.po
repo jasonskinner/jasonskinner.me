@@ -648,16 +648,16 @@ msgid "You've successfully confirmed your subscription."
 msgstr "Vous avez confirmé votre abonnement avec succès."
 
 #: options/phrases-layout/phrases-email.php:92
-msgid "Subscribe Confirmation Email Subject"
+msgid "Subscription Confirmation Email Subject"
 msgstr "Sujet email confirmation abonnement"
 
 #: options/phrases-layout/phrases-email.php:96 options/wc-options-serialize.php:463
 #: wc.php:941
-msgid "Subscribe Confirmation"
+msgid "Subscription Confirmation"
 msgstr "Confirmation d'abonnement"
 
 #: options/phrases-layout/phrases-email.php:103
-msgid "Subscribe Confirmation Email Content"
+msgid "Subscription Confirmation Email Content"
 msgstr "Contenu de l'email de confirmation d'abonnement"
 
 #: options/phrases-layout/phrases-email.php:107 options/wc-options-serialize.php:464

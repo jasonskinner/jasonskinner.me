@@ -5,7 +5,7 @@ if (!defined('ABSPATH')) {
 $isMuExists = class_exists('WpdiscuzMediaUploader');
 $isUcmExists = class_exists('WpdiscuzUCM');
 $isAlExists = class_exists('WpdiscuzVoters');
-$isFemExists = class_exists('frontEndModeration');
+$isFemExists = class_exists('wpDiscuzFrontEndModeration');
 $isCaiExists = class_exists('WpdiscuzCommentAuthorInfo');
 $isRafExists = class_exists('wpDiscuzFlagComment');
 $showDemos = get_option(WpDiscuzConstants::OPTION_SLUG_SHOW_DEMO, 1);

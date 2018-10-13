@@ -363,7 +363,7 @@ msgstr "تم بنجاح تأكيد الاشتراك في التنبيهات"
 #: options/class.WpdiscuzOptionsSerialized.php:613
 #: options/phrases-layouts/phrases-email.php:96
 #: utils/class.WpdiscuzEmailHelper.php:47
-msgid "Subscribe Confirmation"
+msgid "Subscription Confirmation"
 msgstr "تأكيد الاشتراك"
 
 #: options/class.WpdiscuzOptionsSerialized.php:614
@@ -1172,7 +1172,7 @@ msgid "label color"
 msgstr "لون بطاقة"
 
 #: options/options-layouts/settings-style.php:100
-msgid "Disable font awesome css loading"
+msgid "Do not load Font Awesome css lib"
 msgstr "تعطيل تحميل خطوط awesome في الـ CSS"
 
 #: options/options-layouts/settings-style.php:108
@@ -1360,11 +1360,11 @@ msgid "Ignore Subscription"
 msgstr "تجاهل الاشتراك"
 
 #: options/phrases-layouts/phrases-email.php:92
-msgid "Subscribe Confirmation Email Subject"
+msgid "Subscription Confirmation Email Subject"
 msgstr "عنوان البريد الالكتروني الخاص برسالة “تأكيد الاشتراك”"
 
 #: options/phrases-layouts/phrases-email.php:102
-msgid "Subscribe Confirmation Email Content"
+msgid "Subscription Confirmation Email Content"
 msgstr "محتوى رسالة البريد الالكتروني الخاصة بـ “تأكيد الاشتراك”"
 
 #: options/phrases-layouts/phrases-form.php:7

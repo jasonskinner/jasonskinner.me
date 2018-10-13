@@ -44,12 +44,18 @@ function wpforms_panel_field( $option, $panel, $field, $form_data, $label, $args
 	$placeholder = ! empty( $args['placeholder'] ) ? esc_attr( $args['placeholder'] ) : '';
 	$data_attr   = '';
 	$output      = '';
+	$input_id    = sprintf( 'wpforms-panel-field-%s-%s', sanitize_html_class( $panel_id ), sanitize_html_class( $field ) );
+
+	if ( ! empty( $args['input_id'] ) ) {
+		$input_id = esc_attr( $args['input_id'] );
+	}
 
 	// Check if we should store values in a parent array.
 	if ( ! empty( $parent ) ) {
 		if ( ! empty( $subsection ) ) {
 			$field_name = sprintf( '%s[%s][%s][%s]', $parent, $panel, $subsection, $field );
 			$value      = isset( $form_data[ $parent ][ $panel ][ $subsection ][ $field ] ) ? $form_data[ $parent ][ $panel ][ $subsection ][ $field ] : $default;
+			$input_id   = sprintf( 'wpforms-panel-field-%s-%s-%s', sanitize_html_class( $panel_id ), sanitize_html_class( $subsection ), sanitize_html_class( $field ) );
 			$panel_id   = sanitize_html_class( $panel . '-' . $subsection );
 		} else {
 			$field_name = sprintf( '%s[%s][%s]', $parent, $panel, $field );
@@ -70,17 +76,20 @@ function wpforms_panel_field( $option, $panel, $field, $form_data, $label, $args
 		}
 	}
 
+	// Check for readonly inputs.
+	if ( ! empty( $args['readonly' ] ) ) {
+		$data_attr .= 'readonly';
+	}
+
 	// Determine what field type to output.
 	switch ( $option ) {
 
 		// Text input.
 		case 'text':
-			$type   = ! empty( $args['type'] ) ? esc_attr( $args['type'] ) : 'text';
 			$output = sprintf(
-				'<input type="%s" id="wpforms-panel-field-%s-%s" name="%s" value="%s" placeholder="%s" class="%s" %s>',
-				$type,
-				sanitize_html_class( $panel_id ),
-				sanitize_html_class( $field ),
+				'<input type="%s" id="%s" name="%s" value="%s" placeholder="%s" class="%s" %s>',
+				! empty( $args['type'] ) ? esc_attr( $args['type'] ) : 'text',
+				$input_id,
 				$field_name,
 				esc_attr( $value ),
 				$placeholder,
@@ -91,13 +100,11 @@ function wpforms_panel_field( $option, $panel, $field, $form_data, $label, $args
 
 		// Textarea.
 		case 'textarea':
-			$rows   = ! empty( $args['rows'] ) ? (int) $args['rows'] : '3';
 			$output = sprintf(
-				'<textarea id="wpforms-panel-field-%s-%s" name="%s" rows="%d" placeholder="%s" class="%s" %s>%s</textarea>',
-				sanitize_html_class( $panel_id ),
-				sanitize_html_class( $field ),
+				'<textarea id="%s" name="%s" rows="%d" placeholder="%s" class="%s" %s>%s</textarea>',
+				$input_id,
 				$field_name,
-				$rows,
+				! empty( $args['rows'] ) ? (int) $args['rows'] : '3',
 				$placeholder,
 				$input_class,
 				$data_attr,
@@ -107,35 +114,31 @@ function wpforms_panel_field( $option, $panel, $field, $form_data, $label, $args
 
 		// TinyMCE.
 		case 'tinymce':
-			$args                  = wp_parse_args( $args['tinymce'], array(
+			$id                               = str_replace( '-', '_', $input_id );
+			$args['tinymce']['textarea_name'] = $field_name;
+			$args['tinymce']['teeny']         = true;
+			$args['tinymce']                  = wp_parse_args( $args['tinymce'], array(
 				'media_buttons' => false,
 				'teeny'         => true,
 			) );
-			$args['textarea_name'] = $field_name;
-			$args['teeny']         = true;
-			$id                    = 'wpforms-panel-field-' . sanitize_html_class( $panel_id ) . '-' . sanitize_html_class( $field );
-			$id                    = str_replace( '-', '_', $id );
 			ob_start();
-			wp_editor( $value, $id, $args );
+			wp_editor( $value, $id, $args['tinymce'] );
 			$output = ob_get_clean();
 			break;
 
 		// Checkbox.
 		case 'checkbox':
-			$checked = checked( '1', $value, false );
 			$output  = sprintf(
-				'<input type="checkbox" id="wpforms-panel-field-%s-%s" name="%s" value="1" class="%s" %s %s>',
-				sanitize_html_class( $panel_id ),
-				sanitize_html_class( $field ),
+				'<input type="checkbox" id="%s" name="%s" value="1" class="%s" %s %s>',
+				$input_id,
 				$field_name,
 				$input_class,
-				$checked,
+				checked( '1', $value, false ),
 				$data_attr
 			);
 			$output .= sprintf(
-				'<label for="wpforms-panel-field-%s-%s" class="inline">%s',
-				sanitize_html_class( $panel_id ),
-				sanitize_html_class( $field ),
+				'<label for="%s" class="inline">%s',
+				$input_id,
 				$label
 			);
 			if ( ! empty( $args['tooltip'] ) ) {
@@ -146,37 +149,36 @@ function wpforms_panel_field( $option, $panel, $field, $form_data, $label, $args
 
 		// Radio.
 		case 'radio':
-			$options = $args['options'];
-			$x       = 1;
-			$output  = '';
+			$options       = $args['options'];
+			$radio_counter = 1;
+			$output        = '';
+
 			foreach ( $options as $key => $item ) {
 				if ( empty( $item['label'] ) ) {
 					continue;
 				}
-				$checked = checked( $key, $value, false );
+
 				$output .= sprintf(
-					'<span class="row"><input type="radio" id="wpforms-panel-field-%s-%s-%d" name="%s" value="%s" class="%s" %s %s>',
-					sanitize_html_class( $panel_id ),
-					sanitize_html_class( $field ),
-					$x,
+					'<span class="row"><input type="radio" id="%s-%d" name="%s" value="%s" class="%s" %s %s>',
+					$input_id,
+					$radio_counter,
 					$field_name,
 					$key,
 					$input_class,
-					$checked,
+					checked( $key, $value, false ),
 					$data_attr
 				);
 				$output .= sprintf(
-					'<label for="wpforms-panel-field-%s-%s-%d" class="inline">%s',
-					sanitize_html_class( $panel_id ),
-					sanitize_html_class( $field ),
-					$x,
+					'<label for="%s-%d" class="inline">%s',
+					$input_id,
+					$radio_counter,
 					$item['label']
 				);
 				if ( ! empty( $item['tooltip'] ) ) {
 					$output .= sprintf( ' <i class="fa fa-question-circle wpforms-help-tooltip" title="%s"></i>', esc_attr( $item['tooltip'] ) );
 				}
 				$output .= '</label></span>';
-				$x ++;
+				$radio_counter ++;
 			}
 			break;
 
@@ -205,9 +207,8 @@ function wpforms_panel_field( $option, $panel, $field, $form_data, $label, $args
 			}
 
 			$output = sprintf(
-				'<select id="wpforms-panel-field-%s-%s" name="%s" class="%s" %s>',
-				sanitize_html_class( $panel_id ),
-				sanitize_html_class( $field ),
+				'<select id="%s" name="%s" class="%s" %s>',
+				$input_id,
 				$field_name,
 				$input_class,
 				$data_attr
@@ -227,18 +228,16 @@ function wpforms_panel_field( $option, $panel, $field, $form_data, $label, $args
 
 	// Put the pieces together.
 	$field_open  = sprintf(
-		'<div id="wpforms-panel-field-%s-%s-wrap" class="wpforms-panel-field %s %s">',
-		sanitize_html_class( $panel_id ),
-		sanitize_html_class( $field ),
+		'<div id="%s-wrap" class="wpforms-panel-field %s %s">',
+		$input_id,
 		$class,
 		'wpforms-panel-field-' . sanitize_html_class( $option )
 	);
 	$field_open .= ! empty( $args['before'] ) ? $args['before'] : '';
 	if ( ! in_array( $option, array( 'checkbox' ), true ) && ! empty( $label ) ) {
 		$field_label = sprintf(
-			'<label for="wpforms-panel-field-%s-%s">%s',
-			sanitize_html_class( $panel_id ),
-			sanitize_html_class( $field ),
+			'<label for="%s">%s',
+			$input_id,
 			$label
 		);
 		if ( ! empty( $args['tooltip'] ) ) {
@@ -274,6 +273,7 @@ function wpforms_panel_field( $option, $panel, $field, $form_data, $label, $args
  * Get notification state, whether it's opened or closed.
  *
  * @since 1.4.1
+ * @deprecated 1.4.8
  *
  * @param int $form_id
  * @param int $notification_id
@@ -281,19 +281,52 @@ function wpforms_panel_field( $option, $panel, $field, $form_data, $label, $args
  * @return string
  */
 function wpforms_builder_notification_get_state( $form_id, $notification_id ) {
+	_deprecated_function( __FUNCTION__, '1.4.8 of WPForms plugin', 'wpforms_builder_settings_block_get_state()' );
+	return wpforms_builder_settings_block_get_state( $form_id, $notification_id, 'notification' );
+}
 
-	$form_id         = absint( $form_id );
-	$notification_id = absint( $notification_id );
-	$state           = 'opened';
+/**
+ * Get settings block state, whether it's opened or closed.
+ *
+ * @since 1.4.8
+ *
+ * @param int $form_id
+ * @param int $block_id
+ * @param string $block_type
+ *
+ * @return string
+ */
+function wpforms_builder_settings_block_get_state( $form_id, $block_id, $block_type ) {
 
-	$all_states = get_user_meta( get_current_user_id(), 'wpforms_builder_notification_states', true );
+	$form_id    = absint( $form_id );
+	$block_id   = absint( $block_id );
+	$block_type = sanitize_key( $block_type );
+	$state      = 'opened';
+
+	$all_states = get_user_meta( get_current_user_id(), 'wpforms_builder_settings_collapsable_block_states', true );
 
 	if (
-		! empty( $all_states[ $form_id ][ $notification_id ] ) &&
-		'closed' === $all_states[ $form_id ][ $notification_id ]
+		! empty( $all_states[ $form_id ][ $block_type ][ $block_id ] ) &&
+		'closed' === $all_states[ $form_id ][ $block_type ][ $block_id ]
 	) {
 		$state = 'closed';
 	}
 
-	return apply_filters( 'wpforms_builder_notification_get_state', $state, $form_id, $notification_id );
+	// Backward compatibility for notifications.
+	if ( 'notification' === $block_type && 'closed' !== $state ) {
+		$notification_states = get_user_meta( get_current_user_id(), 'wpforms_builder_notification_states', true );
+	}
+	if (
+		! empty( $notification_states[ $form_id ][ $block_id ] ) &&
+		'closed' === $notification_states[ $form_id ][ $block_id ]
+	) {
+		$state = 'closed';
+	}
+
+	if ( 'notification' === $block_type ) {
+		// Backward compatibility for notifications.
+		return apply_filters( 'wpforms_builder_notification_get_state', $state, $form_id, $block_id );
+	}
+
+	return apply_filters( 'wpforms_builder_settings_block_get_state', $state, $form_id, $block_id, $block_type );
 }

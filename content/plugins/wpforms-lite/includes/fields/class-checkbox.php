@@ -318,7 +318,7 @@ class WPForms_Field_Checkbox extends WPForms_Field {
 						'slug'    => 'disclaimer_format',
 						'value'   => isset( $field['disclaimer_format'] ) ? '1' : '0',
 						'desc'    => esc_html__( 'Enable Disclaimer / Terms of Service Display', 'wpforms' ),
-						'tooltip' => esc_html__( 'Check this option apply adjust the field styling to support Disclaimers and Terms of Serice type agreements.', 'wpforms' ),
+						'tooltip' => esc_html__( 'Check this option to adjust the field styling to support Disclaimers and Terms of Service type agreements.', 'wpforms' ),
 					),
 					false
 				),
@@ -378,7 +378,7 @@ class WPForms_Field_Checkbox extends WPForms_Field {
 				// label.
 				$required = '';
 				if ( ! empty( $field['disclaimer_format'] ) && ! empty( $choice['required'] ) && ! empty( $field['label_hide'] ) ) {
-					$required = apply_filters( 'wpforms_field_required_label', ' <span class="wpforms-required-label">*</span>' );
+					$required = wpforms_get_field_required_label();
 				}
 
 				printf( '<li %s>',
@@ -393,7 +393,11 @@ class WPForms_Field_Checkbox extends WPForms_Field {
 						);
 
 							if ( ! empty( $choice['image'] ) ) {
-								echo '<span class="wpforms-image-choices-image"><img src="' . esc_url( $choice['image'] ) . '"></span>';
+								printf( '<span class="wpforms-image-choices-image"><img src="%s" alt="%s"%s></span>',
+									esc_url( $choice['image'] ),
+									esc_attr( $choice['label']['text'] ),
+									! empty( $choice['label']['text'] ) ? ' title="' . esc_attr( $choice['label']['text'] ) . '"' : ''
+								);
 							}
 
 							if ( 'none' === $field['choices_images_style'] ) {
@@ -507,8 +511,6 @@ class WPForms_Field_Checkbox extends WPForms_Field {
 			// the choice keys.
 			if ( ! empty( $field['show_values'] ) && '1' == $field['show_values'] ) {
 
-				$labels = array();
-
 				foreach ( $field_submit as $item ) {
 					foreach ( $field['choices'] as $key => $choice ) {
 						if ( $item == $choice['value'] ) {
@@ -519,7 +521,7 @@ class WPForms_Field_Checkbox extends WPForms_Field {
 					}
 				}
 
-				$data['value'] = ! empty( $labels ) ? wpforms_sanitize_array_combine( $labels ) : '';
+				$data['value'] = ! empty( $value ) ? wpforms_sanitize_array_combine( $value ) : '';
 
 			} else {
 

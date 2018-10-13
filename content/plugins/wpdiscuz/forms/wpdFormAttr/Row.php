@@ -169,7 +169,7 @@ class Row {
                     $metaData = maybe_unserialize($row['meta_value']);
                     if (is_array($metaData) && key_exists($oldName, $metaData)) {
                         $metaData = $this->chageArrayKey($metaData, $oldName, $newName);
-                        update_post_meta($row['post_id'], 'wpdiscuz_rating_count', $metaData);
+                        update_post_meta($row['post_id'], wpdFormConst::WPDISCUZ_RATING_COUNT, $metaData);
                     }
                 }
             }
@@ -186,7 +186,7 @@ class Row {
 
     private function getPostRatingMeta() {
         global $wpdb;
-        $sql = "SELECT `post_id`,`meta_value` FROM `{$wpdb->postmeta}` WHERE `meta_key` = 'wpdiscuz_rating_count'";
+        $sql = $wpdb->prepare("SELECT `post_id`,`meta_value` FROM `{$wpdb->postmeta}` WHERE `meta_key` = %s",wpdFormConst::WPDISCUZ_RATING_COUNT);
         return $wpdb->get_results($sql, ARRAY_A);
     }
 

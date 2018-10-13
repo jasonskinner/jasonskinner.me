@@ -11,6 +11,9 @@
                            'CheckboxField' => 'Multiple Choice (checkbox)',
                            'SelectField' => 'Select',
                            'RatingField' => 'Rating',
+                           'AgreementCheckbox' => 'Agreement Checkbox',
+                           'CookiesConsent' => 'Cookies Consent',
+                           'HTMLField' => 'HTML Field',
             )
     );
 

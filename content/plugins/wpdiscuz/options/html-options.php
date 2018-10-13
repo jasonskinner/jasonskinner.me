@@ -28,7 +28,6 @@ if (!defined('ABSPATH')) {
     <?php
     if (isset($_GET['_wpnonce']) && isset($_GET['wpdiscuz_reset_options']) && wp_verify_nonce($_GET['_wpnonce'], 'wpdiscuz_reset_options_nonce') && $_GET['wpdiscuz_reset_options'] == 1 && current_user_can('manage_options')) {
         delete_option(WpdiscuzCore::OPTION_SLUG_OPTIONS);
-        $this->optionsSerialized->shareButtons = array('fb', 'twitter', 'google');
         $this->optionsSerialized->addOptions();
         $this->optionsSerialized->initOptions(get_option(WpdiscuzCore::OPTION_SLUG_OPTIONS));
         $this->optionsSerialized->blogRoles['post_author'] = '#00B38F';
@@ -60,6 +59,7 @@ if (!defined('ABSPATH')) {
                 <li><?php _e('Subscription', 'wpdiscuz'); ?> <?php if (class_exists('Prompt_Comment_Form_Handling')): ?> <?php _e('and Postmatic', 'wpdiscuz'); ?> <?php endif; ?></li>
                 <li><?php _e('Styling', 'wpdiscuz'); ?></li>
                 <li><?php _e('Cache', 'wpdiscuz'); ?></li>
+                <li><?php _e('Social Login &amp; Share', 'wpdiscuz'); ?></li>
                 <li><?php _e('Integrations', 'wpdiscuz'); ?></li>
                 <li><?php _e('Addons', 'wpdiscuz'); ?></li>
             </ul>
@@ -72,7 +72,7 @@ if (!defined('ABSPATH')) {
                 include 'options-layouts/settings-subscription.php';
                 include 'options-layouts/settings-style.php';
                 include 'options-layouts/settings-cache.php';
-                //include 'options-layouts/settings-social.php';
+                include 'options-layouts/settings-social.php';
                 include 'options-layouts/settings-integrations.php';
                 include 'options-layouts/settings-addons.php';
                 ?>
@@ -134,12 +134,7 @@ if (!defined('ABSPATH')) {
                     Cookies.set('optionsActiveTabIndex', activeTabIndex, {expires: 30});
                 });
                 var savedIndex = Cookies.get('optionsActiveTabIndex') >= 0 ? Cookies.get('optionsActiveTabIndex') : 0;
-                $('.resp-tabs-list.options_tab_id li').removeClass('resp-tab-active');
-                $('.resp-tabs-container.options_tab_id > div').removeClass('resp-tab-content-active');
-                $('.resp-tabs-container.options_tab_id > div').css('display', 'none');
-                $('.resp-tabs-list.options_tab_id li').eq(savedIndex).addClass('resp-tab-active');
-                $('.resp-tabs-container.options_tab_id > div').eq(savedIndex).addClass('resp-tab-content-active');
-                $('.resp-tabs-container.options_tab_id > div').eq(savedIndex).css('display', 'block');
+                $('.resp-tabs-list.options_tab_id li').eq(savedIndex).click();
             });
         </script>
         <table class="form-table wc-form-table">
@@ -152,7 +147,7 @@ if (!defined('ABSPATH')) {
                             $resetOptionsUrl = wp_nonce_url($resetOptionsUrl, 'wpdiscuz_reset_options_nonce');
                             ?>
                             <a id="wpdiscuz-reset-options" style="float: left;" class="button button-secondary" href="<?php echo $resetOptionsUrl; ?>"><?php _e('Reset Options', 'wpdiscuz'); ?></a>                            
-                            <?php $voteUrl = admin_url('admin-post.php?action=removeVoteData&remove=1'); ?>
+                            <?php $voteUrl = admin_url('admin-post.php?action=removeVoteData'); ?>
                             <a id="wpdiscuz-remove-votes" href="<?php echo wp_nonce_url($voteUrl, 'remove_vote_data'); ?>" class="button button-secondary" style="margin-left: 5px;"><?php _e('Remove vote data', 'wpdiscuz'); ?></a>
                             <input style="float: right;" type="submit" class="button button-primary" name="wc_submit_options" value="<?php _e('Save Changes', 'wpdiscuz'); ?>" />                                
                         </p>

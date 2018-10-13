@@ -315,7 +315,7 @@ msgstr "Դուք հաջողությամբ հաստատել եք Ձեր բաժա�
 #: options/class.WpdiscuzOptionsSerialized.php:564
 #: options/phrases-layouts/phrases-email.php:96
 #: utils/class.WpdiscuzEmailHelper.php:45
-msgid "Subscribe Confirmation"
+msgid "Subscription Confirmation"
 msgstr "Բաժանորդագրման հաստատում"
 
 #: options/class.WpdiscuzOptionsSerialized.php:565
@@ -1250,11 +1250,11 @@ msgid "Ignore Subscription"
 msgstr "Անտեսել բաժանորդագրությունները"
 
 #: options/phrases-layouts/phrases-email.php:92
-msgid "Subscribe Confirmation Email Subject"
+msgid "Subscription Confirmation Email Subject"
 msgstr "Բաժանորդագրման հաստատման էլ․հաղորդագրության թեման"
 
 #: options/phrases-layouts/phrases-email.php:102
-msgid "Subscribe Confirmation Email Content"
+msgid "Subscription Confirmation Email Content"
 msgstr "Բաժանորդագրման հաստատման հաղորդագրություն էլ․փոստին"
 
 #: options/phrases-layouts/phrases-form.php:7

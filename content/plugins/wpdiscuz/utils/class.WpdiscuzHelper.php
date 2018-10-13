@@ -5,19 +5,6 @@ if (!defined('ABSPATH')) {
 
 class WpdiscuzHelper implements WpDiscuzConstants {
 
-    public static $datetime = 'datetime';
-    public static $year = 'wc_year_text';
-    public static $years = 'wc_year_text_plural';
-    public static $month = 'wc_month_text';
-    public static $months = 'wc_month_text_plural';
-    public static $day = 'wc_day_text';
-    public static $days = 'wc_day_text_plural';
-    public static $hour = 'wc_hour_text';
-    public static $hours = 'wc_hour_text_plural';
-    public static $minute = 'wc_minute_text';
-    public static $minutes = 'wc_minute_text_plural';
-    public static $second = 'wc_second_text';
-    public static $seconds = 'wc_second_text_plural';
     private $spoilerPattern = '@\[(\[?)(spoiler)(?![\w-])([^\]\/]*(?:\/(?!\])[^\]\/]*)*?)(?:(\/)\]|\](?:([^\[]*+(?:\[(?!\/\2\])[^\[]*+)*+)\[\/\2\])?)(\]?)@is';
     private $optionsSerialized;
     private $dbManager;
@@ -28,6 +15,8 @@ class WpdiscuzHelper implements WpDiscuzConstants {
         $this->dbManager = $dbManager;
         $this->wpdiscuzForm = $wpdiscuzForm;
         add_filter('the_champ_login_interface_filter', array(&$this, 'wpDiscuzSuperSocializerLogin'), 15, 2);
+        add_action('wpdiscuz_form_bottom', array(&$this, 'formBottom'), 10, 4);
+        add_filter('pre_comment_user_ip', array(&$this, 'fixLocalhostIp'), 10);
     }
 
     public function filterKses() {
@@ -67,152 +56,34 @@ class WpdiscuzHelper implements WpDiscuzConstants {
         return $commentContent;
     }
 
-// Set timezone
-// Time format is UNIX timestamp or
-// PHP strtotime compatible strings
-    public function dateDiff($time1, $time2, $precision = 2) {
-
-// If not numeric then convert texts to unix timestamps
-        if (!is_int($time1)) {
-            $time1 = strtotime($time1);
-        }
-        if (!is_int($time2)) {
-            $time2 = strtotime($time2);
-        }
-
-// If time1 is bigger than time2
-// Then swap time1 and time2
-        if ($time1 > $time2) {
-            $ttime = $time1;
-            $time1 = $time2;
-            $time2 = $ttime;
-        }
-
-// Set up intervals and diffs arrays
-        $intervals = array(
-            $this->optionsSerialized->phrases['wc_year_text']['datetime'][1],
-            $this->optionsSerialized->phrases['wc_month_text']['datetime'][1],
-            $this->optionsSerialized->phrases['wc_day_text']['datetime'][1],
-            $this->optionsSerialized->phrases['wc_hour_text']['datetime'][1],
-            $this->optionsSerialized->phrases['wc_minute_text']['datetime'][1],
-            $this->optionsSerialized->phrases['wc_second_text']['datetime'][1]
-        );
-        $diffs = array();
-// Loop thru all intervals
-        foreach ($intervals as $interval) {
-// Create temp time from time1 and interval
-            $interval = $this->dateComparisionByIndex($interval);
-            $ttime = strtotime('+1 ' . $interval, $time1);
-// Set initial values
-            $add = 1;
-            $looped = 0;
-// Loop until temp time is smaller than time2
-            while ($time2 >= $ttime) {
-// Create new temp time from time1 and interval
-                $add++;
-                $ttime = strtotime("+" . $add . " " . $interval, $time1);
-                $looped++;
+    public function dateDiff($datetime) {
+        $text = '';
+        if ($datetime) {
+            $now = new DateTime();
+            $ago = new DateTime($datetime);
+            $diff = $now->diff($ago);
+            if ($diff->y) {
+                $text .= $diff->y . ' ';
+                $text .= $diff->y > 1 ? $this->optionsSerialized->phrases['wc_year_text_plural'] : $this->optionsSerialized->phrases['wc_year_text'];
+            } else if ($diff->m) {
+                $text .= $diff->m . ' ';
+                $text .= $diff->m > 1 ? $this->optionsSerialized->phrases['wc_month_text_plural'] : $this->optionsSerialized->phrases['wc_month_text'];
+            } else if ($diff->d) {
+                $text .= $diff->d . ' ';
+                $text .= $diff->d > 1 ? $this->optionsSerialized->phrases['wc_day_text_plural'] : $this->optionsSerialized->phrases['wc_day_text'];
+            } else if ($diff->h) {
+                $text .= $diff->h . ' ';
+                $text .= $diff->h > 1 ? $this->optionsSerialized->phrases['wc_hour_text_plural'] : $this->optionsSerialized->phrases['wc_hour_text'];
+            } else if ($diff->i) {
+                $text .= $diff->i . ' ';
+                $text .= $diff->i > 1 ? $this->optionsSerialized->phrases['wc_minute_text_plural'] : $this->optionsSerialized->phrases['wc_minute_text'];
+            } else if ($diff->s) {
+                $text .= $diff->s . ' ';
+                $text .= $diff->s > 1 ? $this->optionsSerialized->phrases['wc_second_text_plural'] : $this->optionsSerialized->phrases['wc_second_text'];
             }
-
-            $time1 = strtotime("+" . $looped . " " . $interval, $time1);
-            $diffs[$interval] = $looped;
+            $text .= ($text) ? ' ' . $this->optionsSerialized->phrases['wc_ago_text'] : ' ' . $this->optionsSerialized->phrases['wc_right_now_text'];
         }
-
-        $count = 0;
-        $times = array();
-// Loop thru all diffs
-        foreach ($diffs as $interval => $value) {
-            $interval = $this->dateTextByIndex($interval, $value);
-// Break if we have needed precission
-            if ($count >= $precision) {
-                break;
-            }
-// Add value and interval
-// if value is bigger than 0
-            if ($value > 0) {
-// Add value and interval to times array
-                $times[] = $value . " " . $interval;
-                $count++;
-            }
-        }
-
-// Return string with times
-        $ago = ($times) ? $this->optionsSerialized->phrases['wc_ago_text'] : $this->optionsSerialized->phrases['wc_right_now_text'];
-        return implode(" ", $times) . ' ' . $ago;
-    }
-
-    public static function initPhraseKeyValue($phrase) {
-        $phrase_value = stripslashes($phrase['phrase_value']);
-        switch ($phrase['phrase_key']) {
-            case WpdiscuzHelper::$year:
-                return array(WpdiscuzHelper::$datetime => array($phrase_value, 1));
-            case WpdiscuzHelper::$years:
-                return array(WpdiscuzHelper::$datetime => array($phrase_value, 1));
-            case WpdiscuzHelper::$month:
-                return array(WpdiscuzHelper::$datetime => array($phrase_value, 2));
-            case WpdiscuzHelper::$months:
-                return array(WpdiscuzHelper::$datetime => array($phrase_value, 2));
-            case WpdiscuzHelper::$day:
-                return array(WpdiscuzHelper::$datetime => array($phrase_value, 3));
-            case WpdiscuzHelper::$days:
-                return array(WpdiscuzHelper::$datetime => array($phrase_value, 3));
-            case WpdiscuzHelper::$hour:
-                return array(WpdiscuzHelper::$datetime => array($phrase_value, 4));
-            case WpdiscuzHelper::$hours:
-                return array(WpdiscuzHelper::$datetime => array($phrase_value, 4));
-            case WpdiscuzHelper::$minute:
-                return array(WpdiscuzHelper::$datetime => array($phrase_value, 5));
-            case WpdiscuzHelper::$minutes:
-                return array(WpdiscuzHelper::$datetime => array($phrase_value, 5));
-            case WpdiscuzHelper::$second:
-                return array(WpdiscuzHelper::$datetime => array($phrase_value, 6));
-            case WpdiscuzHelper::$seconds:
-                return array(WpdiscuzHelper::$datetime => array($phrase_value, 6));
-            default :
-                return $phrase_value;
-        }
-    }
-
-    private function dateComparisionByIndex($index) {
-        switch ($index) {
-            case 1:
-                return 'year';
-            case 2:
-                return 'month';
-            case 3:
-                return 'day';
-            case 4:
-                return 'hour';
-            case 5:
-                return 'minute';
-            case 6:
-                return 'second';
-        }
-    }
-
-    private function dateTextByIndex($index, $value) {
-        switch ($index) {
-            case 'year':
-                return ($value > 1) ? $this->optionsSerialized->phrases['wc_year_text_plural']['datetime'][0] : $this->optionsSerialized->phrases['wc_year_text']['datetime'][0];
-            case 'month':
-                return ($value > 1) ? $this->optionsSerialized->phrases['wc_month_text_plural']['datetime'][0] : $this->optionsSerialized->phrases['wc_month_text']['datetime'][0];
-            case 'day':
-                return ($value > 1) ? $this->optionsSerialized->phrases['wc_day_text_plural']['datetime'][0] : $this->optionsSerialized->phrases['wc_day_text']['datetime'][0];
-            case 'hour':
-                return ($value > 1) ? $this->optionsSerialized->phrases['wc_hour_text_plural']['datetime'][0] : $this->optionsSerialized->phrases['wc_hour_text']['datetime'][0];
-            case 'minute':
-                return ($value > 1) ? $this->optionsSerialized->phrases['wc_minute_text_plural']['datetime'][0] : $this->optionsSerialized->phrases['wc_minute_text']['datetime'][0];
-            case 'second':
-                return ($value > 1) ? $this->optionsSerialized->phrases['wc_second_text_plural']['datetime'][0] : $this->optionsSerialized->phrases['wc_second_text']['datetime'][0];
-        }
-    }
-
-    public static function getArray($array) {
-        $new_array = array();
-        foreach ($array as $value) {
-            $new_array[] = $value[0];
-        }
-        return $new_array;
+        return $text;
     }
 
     public function makeClickable($ret) {
@@ -238,19 +109,25 @@ class WpdiscuzHelper implements WpDiscuzConstants {
 
     /**
      * check if comment has been posted today or not
-     * return boolean
+     * @param type $comment WP_Comment object or Datetime value
+     * @return type
      */
     public static function isPostedToday($comment) {
-        return date('Ymd', strtotime(current_time('Ymd'))) <= date('Ymd', strtotime($comment->comment_date));
+        if ($comment && is_object($comment)) {
+            return date('Ymd', strtotime(current_time('Ymd'))) <= date('Ymd', strtotime($comment->comment_date));
+        } else {
+            return date('Ymd', strtotime(current_time('Ymd'))) <= date('Ymd', strtotime($comment));
+        }
     }
 
     /**
      * check if comment is still editable or not
      * return boolean
      */
-    public function isCommentEditable($comment) {
+    public function isCommentEditable($comment) {               
         $editableTimeLimit = isset($this->optionsSerialized->commentEditableTime) ? $this->optionsSerialized->commentEditableTime : 0;
-        $timeDiff = (time() - strtotime($comment->comment_date_gmt));
+        $commentTimestamp = strtotime($comment->comment_date);
+        $timeDiff = (current_time('timestamp') - $commentTimestamp);
         $editableTimeLimit = ($editableTimeLimit == 'unlimit') ? $timeDiff + 1 : intval($editableTimeLimit);
         return $editableTimeLimit && ($timeDiff < $editableTimeLimit);
     }
@@ -278,6 +155,8 @@ class WpdiscuzHelper implements WpDiscuzConstants {
             $ip = $_SERVER['REMOTE_ADDR'];
         }
 
+        $ip = apply_filters('pre_comment_user_ip', $ip);
+
         if ($ip == '::1') {
             $ip = '127.0.0.1';
         }
@@ -303,7 +182,7 @@ class WpdiscuzHelper implements WpDiscuzConstants {
 
             public function getCommentExcerpt($commentContent, $uniqueId) {
                 $readMoreLink = '<span id="wpdiscuz-readmore-' . $uniqueId . '"><span class="wpdiscuz-hellip">&hellip;&nbsp;</span><span class="wpdiscuz-readmore" title="' . $this->optionsSerialized->phrases['wc_read_more'] . '">' . $this->optionsSerialized->phrases['wc_read_more'] . '</span></span>';
-                return wp_trim_words($commentContent, $this->optionsSerialized->commentReadMoreLimit, $readMoreLink);
+                return "<p>" . wp_trim_words($commentContent, $this->optionsSerialized->commentReadMoreLimit, $readMoreLink) . "</p>";
             }
 
             public function isLoadWpdiscuz($post) {
@@ -344,7 +223,7 @@ class WpdiscuzHelper implements WpDiscuzConstants {
             private function _spoiler($matches) {
                 $html = '<div class="wpdiscuz-spoiler-wrap">';
                 $title = __('Spoiler', 'wpdiscuz');
-                $matches[3] = str_replace(array('&#8221;', '&#8220;'), '"', $matches[3]);
+                $matches[3] = str_replace(array('&#8221;', '&#8220;', '&#8243;', '&#8242;'), '"', $matches[3]);
                 if (preg_match('@title[^\S]*=[^\S]*"*([^\"]+)"@is', $matches[3], $titleMatch)) {
                     $title = trim($titleMatch[1]) ? trim($titleMatch[1]) : __('Spoiler', 'wpdiscuz');
                 }
@@ -382,6 +261,9 @@ class WpdiscuzHelper implements WpDiscuzConstants {
                     $html .= '<div class="wp-social-login-widget">';
                     $html .= '<div class="wp-social-login-connect-with_by_the_champ">' . $this->optionsSerialized->phrases['wc_connect_with'] . ':</div>';
                     $html .= '<div class="wp-social-login-provider-list">';
+                    if (isset($theChampLoginOptions['gdpr_enable'])) {
+                        $html .= '<div class="heateor_ss_sl_optin_container"><label><input type="checkbox" class="heateor_ss_social_login_optin" value="1" />' . str_replace($theChampLoginOptions['ppu_placeholder'], '<a href="' . $theChampLoginOptions['privacy_policy_url'] . '" target="_blank">' . $theChampLoginOptions['ppu_placeholder'] . '</a>', wp_strip_all_tags($theChampLoginOptions['privacy_policy_optin_text'])) . '</label></div>';
+                    }
                     $html .= '<ul class="wc_social_login_by_the_champ">';
                     foreach ($theChampLoginOptions['providers'] as $provider) {
                         $html .= '<li><i ';
@@ -457,10 +339,7 @@ class WpdiscuzHelper implements WpDiscuzConstants {
             }
 
             public function wpdDeactivationReasonModal() {
-                ob_start();
                 include_once 'deactivation-reason-modal.php';
-                $html = ob_get_clean();
-                echo $html;
             }
 
             public function disableAddonsDemo() {
@@ -468,6 +347,244 @@ class WpdiscuzHelper implements WpDiscuzConstants {
                     update_option(self::OPTION_SLUG_SHOW_DEMO, intval($_GET['show']));
                     wp_redirect(admin_url('edit-comments.php?page=' . WpdiscuzCore::PAGE_SETTINGS));
                 }
+            }
+
+            public function getCommentDate($comment) {
+                if ($this->optionsSerialized->simpleCommentDate) {
+                    $dateFormat = $this->optionsSerialized->wordpressDateFormat;
+                    $timeFormat = $this->optionsSerialized->wordpressTimeFormat;
+                    if (self::isPostedToday($comment)) {
+                        $postedDate = $this->optionsSerialized->phrases['wc_posted_today_text'] . ' ' . mysql2date($timeFormat, $comment->comment_date);
+                    } else {
+                        $postedDate = get_comment_date($dateFormat . ' ' . $timeFormat, $comment->comment_ID);
+                    }
+                } else {
+                    $postedDate = $this->dateDiff($comment->comment_date_gmt);
+                }
+                return $postedDate;
+            }
+
+            public function getPostDate($post) {
+                if ($this->optionsSerialized->simpleCommentDate) {
+                    $dateFormat = $this->optionsSerialized->wordpressDateFormat;
+                    $timeFormat = $this->optionsSerialized->wordpressTimeFormat;
+                    if ($this->isPostPostedToday($post)) {
+                        $postedDate = $this->optionsSerialized->phrases['wc_posted_today_text'] . ' ' . mysql2date($timeFormat, $post->post_date);
+                    } else {
+                        $postedDate = get_the_date($dateFormat . ' ' . $timeFormat, $post);
+                    }
+                } else {
+                    $postedDate = $this->dateDiff($post->post_date_gmt);
+                }
+                return $postedDate;
+            }
+
+            public function getDate($comment) {
+                if ($this->optionsSerialized->simpleCommentDate) {
+                    $dateFormat = $this->optionsSerialized->wordpressDateFormat;
+                    $timeFormat = $this->optionsSerialized->wordpressTimeFormat;
+                    if (self::isPostedToday($comment)) {
+                        $postedDate = $this->optionsSerialized->phrases['wc_posted_today_text'] . ' ' . mysql2date($timeFormat, $comment);
+                    } else {
+                        $postedDate = date($dateFormat . ' ' . $timeFormat, strtotime($comment));
+                    }
+                } else {
+                    $postedDate = $this->dateDiff($comment);
+                }
+                return $postedDate;
+            }
+
+            private function isPostPostedToday($post) {
+                return date('Ymd', strtotime(current_time('Ymd'))) <= date('Ymd', strtotime($post->post_date));
+            }
+
+            public function formBottom($isMain, $form, $currentUser, $commentsCount) {
+                include_once 'form-bottom-statistics.php';
+            }
+
+            public function wpdGetInfo() {
+                $response = '';
+                $currentUser = self::getCurrentUser();
+                if ($currentUser && $currentUser->ID) {
+                    $currentUserId = $currentUser->ID;
+                    $currentUserEmail = $currentUser->user_email;
+                } else {
+                    $currentUserId = 0;
+                    $currentUserEmail = isset($_COOKIE['comment_author_email_' . COOKIEHASH]) ? $_COOKIE['comment_author_email_' . COOKIEHASH] : '';
+                }
+
+                if (is_user_logged_in()) {
+                    $response .= "<div class='wpd-wrapper'>";
+                    $response .= "<ul class='wpd-list'>";
+                    $response .= $this->getActivityTitleHtml();
+                    $response .= $this->getSubscriptionsTitleHtml();
+                    $response .= $this->getFollowsTitleHtml();
+                    $response .= "</ul>";
+                    $response .= "<div class='wpd-content'>";
+                    $response .= $this->getActivityContentHtml($currentUserId, $currentUserEmail);
+                    $response .= $this->getSubscriptionsContentHtml($currentUserId, $currentUserEmail);
+                    $response .= $this->getFollowsContentHtml($currentUserId, $currentUserEmail);
+                    $response .= "</div>";
+                    $response .= "<div class='wpd-user-email-delete-links-wrap'>";
+                    $response .= "<a href='#' class='wpd-user-email-delete-links wpd-not-clicked'>";
+                    $response .= $this->optionsSerialized->phrases['wc_user_settings_email_me_delete_links'];
+                    $response .= "<span class='wpd-loading wpd-hide'><i class='fas fa-pulse fa-spinner'></i></span>";
+                    $response .= "</a>";
+                    $response .= "<div class='wpd-bulk-desc'>" . $this->optionsSerialized->phrases['wc_user_settings_email_me_delete_links_desc'] . "</div>";
+                    $response .= "</div>";
+                    $response .= "</div>";
+                } else if ($currentUserEmail) {
+                    $commentBtn = $this->getDeleteAllCommentsButton($currentUserEmail);
+                    $subscribeBtn = $this->getDeleteAllSubscriptionsButton($currentUserEmail);
+                    $cookieBtnClass = !$commentBtn && !$subscribeBtn ? 'wpd-show' : 'wpd-hide';
+                    $response .= "<div class='wpd-wrapper wpd-guest-settings'>";
+                    $response .= $commentBtn;
+                    $response .= $subscribeBtn;
+                    $response .= $this->deleteCookiesButton($currentUserEmail, $cookieBtnClass);
+                    $response .= "</div>";
+                } else {
+                    $response .= "<div class='wpd-wrapper'>";
+                    $response .= $this->optionsSerialized->phrases['wc_user_settings_no_data'];
+                    $response .= "</div>";
+                }
+                wp_die($response);
+            }
+
+            private function getDeleteAllCommentsButton($email) {
+                $html = '';
+                if (!is_email($email)) {
+                    return $html;
+                }
+                $commentCount = get_comments(array('author_email' => $email, 'count' => true));
+                if ($commentCount) {
+                    $html .= '<div class="wpd-user-settings-button-wrap">';
+                    $html .= '<div class="wpd-user-settings-button wpd-delete-all-comments wpd-not-clicked" data-wpd-delete-action="deleteComments">';
+                    $html .= $this->optionsSerialized->phrases['wc_user_settings_request_deleting_comments'];
+                    $html .= '<span class="wpd-loading wpd-hide"><i class="fas fa-spinner fa-pulse"></i></span>';
+                    $html .= '</div>';
+                    $html .= '</div>';
+                }
+                return $html;
+            }
+
+            private function getDeleteAllSubscriptionsButton($email) {
+                $html = '';
+                if (!is_email($email)) {
+                    return $html;
+                }
+                $subscriptions = $this->dbManager->getSubscriptions($email, 1, 0);
+                if ($subscriptions) {
+                    $html .= '<div class="wpd-user-settings-button-wrap">';
+                    $html .= '<div class="wpd-user-settings-button wpd-delete-all-subscriptions wpd-not-clicked" data-wpd-delete-action="deleteSubscriptions">';
+                    $html .= $this->optionsSerialized->phrases['wc_user_settings_cancel_subscriptions'];
+                    $html .= '<span class="wpd-loading wpd-hide"><i class="fas fa-spinner fa-pulse"></i></span>';
+                    $html .= '</div>';
+                    $html .= '</div>';
+                }
+                return $html;
+            }
+
+            private function deleteCookiesButton($email, $cookieBtnClass) {
+                $html = '';
+                if (!is_email($email)) {
+                    return $html;
+                }
+                $html .= '<div class="wpd-user-settings-button-wrap ' . $cookieBtnClass . '">';
+                $html .= '<div class="wpd-user-settings-button wpd-delete-all-cookies wpd-not-clicked" data-wpd-delete-action="deleteCookies">';
+                $html .= $this->optionsSerialized->phrases['wc_user_settings_clear_cookie'];
+                $html .= '<span class="wpd-loading wpd-hide"><i class="fas fa-spinner fa-pulse"></i></span>';
+                $html .= '</div>';
+                $html .= '</div>';
+                return $html;
+            }
+
+            private function getActivityTitleHtml() {
+                ob_start();
+                include_once 'layouts/activity/title.php';
+                return ob_get_clean();
+            }
+
+            private function getActivityContentHtml($currentUserId, $currentUserEmail) {
+                $html = "<div id='wpd-content-item-1' class='wpd-content-item'>";
+                include_once 'layouts/activity/content.php';
+                $html .= "</div>";
+                return $html;
+            }
+
+            public function getActivityPage() {
+                ob_start();
+                include_once 'layouts/activity/activity-page.php';
+                $html = ob_get_clean();
+                wp_die($html);
+            }
+
+            private function getSubscriptionsTitleHtml() {
+                ob_start();
+                include_once 'layouts/subscriptions/title.php';
+                return ob_get_clean();
+            }
+
+            private function getSubscriptionsContentHtml($currentUserId, $currentUserEmail) {
+                $html = "<div id='wpd-content-item-2' class='wpd-content-item'>";
+                include_once 'layouts/subscriptions/content.php';
+                $html .= "</div>";
+                return $html;
+            }
+
+            public function getSubscriptionsPage() {
+                ob_start();
+                include_once 'layouts/subscriptions/subscriptions-page.php';
+                $html = ob_get_clean();
+                wp_die($html);
+            }
+
+            private function getFollowsTitleHtml() {
+                ob_start();
+                include_once 'layouts/follows/title.php';
+                return ob_get_clean();
+            }
+
+            private function getFollowsContentHtml($currentUserId, $currentUserEmail) {
+                $html = "<div id='wpd-content-item-3' class='wpd-content-item'>";
+                include_once 'layouts/follows/content.php';
+                $html .= "</div>";
+                return $html;
+            }
+
+            public function getFollowsPage() {
+                ob_start();
+                include_once 'layouts/follows/follows-page.php';
+                $html = ob_get_clean();
+                wp_die($html);
+            }
+
+            public function hashVotesNote() {
+                if ($this->dbManager->getNotHashedIpCount()) {
+                    $page = isset($_GET['page']) ? $_GET['page'] : '';
+                    if ($page != self::PAGE_TOOLS) {
+                        $goToHashUrl = get_admin_url(WpdiscuzCore::$CURRENT_BLOG_ID, 'edit-comments.php?page=') . self::PAGE_TOOLS . '#toolsTab4';
+                        $html = "<div class='error' style='padding:10px;'>";
+                        $html .= "<p>" . __('Before using wpDiscuz you should update your data', $goToHashUrl) . "</p>";
+                        $html .= "<a class='' href='$goToHashUrl'>" . __('Go to update data', 'wpdiscuz') . "</a>";
+                        $html .= "</div>";
+                        echo$html;
+                    }
+                }
+            }
+
+            public static function fixEmailFrom($domain) {
+                $domain = strtolower($domain);
+                if (substr($domain, 0, 4) == 'www.') {
+                    $domain = substr($domain, 4);
+                }
+                return $domain;
+            }
+
+            public function fixLocalhostIp($ip) {
+                if (trim($ip) == '::1') {
+                    $ip = '127.0.0.1';
+                }
+                return $ip;
             }
 
         }

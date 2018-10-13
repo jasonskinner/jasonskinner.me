@@ -3,6 +3,8 @@ include_once 'autoload.php';
 
 use wpdFormAttr\FormConst\wpdFormConst;
 use wpdFormAttr\Form;
+use wpdFormAttr\Login\SocialLogin;
+use wpdFormAttr\Tools\PersonalDataExporter;
 
 class wpDiscuzForm implements wpdFormConst {
 
@@ -21,6 +23,8 @@ class wpDiscuzForm implements wpdFormConst {
         $this->initAdminPhrazes();
         $this->formContentTypeRel = $options->formContentTypeRel;
         $this->formPostRel = $options->formPostRel;
+        SocialLogin::getInstance($this->options);
+        
         add_action('init', array(&$this, 'registerPostType'), 1);
         add_action('admin_init', array(&$this, 'custoFormRoleCaps'), 999);
         add_action('admin_menu', array(&$this, 'addFormToAdminMenu'), 874);
@@ -52,6 +56,12 @@ class wpDiscuzForm implements wpdFormConst {
         add_filter('the_content', array(&$this->form, 'displayRatingMeta'), 10);
         add_shortcode('wpdrating', array(&$this->form, 'getRatingMetaHtml'));
         add_action('admin_notices', array(&$this, 'formExists'));
+        add_action('wp_loaded', array(&$this, 'initPersonalDataExporter'));
+    }
+    
+    
+    public function initPersonalDataExporter() {
+        PersonalDataExporter::getInstance($this->options);
     }
 
     public function validateMetaCommentSavePre($commentContent) {
@@ -501,7 +511,7 @@ class wpDiscuzForm implements wpdFormConst {
     }
 
     private function updatePostRating($comment, $difference) {
-        $postRatings = get_post_meta($comment->comment_post_ID, 'wpdiscuz_rating_count', true);
+        $postRatings = get_post_meta($comment->comment_post_ID, self::WPDISCUZ_RATING_COUNT, true);
         $form = $this->getForm($comment->comment_post_ID);
         $form->initFormFields();
         $formFields = $form->getFormFields();
@@ -510,12 +520,15 @@ class wpDiscuzForm implements wpdFormConst {
                 $postRatings = $this->chagePostSingleRating($key, $comment->comment_ID, $difference, $postRatings);
             }
         }
-        update_post_meta($comment->comment_post_ID, 'wpdiscuz_rating_count', $postRatings);
+        update_post_meta($comment->comment_post_ID, self::WPDISCUZ_RATING_COUNT, $postRatings);
     }
 
     private function chagePostSingleRating($metaKey, $commentID, $difference, $postRatings) {
         $commentFieldRating = get_comment_meta($commentID, $metaKey, true);
-        if (key_exists($metaKey, $postRatings) && $commentFieldRating) {
+        if(!$postRatings){
+            $postRatings = array($metaKey => array());
+        }
+        if ($commentFieldRating) {
             if (key_exists($commentFieldRating, $postRatings[$metaKey])) {
                 $postRatings[$metaKey][$commentFieldRating] = $postRatings[$metaKey][$commentFieldRating] + $difference;
             } else {

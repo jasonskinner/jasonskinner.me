@@ -2,130 +2,279 @@
 if (!defined('ABSPATH')) {
     exit();
 }
-/*
-  1. WordPress Social Login
-  2. Social Login
-  3  Super Socializer
-  4. Social Connect
- */
-
-$pluginsDir = plugins_url();
-$html = '';
-// WordPress Social Login
-$wpSLDirName = 'wordpress-social-login';
-$wpSLFileName = "$wpSLDirName/wp-social-login.php";
-$wpSLDirPath = WP_PLUGIN_DIR . '/' . $wpSLDirName . '/';
-$wpSLOptionsPage = 'options-general.php?page=wordpress-social-login';
-
-// Social Login
-$slDirName = 'oa-social-login';
-$slFileName = "$slDirName/oa-social-login.php";
-$slDirPath = WP_PLUGIN_DIR . '/' . $slDirName . '/';
-$slOptionsPage = 'admin.php?page=oa_social_login_setup';
-
-// Super Socializer
-$ssDirName = 'super-socializer';
-$ssFileName = "$ssDirName/super_socializer.php";
-$ssDirPath = WP_PLUGIN_DIR . '/' . $ssDirName . '/';
-$ssOptionsPage = 'admin.php?page=heateor-ss-general-options';
-
-// Social Connect
-$scDirName = 'social-connect';
-$scFileName = "$scDirName/social-connect.php";
-$scDirPath = WP_PLUGIN_DIR . '/' . $scDirName . '/';
-$scOptionsPage = 'options-general.php?page=social-connect-id';
-
-add_thickbox();
-if (function_exists('wsl_activate')) {
-    $html = "<tr valign='top'><td>WordPress Social Login</td><td><a href='$wpSLOptionsPage' class='button button-primary'>" . __('Settings', 'default') . "</a></td></tr>";
-} else if (function_exists('oa_social_login_activate')) {
-    $html = "<tr valign='top'><td>Social Login</td><td><a href='$slOptionsPage' class='button button-primary'>" . __('Settings', 'default') . "</a></td></tr>";
-} else if (function_exists('the_champ_init')) {
-    $html = "<tr valign='top'><td>Super Socializer</td><td><a href='$ssOptionsPage' class='button button-primary'>" . __('Settings', 'default') . "</a></td></tr>";
-} else if (function_exists('sc_activate')) {
-    $html = "<tr valign='top'><td>Social Connect</td><td><a href='$scOptionsPage' class='button button-primary'>" . __('Settings', 'default') . "</a></td></tr>";
-} else {
-    // wordpress social login
-    if (file_exists($wpSLDirPath)) {
-        $wc_wordpress_social_login_text = __('Activate', 'wpdiscuz');
-        $wc_wordpress_social_login_link = 'edit-comments.php?page=' . WpdiscuzCore::PAGE_SETTINGS . '&wc_social_action=' . $wpSLDirName;
-        $wc_wordpress_social_login_thickbox = '';
-    } else {
-        $wc_wordpress_social_login_text = __('View details/Install', 'wpdiscuz');
-        $wc_wordpress_social_login_link = 'plugin-install.php?tab=plugin-information&plugin=wordpress-social-login&TB_iframe=true&width=772&height=342';
-        $wc_wordpress_social_login_thickbox = 'thickbox';
-    }
-
-    // social login
-    if (file_exists($slDirPath)) {
-        $wc_oa_social_login_text = __('Activate', 'wpdiscuz');
-        $wc_oa_social_login_link = 'edit-comments.php?page=' . WpdiscuzCore::PAGE_SETTINGS . '&wc_social_action=' . $slDirName;
-        $wc_oa_social_login_thickbox = '';
-    } else {
-        $wc_oa_social_login_text = __('View details/Install', 'wpdiscuz');
-        $wc_oa_social_login_link = 'plugin-install.php?tab=plugin-information&plugin=oa-social-login&TB_iframe=true&width=772&height=342';
-        $wc_oa_social_login_thickbox = 'thickbox';
-    }
-
-    // super socializer
-    if (file_exists($ssDirPath)) {
-        $wc_super_socializer_text = __('Activate', 'wpdiscuz');
-        $wc_super_socializer_link = 'edit-comments.php?page=' . WpdiscuzCore::PAGE_SETTINGS . '&wc_social_action=' . $ssDirName;
-        $wc_super_socializer_thickbox = '';
-    } else {
-        $wc_super_socializer_text = __('View details/Install', 'wpdiscuz');
-        $wc_super_socializer_link = 'plugin-install.php?tab=plugin-information&plugin=super-socializer&TB_iframe=true&width=772&height=342';
-        $wc_super_socializer_thickbox = 'thickbox';
-    }
-
-    // social connect
-    if (file_exists($scDirPath)) {
-        $wc_social_connect_text = __('Activate', 'wpdiscuz');
-        $wc_social_connect_link = 'edit-comments.php?page=' . WpdiscuzCore::PAGE_SETTINGS . '&wc_social_action=' . $scDirName;
-        $wc_social_connect_thickbox = '';
-    } else {
-        $wc_social_connect_text = __('View details/Install', 'wpdiscuz');
-        $wc_social_connect_link = 'plugin-install.php?tab=plugin-information&plugin=social-connect&TB_iframe=true&width=772&height=342';
-        $wc_social_connect_thickbox = 'thickbox';
-    }
-
-    $html = '<tr valign="top"><td>WordPress Social Login</td><td><a href="' . $wc_wordpress_social_login_link . '" class="button button-primary ' . $wc_wordpress_social_login_thickbox . '">' . $wc_wordpress_social_login_text . '</a></td></tr>';
-    $html .= '<tr valign="top"><td>Social Login</td><td><a href="' . $wc_oa_social_login_link . '" class="button button-primary ' . $wc_oa_social_login_thickbox . '">' . $wc_oa_social_login_text . '</a></td></tr>';
-    $html .= '<tr valign="top"><td>Super Socializer</td><td><a href="' . $wc_super_socializer_link . '" class="button button-primary ' . $wc_super_socializer_thickbox . '">' . $wc_super_socializer_text . '</a></td></tr>';
-    $html .= '<tr valign="top"><td>Social Connect</td><td><a href="' . $wc_social_connect_link . '" class="button button-primary ' . $wc_social_connect_thickbox . '">' . $wc_social_connect_text . '</a></td></tr>';
-}
-
-if (isset($_GET['wc_social_action'])) {
-    $plugin_name = $_GET['wc_social_action'];
-    $wc_activation_redirect_url = '';
-    $wc_social_plugin_file = '';
-    switch ($plugin_name) {
-        case $wpSLDirName:
-            $wc_activation_redirect_url = $wpSLOptionsPage;
-            $wc_social_plugin_file = $wpSLFileName;
-            break;
-        case $slDirName:
-            $wc_activation_redirect_url = $slOptionsPage;
-            $wc_social_plugin_file = $slFileName;
-            break;
-        case $ssDirName:
-            $wc_activation_redirect_url = $ssOptionsPage;
-            $wc_social_plugin_file = $ssFileName;
-            break;
-        case $scDirName:
-            $wc_activation_redirect_url = $scOptionsPage;
-            $wc_social_plugin_file = $scFileName;
-            break;
-    }
-    activate_plugin($wc_social_plugin_file, $wc_activation_redirect_url);
-}
 ?>
 <div>
-    <h2 class="wpd-subtitle"><?php _e('Social Login', 'wpdiscuz'); ?> </h2>
-    <p style="padding-bottom:10px; padding-left:10px;"><?php _e('You can use one of these most popular Social Login Plugins to allow your visitors login and comment with Facebook, Twitter, Google+, Wordpress, VK, OK and lots of other social network service accounts. All social login buttons will be fully integrated with wpDiscuz comment forms.', 'wpdiscuz'); ?> </p>
-    <table class="wp-list-table widefat plugins" style="margin-top:10px; border:none;">
+    <h2 class="wpd-subtitle"><?php _e('Social Login &amp; Share', 'wpdiscuz'); ?> </h2>
+    <table class="wp-list-table widefat plugins wpdxb" style="margin-top:10px; border:none;">
         <tbody>
-            <?php echo $html; ?>
+        <tr valign="top">
+            <th scope="row" style="width: 60%;">
+                <label for="socialLoginAgreementCheckbox"><?php _e('User agreement prior to a social login action', 'wpdiscuz'); ?></label>
+                <p class="wpd-desc" style="width: 93%;"><?php _e('If this option is enabled, all Social Login buttons become not-clickable until user accept automatic account creation process based on his/her Social Network Account shared information (email, name). This checkbox and appropriate information will be displayed when user click on a social login button, prior to the login process. This extra step is added to comply with the GDPR', 'wpdiscuz'); ?> <a href="https://gdpr-info.eu/art-22-gdpr/" target="_blank" rel="noreferrer">(Article 22)</a> <br><?php _e('The note text and the label of this checkbox can be managed in Comments > Phrases > Social Login tab.','wpdiscuz') ?></p>
+            </th>
+            <td style="padding-top: 20px;">
+                <input type="checkbox" value="1" <?php checked($this->optionsSerialized->socialLoginAgreementCheckbox == 1) ?> name="socialLoginAgreementCheckbox" id="socialLoginAgreementCheckbox" />
+                <label for="socialLoginAgreementCheckbox"></label>
+                <a href="https://wpdiscuz.com/docs/wpdiscuz-documentation/settings/social-login-and-share/#agreement" title="<?php _e('Read the documentation', 'wpdiscuz') ?>" target="_blank"><i class="far fa-question-circle"></i></a>
+            </td>
+        </tr>
+        <tr valign="top">
+            <th scope="row" style="width: 60%;">
+                <label for="socialLoginInSecondaryForm"><?php _e('Display social login buttons on reply forms', 'wpdiscuz'); ?></label>
+            </th>
+            <td>
+                <input type="checkbox" value="1" <?php checked($this->optionsSerialized->socialLoginInSecondaryForm == 1) ?> name="socialLoginInSecondaryForm" id="socialLoginInSecondaryForm" />
+                <label for="socialLoginInSecondaryForm"></label>
+                <a href="https://wpdiscuz.com/docs/wpdiscuz-documentation/settings/social-login-and-share/#display_on_reply_forms" title="<?php _e('Read the documentation', 'wpdiscuz') ?>" target="_blank"><i class="far fa-question-circle"></i></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <table class="wp-list-table widefat plugins wpdxb wpd-social-login" style="margin-top:10px; border:none;">
+        <tbody>
+            <tr valign="top">
+                <th class="wpd-social-lable wpd-facebook" colspan="2" style="padding: 10px 10px 8px 10px;">
+                    <img src="<?php echo plugins_url(WPDISCUZ_DIR_NAME . '/assets/img/social-icons/fb-m.png'); ?>" style="vertical-align:bottom; height: 30px; margin-bottom: -2px; position: relative;" />&nbsp; <?php _e('Facebook','wpdiscuz');?>
+                </th>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <p style="font-size: 14px; font-style: italic;">
+                        <?php _e('To start using Facebook Login and Share Buttons you should get Facebook Application Key and Secret for your website. Please follow to this', 'wpdiscuz'); ?> <a href="https://wpdiscuz.com/docs/wpdiscuz-documentation/social-login-and-share/facebook-app-configuration/" target="_blank"><?php _e('instruction &raquo;','wpdiscuz');?></a><br>
+                        <?php echo __('Valid OAuth Redirect URI','wpdiscuz') . ' : <code>' . admin_url('admin-ajax.php?action=wpd_login_callback&provider=facebook') . '</code>';?>
+                    </p>
+                </td>
+            </tr>
+            <tr valign="top">
+                <th scope="row" style="width: 60%">
+                    <label for="wpd-enable-fb-login"><?php _e('Enable Login Button', 'wpdiscuz'); ?></label>
+                </th>
+                <td scope="row">
+                    <input type="checkbox" <?php  checked($this->optionsSerialized->enableFbLogin == 1); ?> value="1" name="enableFbLogin" id="wpd-enable-fb-login" />
+                    <label for="wpd-enable-fb-login"></label>
+                </td>
+            </tr>
+            <?php if( is_ssl() ): ?>
+                <tr valign="top">
+                    <th scope="row" style="width: 60%">
+                        <label for="wpd-use-fb-oauth"><?php _e('Use Facebook OAuth2', 'wpdiscuz'); ?></label>
+                        <p class="wpd-info"><?php _e('If you enable this option, please make sure you\'ve inserted the Valid OAuth Redirect URI in according field when you create Facebook Login App. Your website OAuth Redirect URI is displayed above.' , 'wpforo'); ?></p>
+                    </th>
+                    <td scope="row">
+                        <input type="checkbox" <?php  checked($this->optionsSerialized->fbUseOAuth2 == 1); ?> value="1" name="fbUseOAuth2" id="wpd-use-fb-oauth" />
+                        <label for="wpd-use-fb-oauth"></label>
+                    </td>
+                </tr>
+            <?php endif; ?>
+            <tr>
+                <th scope="row">
+                    <label for="wpd-enable-fb-share"><?php _e('Enable Share Button', 'wpdiscuz'); ?></label>
+                </th>
+                <td scope="row">
+                    <input type="checkbox" <?php checked($this->optionsSerialized->enableFbShare == 1); ?> value="1" name="enableFbShare" id="wpd-enable-fb-share" />
+                    <label for="wpd-enable-fb-share"></label>
+                </td>
+            </tr>
+            <tr valign="top">
+                <th scope="row">
+                    <label for="wpd-fb-app-id"><?php _e('Aplication ID', 'wpdiscuz'); ?></label>
+                </th>
+                <td >
+                    <input placeholder="<?php _e('Aplication ID', 'wpdiscuz'); ?>" type="text" value="<?php echo $this->optionsSerialized->fbAppID;?>" name="fbAppID" id="wpd-fb-app-id" /></td>
+            </tr>
+            <tr valign="top">
+                <th scope="row">
+                    <label for="wpd-fb-app-secret"><?php _e('Aplication Secret', 'wpdiscuz'); ?></label>
+                </th>
+                <td >
+                    <input placeholder="<?php _e('Aplication Secret', 'wpdiscuz'); ?>"  type="text" value="<?php echo $this->optionsSerialized->fbAppSecret;?>" name="fbAppSecret" id="wpd-fb-app-secret" /></td>
+            </tr>
+
+
+            <tr valign="top">
+                <th class="wpd-social-lable wpd-twitter" colspan="2" style="padding: 10px 10px 8px 10px;">
+                    <img src="<?php echo plugins_url(WPDISCUZ_DIR_NAME . '/assets/img/social-icons/tw-m.png'); ?>" style="vertical-align:bottom; height: 30px; margin-bottom: -2px; position: relative;" />&nbsp; <?php _e('Twitter','wpdiscuz');?>
+                </th>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <p style="font-size: 14px; font-style: italic;">
+                        <?php _e('To start using Twitter Login Button you should get Consumer Key and Secret for your website. Please follow to this', 'wpdiscuz'); ?> <a href="https://wpdiscuz.com/docs/wpdiscuz-documentation/social-login-and-share/twitter-api-key-and-consumer-secret/" target="_blank"><?php _e('instruction &raquo;','wpdiscuz');?></a><br>
+                        <?php echo __('Callback URL','wpdiscuz') . ' : <code>' . admin_url('admin-ajax.php') . '</code>';?>
+                    </p>
+                </td>
+            </tr>
+            <tr valign="top">
+                <th>
+                    <label for="wpd-enable-twitter-login"><?php _e('Enable Login Button', 'wpdiscuz'); ?></label>
+                </th>
+                <td scope="row">
+                    <input type="checkbox" <?php  checked($this->optionsSerialized->enableTwitterLogin == 1); ?> value="1" name="enableTwitterLogin" id="wpd-enable-twitter-login" />
+                    <label for="wpd-enable-twitter-login"></label>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <label for="wpd-enable-twitter-share"><?php _e('Enable Share Button', 'wpdiscuz'); ?></label>
+                </th>
+                <td scope="row">
+                    <input type="checkbox" <?php checked($this->optionsSerialized->enableTwitterShare == 1); ?> value="1" name="enableTwitterShare" id="wpd-enable-twitter-share" />
+                    <label for="wpd-enable-twitter-share"></label>
+                </td>
+            </tr>
+            <tr valign="top">
+                <th scope="row">
+                    <label for="wpd-twitter-app-id"><?php _e('Consumer Key (API Key)', 'wpdiscuz'); ?></label>
+                </th>
+                <td><input placeholder="<?php _e('Consumer Key (API Key)', 'wpdiscuz'); ?>" type="text" value="<?php echo $this->optionsSerialized->twitterAppID;?>" name="twitterAppID" id="wpd-twitter-app-id" /></td>
+            </tr>
+            <tr valign="top">
+                <th scope="row">
+                    <label for="wpd-twitter-app-secret"><?php _e('Consumer Secret (API Secret)', 'wpdiscuz'); ?></label>
+                </th>
+                <td >
+                    <input placeholder="<?php _e('Consumer Secret (API Secret)', 'wpdiscuz'); ?>" type="text" value="<?php echo $this->optionsSerialized->twitterAppSecret;?>" name="twitterAppSecret" id="wpd-twitter-app-secret" />
+                </td>
+            </tr>
+
+
+
+            <tr valign="top">
+                <th class="wpd-social-lable wpd-google" colspan="2" style="padding: 10px 10px 8px 10px;">
+                    <img src="<?php echo plugins_url(WPDISCUZ_DIR_NAME . '/assets/img/social-icons/gg-m.png'); ?>" style="vertical-align:bottom; height: 30px; margin-bottom: -2px; position: relative;" />&nbsp; <?php _e('Google +','wpdiscuz');?>
+                </th>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <p style="font-size: 14px; font-style: italic;">
+                        <?php _e('To start using Google+ Login Button you should get Client ID for your website. Please follow to this', 'wpdiscuz'); ?> <a href="https://wpdiscuz.com/docs/wpdiscuz-documentation/social-login-and-share/google-client-id/" target="_blank"><?php _e('instruction &raquo;','wpdiscuz');?></a><br>
+                        <?php echo __('Authorized JavaScript Sources / Permitted URI redirects','wpdiscuz') . ' : <code>' . home_url() . '</code>';?>
+                    </p>
+                </td>
+            </tr>
+            <tr valign="top">
+                <th>
+                    <label for="wpd-enable-google-login"><?php _e('Enable Login Button', 'wpdiscuz'); ?></label>
+                </th>
+                <td scope="row">
+                    <input type="checkbox" <?php checked($this->optionsSerialized->enableGoogleLogin == 1); ?> value="1" name="enableGoogleLogin" id="wpd-enable-google-login" />
+                    <label for="wpd-enable-google-login"></label>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <label for="wpd-enable-google-share"><?php _e('Enable Share Button', 'wpdiscuz'); ?></label>
+                </th>
+                <td scope="row">
+                    <input placeholder="<?php _e('Enable Share Button', 'wpdiscuz'); ?>" type="checkbox" <?php checked($this->optionsSerialized->enableGoogleShare == 1); ?> value="1" name="enableGoogleShare" id="wpd-enable-google-share" />
+                    <label for="wpd-enable-google-share"></label>
+                </td>
+            </tr>
+            <tr valign="top">
+                <th scope="row">
+                    <label for="wpd-google-app-id"><?php _e('Client ID', 'wpdiscuz'); ?></label>
+                </th>
+                <td ><input placeholder="<?php _e('Client ID', 'wpdiscuz'); ?>" type="text" value="<?php echo $this->optionsSerialized->googleAppID;?>" name="googleAppID" id="wpd-google-app-id" /></td>
+            </tr>
+
+
+
+            <tr valign="top">
+                <th class="wpd-social-lable wpd-vk" colspan="2" style="padding: 10px 10px 8px 10px;">
+                    <img src="<?php echo plugins_url(WPDISCUZ_DIR_NAME . '/assets/img/social-icons/vk-m.png'); ?>" style="vertical-align:bottom; height: 30px; margin-bottom: -2px; position: relative;" />&nbsp; <?php _e('VK','wpdiscuz');?>
+                </th>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <p style="font-size: 14px; font-style: italic;">
+                        <?php _e('To start using VK Login Button you should get Application ID and Secure Key. Please follow to this ', 'wpdiscuz'); ?> <a href="https://wpdiscuz.com/docs/wpdiscuz-documentation/social-login-and-share/vk-application-id-and-secure-key/" target="_blank"><?php _e('instruction &raquo;','wpdiscuz');?></a><br>
+                        <?php echo __('Redirect URI','wpdiscuz') . ' : <code>' . admin_url('admin-ajax.php') . '</code>';?>
+                    </p>
+                </td>
+            </tr>
+            <tr valign="top">
+                <th>
+                    <label for="wpd-enable-vk-login"><?php _e('Enable Login Button', 'wpdiscuz'); ?></label>
+                </th>
+                <td scope="row">
+                    <input type="checkbox" <?php  checked($this->optionsSerialized->enableVkLogin == 1); ?> value="1" name="enableVkLogin" id="wpd-enable-vk-login" />
+                    <label for="wpd-enable-vk-login"></label>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <label for="wpd-enable-vk-share"><?php _e('Enable Share Button', 'wpdiscuz'); ?></label>
+                </th>
+                <td scope="row">
+                    <input type="checkbox" <?php checked($this->optionsSerialized->enableVkShare == 1); ?> value="1" name="enableVkShare" id="wpd-enable-vk-share" />
+                    <label for="wpd-enable-vk-share"></label>
+                </td>
+            </tr>
+            <tr valign="top">
+                <th scope="row">
+                    <label for="wpd-vk-app-id"><?php _e('Application ID', 'wpdiscuz'); ?></label>
+                </th>
+                <td ><input placeholder="<?php _e('Application ID', 'wpdiscuz'); ?>" type="text" value="<?php echo $this->optionsSerialized->vkAppID;?>" name="vkAppID" id="wpd-vk-app-id" /></td>
+            </tr>
+            <tr valign="top">
+                <th scope="row">
+                    <label for="wpd-vk-app-secret"><?php _e('Secure Key', 'wpdiscuz'); ?></label>
+                </th>
+                <td ><input placeholder="<?php _e('Secure Key', 'wpdiscuz'); ?>" type="text" value="<?php echo $this->optionsSerialized->vkAppSecret;?>" name="vkAppSecret" id="wpd-vk-app-secret" /></td>
+            </tr>
+
+
+
+            <tr valign="top">
+                <th class="wpd-social-lable wpd-ok" colspan="2" style="padding: 10px 10px 8px 10px;">
+                    <img src="<?php echo plugins_url(WPDISCUZ_DIR_NAME . '/assets/img/social-icons/ok-m.png'); ?>" style="vertical-align:bottom; height: 30px; margin-bottom: -2px; position: relative;" />&nbsp; <?php _e('OK','wpdiscuz');?>
+                </th>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <p style="font-size: 14px; font-style: italic;">
+                        <?php _e('Getting started with','wpdiscuz');?> <a href="https://apiok.ru/en/ext/oauth/">OK API</a><br>
+                        <?php _e('To get the Aplication ID, Key and Secret, you should create an app using one of the supported types (external, Android, iOS), use this', 'wpdiscuz'); ?> <a href="https://apiok.ru/en/dev/app/create" target="_blank"><?php _e('instruction &raquo;','wpdiscuz');?></a><br>
+                        <?php echo __('Redirect URI','wpdiscuz') . ' : <code>' . admin_url('admin-ajax.php') . '</code>';?>
+                    </p>
+                </td>
+            </tr>
+            <tr valign="top">
+                <th>
+                    <label for="wpd-enable-ok-login"><?php _e('Enable Login Button', 'wpdiscuz'); ?></label>
+                </th>
+                <td scope="row">
+                    <input type="checkbox" <?php  checked($this->optionsSerialized->enableOkLogin == 1); ?> value="1" name="enableOkLogin" id="wpd-enable-ok-login" />
+                    <label for="wpd-enable-ok-login"></label>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <label for="wpd-enable-ok-share"><?php _e('Enable Share Button', 'wpdiscuz'); ?></label>
+                </th>
+                <td scope="row">
+                    <input type="checkbox" <?php checked($this->optionsSerialized->enableOkShare == 1); ?> value="1" name="enableOkShare" id="wpd-enable-ok-share" />
+                    <label for="wpd-enable-ok-share"></label>
+                </td>
+            </tr>
+            <tr valign="top">
+                <th scope="row">
+                    <label for="wpd-ok-app-id"><?php _e('Aplication ID', 'wpdiscuz'); ?></label>
+                </th>
+                <td ><input placeholder="<?php _e('Aplication ID', 'wpdiscuz'); ?>" type="text" value="<?php echo $this->optionsSerialized->okAppID;?>" name="okAppID" id="wpd-ok-app-id" /></td>
+            </tr>
+            <tr valign="top">
+                <th scope="row">
+                    <label for="wpd-ok-app-key"><?php _e('Aplication Key', 'wpdiscuz'); ?></label>
+                </th>
+                <td ><input placeholder="<?php _e('Aplication Key', 'wpdiscuz'); ?>" type="text" value="<?php echo $this->optionsSerialized->okAppKey;?>" name="okAppKey" id="wpd-ok-app-key" /></td>
+            </tr>
+            <tr valign="top">
+                <th scope="row">
+                    <label for="wpd-ok-app-secret"><?php _e('Aplication Secret', 'wpdiscuz'); ?></label>
+                </th>
+                <td ><input placeholder="<?php _e('Aplication Secret', 'wpdiscuz'); ?>" type="text" value="<?php echo $this->optionsSerialized->okAppSecret;?>" name="okAppSecret" id="wpd-ok-app-secret" /></td>
+            </tr>
         </tbody>
     </table>
 </div>

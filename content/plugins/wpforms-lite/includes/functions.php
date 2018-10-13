@@ -16,8 +16,8 @@
  * @since 1.0.2
  *
  * @param mixed $form_id
- * @param bool $title
- * @param bool $desc
+ * @param bool  $title
+ * @param bool  $desc
  */
 function wpforms_display( $form_id = false, $title = false, $desc = false ) {
 
@@ -120,7 +120,7 @@ function wpforms_object_to_array( $object ) {
  * @since 1.0.0
  *
  * @param string $key
- * @param mixed $default
+ * @param mixed  $default
  * @param string $option
  *
  * @return mixed
@@ -154,8 +154,8 @@ function wpforms_sanitize_key( $key = '' ) {
  * @since 1.0.5
  *
  * @param array|string $type
- * @param array $form
- * @param bool $multiple
+ * @param array        $form
+ * @param bool         $multiple
  *
  * @return bool
  */
@@ -203,8 +203,8 @@ function wpforms_has_field_type( $type, $form, $multiple = false ) {
  * @since 1.4.5
  *
  * @param string $setting
- * @param array $form
- * @param bool $multiple
+ * @param array  $form
+ * @param bool   $multiple
  *
  * @return bool
  */
@@ -393,10 +393,10 @@ function wpforms_get_pagebreak_details( $form = false ) {
  * @since 1.3.7
  *
  * @param string $id
- * @param array $class
- * @param array $datas
- * @param array $atts
- * @param bool $echo
+ * @param array  $class
+ * @param array  $datas
+ * @param array  $atts
+ * @param bool   $echo
  *
  * @return string
  */
@@ -436,7 +436,7 @@ function wpforms_html_attributes( $id = '', $class = array(), $datas = array(), 
 	$output = implode( ' ', $parts );
 
 	if ( $echo ) {
-		echo trim( $output );
+		echo trim( $output ); // phpcs:ignore
 	} else {
 		return trim( $output );
 	}
@@ -448,7 +448,7 @@ function wpforms_html_attributes( $id = '', $class = array(), $datas = array(), 
  * @since 1.2.1
  *
  * @param array|string $classes
- * @param bool $convert True will convert strings to array and vice versa.
+ * @param bool         $convert True will convert strings to array and vice versa.
  *
  * @return string|array
  */
@@ -515,7 +515,7 @@ function wpforms_size_to_bytes( $size ) {
  *
  * @since 1.0.0
  *
- * @param int $bytes
+ * @param int $bytes Bytes to convert to a readable format.
  *
  * @return string
  */
@@ -563,7 +563,7 @@ function wpforms_max_upload( $bytes = false ) {
  */
 function wpforms_get_form_fields( $form = false, $whitelist = array() ) {
 
-	// Accept form (post) object or form ID
+	// Accept form (post) object or form ID.
 	if ( is_object( $form ) ) {
 		$form = wpforms_decode( $form->post_content );
 	} elseif ( is_numeric( $form ) ) {
@@ -579,13 +579,14 @@ function wpforms_get_form_fields( $form = false, $whitelist = array() ) {
 		return false;
 	}
 
-	// White list of field types to allow
+	// White list of field types to allow.
 	$allowed_form_fields = array(
 		'text',
 		'textarea',
 		'select',
 		'radio',
 		'checkbox',
+		'gdpr-checkbox',
 		'email',
 		'address',
 		'url',
@@ -595,10 +596,14 @@ function wpforms_get_form_fields( $form = false, $whitelist = array() ) {
 		'phone',
 		'number',
 		'file-upload',
+		'rating',
+		'likert_scale',
+		'signature',
 		'payment-single',
 		'payment-multiple',
 		'payment-select',
 		'payment-total',
+		'net_promoter_score'
 	);
 	$allowed_form_fields = apply_filters( 'wpforms_get_form_fields_allowed', $allowed_form_fields );
 
@@ -621,8 +626,8 @@ function wpforms_get_form_fields( $form = false, $whitelist = array() ) {
  * @since 1.1.9
  *
  * @param int|string $id Field ID.
- * @param string $key Meta key.
- * @param mixed $form_data Form data array.
+ * @param string     $key Meta key.
+ * @param mixed      $form_data Form data array.
  *
  * @return string
  */
@@ -646,7 +651,7 @@ function wpforms_get_form_field_meta( $id = '', $key = '', $form_data = '' ) {
  *
  * @param string $key Meta key.
  * @param string $value
- * @param mixed $form_data Form data array.
+ * @param mixed  $form_data Form data array.
  *
  * @return string
  */
@@ -676,6 +681,7 @@ function wpforms_get_form_fields_by_meta( $key = '', $value = '', $form_data = '
  * US States
  *
  * @since 1.0.0
+ *
  * @return array
  */
 function wpforms_us_states() {
@@ -741,6 +747,7 @@ function wpforms_us_states() {
  * Countries.
  *
  * @since 1.0.0
+ *
  * @return array
  */
 function wpforms_countries() {
@@ -1378,7 +1385,6 @@ function wpforms_get_field_dynamic_choices( $field, $form_id, $form_data = array
 				'depth' => isset( $post->depth ) ? absint( $post->depth ) : 1,
 			);
 		}
-
 	} elseif ( 'taxonomy' === $field['dynamic_choices'] ) {
 
 		if ( empty( $field['dynamic_taxonomy'] ) ) {
@@ -1466,7 +1472,7 @@ function wpforms_array_remove_empty_strings( $data ) {
 }
 
 /**
- * Debug mode bool.
+ * Whether plugin works in a debug mode.
  *
  * @since 1.2.3
  *
@@ -1497,8 +1503,8 @@ function wpforms_debug() {
  *
  * @since 1.0.0
  *
- * @param mixed $data
- * @param bool $echo
+ * @param mixed $data What to dump, can be any type.
+ * @param bool  $echo Whether to print or return. Default is to print.
  *
  * @return string
  */
@@ -1511,7 +1517,7 @@ function wpforms_debug_data( $data, $echo = true ) {
 		$output .= "=================== WPFORMS DEBUG ===================\n\n";
 
 		if ( is_array( $data ) || is_object( $data ) ) {
-			$output .= ( print_r( $data, true ) );
+			$output .= ( print_r( $data, true ) ); // phpcs:ignore
 		} else {
 			$output .= $data;
 		}
@@ -1519,7 +1525,7 @@ function wpforms_debug_data( $data, $echo = true ) {
 		$output .= '</textarea>';
 
 		if ( $echo ) {
-			echo $output;
+			echo $output; // phpcs:ignore
 		} else {
 			return $output;
 		}
@@ -1531,18 +1537,18 @@ function wpforms_debug_data( $data, $echo = true ) {
  *
  * @since 1.0.0
  *
- * @param string $title
- * @param string $message
- * @param array $args
+ * @param string $title Title of a log message.
+ * @param string $message Content of a log message.
+ * @param array  $args Expected keys: form_id, meta, parent.
  */
 function wpforms_log( $title = '', $message = '', $args = array() ) {
 
-	// Require log title
+	// Require log title.
 	if ( empty( $title ) ) {
 		return;
 	}
 
-	// Force logging everything when in debug mode
+	// Force logging everything when in debug mode.
 	if ( ! wpforms_debug() ) {
 
 		/**
@@ -1573,15 +1579,15 @@ function wpforms_log( $title = '', $message = '', $args = array() ) {
 		$meta = '';
 	}
 
-	// Parent.
+	// Parent element.
 	$parent = ! empty( $args['parent'] ) ? $args['parent'] : 0;
 
-	// Make arrays and objects look nice
+	// Make arrays and objects look nice.
 	if ( is_array( $message ) || is_object( $message ) ) {
-		$message = '<pre>' . print_r( $message, true ) . '</pre>';
+		$message = '<pre>' . print_r( $message, true ) . '</pre>'; // phpcs:ignore
 	}
 
-	// Create log entry
+	// Create log entry.
 	wpforms()->logs->add( $title, $message, $parent, $parent, $meta );
 }
 
@@ -1615,6 +1621,7 @@ if ( ! function_exists( 'array_replace_recursive' ) ) :
 		foreach ( array_slice( func_get_args(), 1 ) as $replacements ) {
 			$bref_stack = array( &$base );
 			$head_stack = array( $replacements );
+			$counter    = count( $head_stack );
 			do {
 				end( $bref_stack );
 				$bref = &$bref_stack[ key( $bref_stack ) ];
@@ -1628,7 +1635,7 @@ if ( ! function_exists( 'array_replace_recursive' ) ) :
 						$bref[ $key ] = $head[ $key ];
 					}
 				}
-			} while ( count( $head_stack ) );
+			} while ( $counter );
 		}
 
 		return $base;
@@ -1648,9 +1655,9 @@ function wpforms_is_amp() {
 	$is_amp = false;
 
 	if (
-		// AMP by Automattic; ampforwp
+		// AMP by Automattic; ampforwp.
 		( function_exists( 'is_amp_endpoint' ) && is_amp_endpoint() ) ||
-		// Better AMP
+		// Better AMP.
 		( function_exists( 'is_better_amp' ) && is_better_amp() )
 	) {
 		$is_amp = true;
@@ -1664,13 +1671,13 @@ function wpforms_is_amp() {
  *
  * @since 1.4.1
  *
- * @param string $string
+ * @param string $string Raw string to decode.
  *
  * @return string
  */
 function wpforms_decode_string( $string ) {
 
-	if ( ! is_string( $string) ) {
+	if ( ! is_string( $string ) ) {
 		return $string;
 	}
 
@@ -1699,6 +1706,25 @@ function wpforms_get_min_suffix() {
  */
 function wpforms_get_required_label() {
 	return apply_filters( 'wpforms_required_label', esc_html__( 'This field is required.', 'wpforms' ) );
+}
+
+/**
+ * Get the required field label HTML, with a filter.
+ *
+ * @since 1.4.8
+ *
+ * @return string
+ */
+function wpforms_get_field_required_label() {
+
+	$label_html = apply_filters_deprecated(
+		'wpforms_field_required_label',
+		array( ' <span class="wpforms-required-label">*</span>' ),
+		'1.4.8 of WPForms plugin',
+		'wpforms_get_field_required_label'
+	);
+
+	return apply_filters( 'wpforms_get_field_required_label', $label_html );
 }
 
 /**
@@ -1757,4 +1783,107 @@ function wpforms_get_day_period_date( $period, $timestamp = '', $format = 'Y-m-d
 	}
 
 	return $date;
+}
+
+/**
+ * Get an array of all the active provider addons.
+ *
+ * @since 1.4.7
+ *
+ * @return array
+ */
+function wpforms_get_providers_available() {
+	return (array) apply_filters( 'wpforms_providers_available', array() );
+}
+
+/**
+ * Get options for all providers.
+ *
+ * @since 1.4.7
+ *
+ * @param string $provider Define a single provider to get options for this one only.
+ *
+ * @return array
+ */
+function wpforms_get_providers_options( $provider = '' ) {
+
+	$options  = get_option( 'wpforms_providers', array() );
+	$provider = sanitize_key( $provider );
+	$data     = $options;
+
+	if ( ! empty( $provider ) && isset( $options[ $provider ] ) ) {
+		$data = $options[ $provider ];
+	}
+
+	return (array) apply_filters( 'wpforms_get_providers_options', $data, $provider );
+}
+
+/**
+ * Update options for all providers.
+ *
+ * @since 1.4.7
+ *
+ * @param string      $provider Provider slug.
+ * @param array|false $options If false is passed - provider will be removed. Otherwise saved.
+ * @param string      $key Optional key to identify which connection to update. If empty - generate a new one.
+ */
+function wpforms_update_providers_options( $provider, $options, $key = '' ) {
+
+	$providers = wpforms_get_providers_options();
+	$id        = ! empty( $key ) ? $key : uniqid();
+	$provider  = sanitize_key( $provider );
+
+	if ( $options ) {
+		$providers[ $provider ][ $id ] = (array) $options;
+	} else {
+		unset( $providers[ $provider ] );
+	}
+
+	update_option( 'wpforms_providers', $providers );
+}
+
+/**
+ * Helper function to determine if loading an WPForms related admin page.
+ *
+ * Here we determine if the current administration page is owned/created by
+ * WPForms. This is done in compliance with WordPress best practices for
+ * development, so that we only load required WPForms CSS and JS files on pages
+ * we create. As a result we do not load our assets admin wide, where they might
+ * conflict with other plugins needlessly, also leading to a better, faster user
+ * experience for our users.
+ *
+ * @since 1.3.9
+ *
+ * @param string $slug Slug identifier for a specifc WPForms admin page.
+ *
+ * @return boolean
+ */
+function wpforms_is_admin_page( $slug = '', $view = '' ) {
+
+	// Check against basic requirements.
+	if (
+		! is_admin() ||
+		empty( $_REQUEST['page'] ) ||
+		strpos( $_REQUEST['page'], 'wpforms' ) === false
+	) {
+		return false;
+	}
+
+	// Check against page slug identifier.
+	if (
+		( ! empty( $slug ) && 'wpforms-' . $slug !== $_REQUEST['page'] )
+		|| ( empty( $slug ) && 'wpforms-builder' === $_REQUEST['page'] )
+	) {
+		return false;
+	}
+
+	// Check against sub-level page view.
+	if (
+		! empty( $view )
+		&& ( empty( $_REQUEST['view'] ) || $view !== $_REQUEST['view'] )
+	) {
+		return false;
+	}
+
+	return true;
 }

@@ -5,14 +5,12 @@ class WpdiscuzOptions implements WpDiscuzConstants {
     private $optionsSerialized;
     private $dbManager;
     private $blogRoles;
-    private $shareButtons;
     private $addons;
     private $tips;
 
     public function __construct($optionsSerialized, $dbManager) {
         $this->dbManager = $dbManager;
         $this->optionsSerialized = $optionsSerialized;
-        $this->initShareButtons();
         $this->initAddons();
         $this->initTips();
     }
@@ -23,11 +21,9 @@ class WpdiscuzOptions implements WpDiscuzConstants {
             if (function_exists('current_user_can') && !current_user_can('manage_options')) {
                 die(_e('Hacker?', 'wpdiscuz'));
             }
-
             if (function_exists('check_admin_referer')) {
                 check_admin_referer('wc_options_form');
             }
-
             $this->optionsSerialized->isEnableOnHome = isset($_POST['isEnableOnHome']) ? $_POST['isEnableOnHome'] : 0;
             $this->optionsSerialized->isQuickTagsEnabled = isset($_POST['wc_quick_tags']) ? $_POST['wc_quick_tags'] : 0;
             $this->optionsSerialized->commentListUpdateType = isset($_POST['wc_comment_list_update_type']) ? $_POST['wc_comment_list_update_type'] : 0;
@@ -41,10 +37,14 @@ class WpdiscuzOptions implements WpDiscuzConstants {
             $this->optionsSerialized->votingButtonsShowHide = isset($_POST['wc_voting_buttons_show_hide']) ? $_POST['wc_voting_buttons_show_hide'] : 0;
             $this->optionsSerialized->votingButtonsStyle = isset($_POST['votingButtonsStyle']) ? $_POST['votingButtonsStyle'] : 0;
             $this->optionsSerialized->votingButtonsIcon = isset($_POST['votingButtonsIcon']) ? $_POST['votingButtonsIcon'] : 'fa-plus|fa-minus';
-            $this->optionsSerialized->shareButtons = isset($_POST['wpdiscuz_share_buttons']) ? $_POST['wpdiscuz_share_buttons'] : array();
             $this->optionsSerialized->headerTextShowHide = isset($_POST['wc_header_text_show_hide']) ? $_POST['wc_header_text_show_hide'] : 0;
             $this->optionsSerialized->storeCommenterData = isset($_POST['storeCommenterData']) && (intval($_POST['storeCommenterData']) || $_POST['storeCommenterData'] == 0) ? $_POST['storeCommenterData'] : -1;
             $this->optionsSerialized->showHideLoggedInUsername = isset($_POST['wc_show_hide_loggedin_username']) ? $_POST['wc_show_hide_loggedin_username'] : 0;
+            $this->optionsSerialized->hideLoginLinkForGuests = isset($_POST['hideLoginLinkForGuests']) ? $_POST['hideLoginLinkForGuests'] : 0;
+            $this->optionsSerialized->hideUserSettingsButton = isset($_POST['hideUserSettingsButton']) ? $_POST['hideUserSettingsButton'] : 0;
+            $this->optionsSerialized->hideDiscussionStat = isset($_POST['hideDiscussionStat']) ? $_POST['hideDiscussionStat'] : 0;
+            $this->optionsSerialized->hideRecentAuthors = isset($_POST['hideRecentAuthors']) ? $_POST['hideRecentAuthors'] : 0;
+            $this->optionsSerialized->displayAntispamNote = isset($_POST['displayAntispamNote']) ? $_POST['displayAntispamNote'] : 0;
             $this->optionsSerialized->authorTitlesShowHide = isset($_POST['wc_author_titles_show_hide']) ? $_POST['wc_author_titles_show_hide'] : 0;
             $this->optionsSerialized->simpleCommentDate = isset($_POST['wc_simple_comment_date']) ? $_POST['wc_simple_comment_date'] : 0;
             $this->optionsSerialized->subscriptionType = isset($_POST['subscriptionType']) ? $_POST['subscriptionType'] : 1;
@@ -86,7 +86,6 @@ class WpdiscuzOptions implements WpDiscuzConstants {
             $this->optionsSerialized->isUserByEmail = isset($_POST['isUserByEmail']) ? $_POST['isUserByEmail'] : 0;
             $this->optionsSerialized->commenterNameMinLength = isset($_POST['commenterNameMinLength']) && intval($_POST['commenterNameMinLength']) >= 1 ? $_POST['commenterNameMinLength'] : 1;
             $this->optionsSerialized->commenterNameMaxLength = isset($_POST['commenterNameMaxLength']) && intval($_POST['commenterNameMaxLength']) >= 3 && intval($_POST['commenterNameMaxLength']) <= 50 ? $_POST['commenterNameMaxLength'] : 50;
-            $this->optionsSerialized->facebookAppID = isset($_POST['facebookAppID']) ? $_POST['facebookAppID'] : '';
             $this->optionsSerialized->isNotifyOnCommentApprove = isset($_POST['isNotifyOnCommentApprove']) ? $_POST['isNotifyOnCommentApprove'] : 0;
             $this->optionsSerialized->isGravatarCacheEnabled = isset($_POST['isGravatarCacheEnabled']) ? $_POST['isGravatarCacheEnabled'] : 0;
             $this->optionsSerialized->gravatarCacheMethod = isset($_POST['gravatarCacheMethod']) ? $_POST['gravatarCacheMethod'] : 'cronjob';
@@ -94,6 +93,42 @@ class WpdiscuzOptions implements WpDiscuzConstants {
             $this->optionsSerialized->theme = isset($_POST['theme']) ? $_POST['theme'] : 'wpd-default';
             $this->optionsSerialized->reverseChildren = isset($_POST['reverseChildren']) ? $_POST['reverseChildren'] : 0;
             $this->optionsSerialized->antispamKey = isset($_POST['antispamKey']) ? $_POST['antispamKey'] : '';
+            //social 
+            $this->optionsSerialized->socialLoginAgreementCheckbox = isset($_POST['socialLoginAgreementCheckbox']) ? $_POST['socialLoginAgreementCheckbox'] : 0;
+            $this->optionsSerialized->socialLoginInSecondaryForm = isset($_POST['socialLoginInSecondaryForm']) ? $_POST['socialLoginInSecondaryForm'] : 0;
+            // fb
+            $this->optionsSerialized->enableFbLogin = isset($_POST['enableFbLogin']) ? $_POST['enableFbLogin'] : 0;
+            $this->optionsSerialized->enableFbShare = isset($_POST['enableFbShare']) ? $_POST['enableFbShare'] : 0;
+            $this->optionsSerialized->fbAppID = isset($_POST['fbAppID']) ? trim($_POST['fbAppID']) : '';
+            $this->optionsSerialized->fbAppSecret = isset($_POST['fbAppSecret']) ? trim($_POST['fbAppSecret']) : '';
+            $this->optionsSerialized->fbUseOAuth2 = isset($_POST['fbUseOAuth2']) ? $_POST['fbUseOAuth2'] : 0;
+            // twitter
+            $this->optionsSerialized->enableTwitterLogin = isset($_POST['enableTwitterLogin']) ? $_POST['enableTwitterLogin'] : 0;
+            $this->optionsSerialized->enableTwitterShare = isset($_POST['enableTwitterShare']) ? $_POST['enableTwitterShare'] : 0;
+            $this->optionsSerialized->twitterAppID = isset($_POST['twitterAppID']) ? trim($_POST['twitterAppID']) : '';
+            $this->optionsSerialized->twitterAppSecret = isset($_POST['twitterAppSecret']) ? trim($_POST['twitterAppSecret']) : '';
+            // google+
+            $this->optionsSerialized->enableGoogleLogin = isset($_POST['enableGoogleLogin']) ? $_POST['enableGoogleLogin'] : 0;
+            $this->optionsSerialized->enableGoogleShare = isset($_POST['enableGoogleShare']) ? $_POST['enableGoogleShare'] : 0;
+            $this->optionsSerialized->googleAppID = isset($_POST['googleAppID']) ? trim($_POST['googleAppID']) : '';
+            // ok
+            $this->optionsSerialized->enableOkLogin = isset($_POST['enableOkLogin']) ? $_POST['enableOkLogin'] : 0;
+            $this->optionsSerialized->enableOkShare = isset($_POST['enableOkShare']) ? $_POST['enableOkShare'] : 0;
+            $this->optionsSerialized->okAppID = isset($_POST['okAppID']) ? trim($_POST['okAppID']) : '';
+            $this->optionsSerialized->okAppKey = isset($_POST['okAppKey']) ? trim($_POST['okAppKey']) : '';
+            $this->optionsSerialized->okAppSecret = isset($_POST['okAppSecret']) ? trim($_POST['okAppSecret']) : '';
+            // vk
+            $this->optionsSerialized->enableVkLogin = isset($_POST['enableVkLogin']) ? $_POST['enableVkLogin'] : 0;
+            $this->optionsSerialized->enableVkShare = isset($_POST['enableVkShare']) ? $_POST['enableVkShare'] : 0;
+            $this->optionsSerialized->vkAppID = isset($_POST['vkAppID']) ? trim($_POST['vkAppID']) : '';
+            $this->optionsSerialized->vkAppSecret = isset($_POST['vkAppSecret']) ? trim($_POST['vkAppSecret']) : '';
+
+            $this->optionsSerialized->isFollowActive = isset($_POST['isFollowActive']) ? intval($_POST['isFollowActive']) : 0;
+            $this->optionsSerialized->disableFollowConfirmForUsers = isset($_POST['disableFollowConfirmForUsers']) ? intval($_POST['disableFollowConfirmForUsers']) : 0;
+            $this->optionsSerialized->enableStickButton = isset($_POST['enableStickButton']) ? intval($_POST['enableStickButton']) : 0;
+            $this->optionsSerialized->enableCloseButton = isset($_POST['enableCloseButton']) ? intval($_POST['enableCloseButton']) : 0;
+            $this->optionsSerialized->enableDropAnimation = isset($_POST['enableDropAnimation']) ? intval($_POST['enableDropAnimation']) : 0;
+            $this->optionsSerialized->isNativeAjaxEnabled = isset($_POST['isNativeAjaxEnabled']) ? intval($_POST['isNativeAjaxEnabled']) : 0;
             do_action('wpdiscuz_save_options', $_POST);
             $this->optionsSerialized->updateOptions();
             add_settings_error('wpdiscuz', 'settings_updated', __('Settings updated', 'wpdiscuz'), 'updated');
@@ -110,119 +145,171 @@ class WpdiscuzOptions implements WpDiscuzConstants {
             if (function_exists('check_admin_referer')) {
                 check_admin_referer('wc_phrases_form');
             }
-            $this->optionsSerialized->phrases['wc_be_the_first_text'] = $_POST['wc_be_the_first_text'];
-            $this->optionsSerialized->phrases['wc_header_text'] = $_POST['wc_header_text'];
-            $this->optionsSerialized->phrases['wc_header_text_plural'] = $_POST['wc_header_text_plural'];
-            $this->optionsSerialized->phrases['wc_header_on_text'] = $_POST['wc_header_on_text'];
-            $this->optionsSerialized->phrases['wc_comment_start_text'] = $_POST['wc_comment_start_text'];
-            $this->optionsSerialized->phrases['wc_comment_join_text'] = $_POST['wc_comment_join_text'];
-            $this->optionsSerialized->phrases['wc_email_text'] = $_POST['wc_email_text'];
-            $this->optionsSerialized->phrases['wc_subscribe_anchor'] = $_POST['wc_subscribe_anchor'];
-            $this->optionsSerialized->phrases['wc_notify_of'] = $_POST['wc_notify_of'];
-            $this->optionsSerialized->phrases['wc_notify_on_new_comment'] = $_POST['wc_notify_on_new_comment'];
-            $this->optionsSerialized->phrases['wc_notify_on_all_new_reply'] = $_POST['wc_notify_on_all_new_reply'];
-            $this->optionsSerialized->phrases['wc_notify_on_new_reply_on'] = $_POST['wc_notify_on_new_reply_on'];
-            $this->optionsSerialized->phrases['wc_notify_on_new_reply_off'] = $_POST['wc_notify_on_new_reply_off'];
-            $this->optionsSerialized->phrases['wc_sort_by'] = $_POST['wc_sort_by'];
-            $this->optionsSerialized->phrases['wc_newest'] = $_POST['wc_newest'];
-            $this->optionsSerialized->phrases['wc_oldest'] = $_POST['wc_oldest'];
-            $this->optionsSerialized->phrases['wc_most_voted'] = $_POST['wc_most_voted'];
-            $this->optionsSerialized->phrases['wc_load_more_submit_text'] = $_POST['wc_load_more_submit_text'];
-            $this->optionsSerialized->phrases['wc_load_rest_comments_submit_text'] = $_POST['wc_load_rest_comments_submit_text'];
-            $this->optionsSerialized->phrases['wc_reply_text'] = $_POST['wc_reply_text'];
-            $this->optionsSerialized->phrases['wc_share_text'] = $_POST['wc_share_text'];
-            $this->optionsSerialized->phrases['wc_edit_text'] = $_POST['wc_edit_text'];
-            $this->optionsSerialized->phrases['wc_share_facebook'] = $_POST['wc_share_facebook'];
-            $this->optionsSerialized->phrases['wc_share_twitter'] = $_POST['wc_share_twitter'];
-            $this->optionsSerialized->phrases['wc_share_google'] = $_POST['wc_share_google'];
-            $this->optionsSerialized->phrases['wc_share_vk'] = $_POST['wc_share_vk'];
-            $this->optionsSerialized->phrases['wc_share_ok'] = $_POST['wc_share_ok'];
-            $this->optionsSerialized->phrases['wc_hide_replies_text'] = $_POST['wc_hide_replies_text'];
-            $this->optionsSerialized->phrases['wc_show_replies_text'] = $_POST['wc_show_replies_text'];
-            $this->optionsSerialized->phrases['wc_email_subject'] = $_POST['wc_email_subject'];
-            $this->optionsSerialized->phrases['wc_email_message'] = $_POST['wc_email_message'];
-            $this->optionsSerialized->phrases['wc_new_reply_email_subject'] = $_POST['wc_new_reply_email_subject'];
-            $this->optionsSerialized->phrases['wc_new_reply_email_message'] = $_POST['wc_new_reply_email_message'];
-            $this->optionsSerialized->phrases['wc_subscribed_on_comment'] = $_POST['wc_subscribed_on_comment'];
-            $this->optionsSerialized->phrases['wc_subscribed_on_all_comment'] = $_POST['wc_subscribed_on_all_comment'];
-            $this->optionsSerialized->phrases['wc_subscribed_on_post'] = $_POST['wc_subscribed_on_post'];
-            $this->optionsSerialized->phrases['wc_unsubscribe'] = $_POST['wc_unsubscribe'];
-            $this->optionsSerialized->phrases['wc_ignore_subscription'] = $_POST['wc_ignore_subscription'];
-            $this->optionsSerialized->phrases['wc_unsubscribe_message'] = $_POST['wc_unsubscribe_message'];
-            $this->optionsSerialized->phrases['wc_subscribe_message'] = $_POST['wc_subscribe_message'];
-            $this->optionsSerialized->phrases['wc_confirm_email'] = $_POST['wc_confirm_email'];
-            $this->optionsSerialized->phrases['wc_comfirm_success_message'] = $_POST['wc_comfirm_success_message'];
-            $this->optionsSerialized->phrases['wc_confirm_email_subject'] = $_POST['wc_confirm_email_subject'];
-            $this->optionsSerialized->phrases['wc_confirm_email_message'] = $_POST['wc_confirm_email_message'];
-            $this->optionsSerialized->phrases['wc_error_empty_text'] = $_POST['wc_error_empty_text'];
-            $this->optionsSerialized->phrases['wc_error_email_text'] = $_POST['wc_error_email_text'];
-            $this->optionsSerialized->phrases['wc_error_url_text'] = $_POST['wc_error_url_text'];
-            $this->optionsSerialized->phrases['wc_year_text']['datetime'][0] = $_POST['wc_year_text'];
-            $this->optionsSerialized->phrases['wc_year_text_plural']['datetime'][0] = $_POST['wc_year_text_plural'];
-            $this->optionsSerialized->phrases['wc_month_text']['datetime'][0] = $_POST['wc_month_text'];
-            $this->optionsSerialized->phrases['wc_month_text_plural']['datetime'][0] = $_POST['wc_month_text_plural'];
-            $this->optionsSerialized->phrases['wc_day_text']['datetime'][0] = $_POST['wc_day_text'];
-            $this->optionsSerialized->phrases['wc_day_text_plural']['datetime'][0] = $_POST['wc_day_text_plural'];
-            $this->optionsSerialized->phrases['wc_hour_text']['datetime'][0] = $_POST['wc_hour_text'];
-            $this->optionsSerialized->phrases['wc_hour_text_plural']['datetime'][0] = $_POST['wc_hour_text_plural'];
-            $this->optionsSerialized->phrases['wc_minute_text']['datetime'][0] = $_POST['wc_minute_text'];
-            $this->optionsSerialized->phrases['wc_minute_text_plural']['datetime'][0] = $_POST['wc_minute_text_plural'];
-            $this->optionsSerialized->phrases['wc_second_text']['datetime'][0] = $_POST['wc_second_text'];
-            $this->optionsSerialized->phrases['wc_second_text_plural']['datetime'][0] = $_POST['wc_second_text_plural'];
-            $this->optionsSerialized->phrases['wc_right_now_text'] = $_POST['wc_right_now_text'];
-            $this->optionsSerialized->phrases['wc_ago_text'] = $_POST['wc_ago_text'];
-            $this->optionsSerialized->phrases['wc_you_must_be_text'] = $_POST['wc_you_must_be_text'];
-            $this->optionsSerialized->phrases['wc_logged_in_as'] = $_POST['wc_logged_in_as'];
-            $this->optionsSerialized->phrases['wc_log_out'] = $_POST['wc_log_out'];
-            $this->optionsSerialized->phrases['wc_logged_in_text'] = $_POST['wc_logged_in_text'];
-            $this->optionsSerialized->phrases['wc_to_post_comment_text'] = $_POST['wc_to_post_comment_text'];
-            $this->optionsSerialized->phrases['wc_vote_counted'] = $_POST['wc_vote_counted'];
-            $this->optionsSerialized->phrases['wc_vote_up'] = $_POST['wc_vote_up'];
-            $this->optionsSerialized->phrases['wc_vote_down'] = $_POST['wc_vote_down'];
-            $this->optionsSerialized->phrases['wc_held_for_moderate'] = $_POST['wc_held_for_moderate'];
-            $this->optionsSerialized->phrases['wc_vote_only_one_time'] = $_POST['wc_vote_only_one_time'];
-            $this->optionsSerialized->phrases['wc_voting_error'] = $_POST['wc_voting_error'];
-            $this->optionsSerialized->phrases['wc_self_vote'] = $_POST['wc_self_vote'];
-            $this->optionsSerialized->phrases['wc_deny_voting_from_same_ip'] = $_POST['wc_deny_voting_from_same_ip'];
-            $this->optionsSerialized->phrases['wc_login_to_vote'] = $_POST['wc_login_to_vote'];
-            $this->optionsSerialized->phrases['wc_invalid_captcha'] = $_POST['wc_invalid_captcha'];
-            $this->optionsSerialized->phrases['wc_invalid_field'] = $_POST['wc_invalid_field'];
-            $this->optionsSerialized->phrases['wc_new_comment_button_text'] = $_POST['wc_new_comment_button_text'];
-            $this->optionsSerialized->phrases['wc_new_comments_button_text'] = $_POST['wc_new_comments_button_text'];
-            $this->optionsSerialized->phrases['wc_new_reply_button_text'] = $_POST['wc_new_reply_button_text'];
-            $this->optionsSerialized->phrases['wc_new_replies_button_text'] = $_POST['wc_new_replies_button_text'];
-            $this->optionsSerialized->phrases['wc_new_comments_text'] = $_POST['wc_new_comments_text'];
-            $this->optionsSerialized->phrases['wc_comment_not_updated'] = $_POST['wc_comment_not_updated'];
-            $this->optionsSerialized->phrases['wc_comment_edit_not_possible'] = $_POST['wc_comment_edit_not_possible'];
-            $this->optionsSerialized->phrases['wc_comment_not_edited'] = $_POST['wc_comment_not_edited'];
-            $this->optionsSerialized->phrases['wc_comment_edit_save_button'] = $_POST['wc_comment_edit_save_button'];
-            $this->optionsSerialized->phrases['wc_comment_edit_cancel_button'] = $_POST['wc_comment_edit_cancel_button'];
-            $this->optionsSerialized->phrases['wc_msg_input_min_length'] = $_POST['wc_msg_input_min_length'];
-            $this->optionsSerialized->phrases['wc_msg_input_max_length'] = $_POST['wc_msg_input_max_length'];
-            $this->optionsSerialized->phrases['wc_read_more'] = $_POST['wc_read_more'];
-            $this->optionsSerialized->phrases['wc_anonymous'] = $_POST['wc_anonymous'];
-            $this->optionsSerialized->phrases['wc_msg_required_fields'] = $_POST['wc_msg_required_fields'];
-            $this->optionsSerialized->phrases['wc_connect_with'] = $_POST['wc_connect_with'];
-            $this->optionsSerialized->phrases['wc_subscribed_to'] = $_POST['wc_subscribed_to'];
-            $this->optionsSerialized->phrases['wc_form_subscription_submit'] = $_POST['wc_form_subscription_submit'];
-            $this->optionsSerialized->phrases['wc_comment_approved_email_subject'] = $_POST['wc_comment_approved_email_subject'];
-            $this->optionsSerialized->phrases['wc_comment_approved_email_message'] = $_POST['wc_comment_approved_email_message'];
-            $this->optionsSerialized->phrases['wc_roles_cannot_comment_message'] = $_POST['wc_roles_cannot_comment_message'];
-            $this->optionsSerialized->phrases['wc_stick_main_form_comment_on'] = $_POST['wc_stick_main_form_comment_on'];
-            $this->optionsSerialized->phrases['wc_stick_main_form_comment_off'] = $_POST['wc_stick_main_form_comment_off'];
-            $this->optionsSerialized->phrases['wc_stick_comment'] = $_POST['wc_stick_comment'];
-            $this->optionsSerialized->phrases['wc_unstick_comment'] = $_POST['wc_unstick_comment'];
-            $this->optionsSerialized->phrases['wc_sticky_comment_icon_title'] = $_POST['wc_sticky_comment_icon_title'];
-            $this->optionsSerialized->phrases['wc_close_main_form_comment_on'] = $_POST['wc_close_main_form_comment_on'];
-            $this->optionsSerialized->phrases['wc_close_main_form_comment_off'] = $_POST['wc_close_main_form_comment_off'];
-            $this->optionsSerialized->phrases['wc_close_comment'] = $_POST['wc_close_comment'];
-            $this->optionsSerialized->phrases['wc_open_comment'] = $_POST['wc_open_comment'];
-            $this->optionsSerialized->phrases['wc_closed_comment_icon_title'] = $_POST['wc_closed_comment_icon_title'];
+            $this->optionsSerialized->phrases['wc_be_the_first_text'] = esc_attr($_POST['wc_be_the_first_text']);
+            $this->optionsSerialized->phrases['wc_comment_start_text'] = esc_attr($_POST['wc_comment_start_text']);
+            $this->optionsSerialized->phrases['wc_comment_join_text'] = esc_attr($_POST['wc_comment_join_text']);
+            $this->optionsSerialized->phrases['wc_content_and_settings'] = esc_attr($_POST['wc_content_and_settings']);
+            $this->optionsSerialized->phrases['wc_comment_threads'] = esc_attr($_POST['wc_comment_threads']);
+            $this->optionsSerialized->phrases['wc_thread_replies'] = esc_attr($_POST['wc_thread_replies']);
+            $this->optionsSerialized->phrases['wc_followers'] = esc_attr($_POST['wc_followers']);
+            $this->optionsSerialized->phrases['wc_most_reacted_comment'] = esc_attr($_POST['wc_most_reacted_comment']);
+            $this->optionsSerialized->phrases['wc_hottest_comment_thread'] = esc_attr($_POST['wc_hottest_comment_thread']);
+            $this->optionsSerialized->phrases['wc_comment_authors'] = esc_attr($_POST['wc_comment_authors']);
+            $this->optionsSerialized->phrases['wc_recent_comment_authors'] = esc_attr($_POST['wc_recent_comment_authors']);
+            $this->optionsSerialized->phrases['wc_email_text'] = esc_attr($_POST['wc_email_text']);
+            $this->optionsSerialized->phrases['wc_subscribe_anchor'] = esc_attr($_POST['wc_subscribe_anchor']);
+            $this->optionsSerialized->phrases['wc_notify_of'] = esc_attr($_POST['wc_notify_of']);
+            $this->optionsSerialized->phrases['wc_notify_on_new_comment'] = esc_attr($_POST['wc_notify_on_new_comment']);
+            $this->optionsSerialized->phrases['wc_notify_on_all_new_reply'] = esc_attr($_POST['wc_notify_on_all_new_reply']);
+            $this->optionsSerialized->phrases['wc_notify_on_new_reply'] = esc_attr($_POST['wc_notify_on_new_reply']);
+            $this->optionsSerialized->phrases['wc_sort_by'] = esc_attr($_POST['wc_sort_by']);
+            $this->optionsSerialized->phrases['wc_newest'] = esc_attr($_POST['wc_newest']);
+            $this->optionsSerialized->phrases['wc_oldest'] = esc_attr($_POST['wc_oldest']);
+            $this->optionsSerialized->phrases['wc_most_voted'] = esc_attr($_POST['wc_most_voted']);
+            $this->optionsSerialized->phrases['wc_load_more_submit_text'] = esc_attr($_POST['wc_load_more_submit_text']);
+            $this->optionsSerialized->phrases['wc_load_rest_comments_submit_text'] = esc_attr($_POST['wc_load_rest_comments_submit_text']);
+            $this->optionsSerialized->phrases['wc_reply_text'] = esc_attr($_POST['wc_reply_text']);
+            $this->optionsSerialized->phrases['wc_share_text'] = esc_attr($_POST['wc_share_text']);
+            $this->optionsSerialized->phrases['wc_edit_text'] = esc_attr($_POST['wc_edit_text']);
+            $this->optionsSerialized->phrases['wc_share_facebook'] = esc_attr($_POST['wc_share_facebook']);
+            $this->optionsSerialized->phrases['wc_share_twitter'] = esc_attr($_POST['wc_share_twitter']);
+            $this->optionsSerialized->phrases['wc_share_google'] = esc_attr($_POST['wc_share_google']);
+            $this->optionsSerialized->phrases['wc_share_vk'] = esc_attr($_POST['wc_share_vk']);
+            $this->optionsSerialized->phrases['wc_share_ok'] = esc_attr($_POST['wc_share_ok']);
+            $this->optionsSerialized->phrases['wc_hide_replies_text'] = esc_attr($_POST['wc_hide_replies_text']);
+            $this->optionsSerialized->phrases['wc_show_replies_text'] = esc_attr($_POST['wc_show_replies_text']);
+            $this->optionsSerialized->phrases['wc_email_subject'] = esc_attr($_POST['wc_email_subject']);
+            $this->optionsSerialized->phrases['wc_email_message'] = wpautop($_POST['wc_email_message']);
+            $this->optionsSerialized->phrases['wc_all_comment_new_reply_subject'] = esc_attr($_POST['wc_all_comment_new_reply_subject']);
+            $this->optionsSerialized->phrases['wc_all_comment_new_reply_message'] = wpautop($_POST['wc_all_comment_new_reply_message']);
+            $this->optionsSerialized->phrases['wc_new_reply_email_subject'] = esc_attr($_POST['wc_new_reply_email_subject']);
+            $this->optionsSerialized->phrases['wc_new_reply_email_message'] = wpautop($_POST['wc_new_reply_email_message']);
+            $this->optionsSerialized->phrases['wc_subscribed_on_comment'] = esc_attr($_POST['wc_subscribed_on_comment']);
+            $this->optionsSerialized->phrases['wc_subscribed_on_all_comment'] = esc_attr($_POST['wc_subscribed_on_all_comment']);
+            $this->optionsSerialized->phrases['wc_subscribed_on_post'] = esc_attr($_POST['wc_subscribed_on_post']);
+            $this->optionsSerialized->phrases['wc_unsubscribe'] = esc_attr($_POST['wc_unsubscribe']);
+            $this->optionsSerialized->phrases['wc_ignore_subscription'] = esc_attr($_POST['wc_ignore_subscription']);
+            $this->optionsSerialized->phrases['wc_unsubscribe_message'] = esc_attr($_POST['wc_unsubscribe_message']);
+            $this->optionsSerialized->phrases['wc_subscribe_message'] = esc_attr($_POST['wc_subscribe_message']);
+            $this->optionsSerialized->phrases['wc_confirm_email'] = esc_attr($_POST['wc_confirm_email']);
+            $this->optionsSerialized->phrases['wc_comfirm_success_message'] = esc_attr($_POST['wc_comfirm_success_message']);
+            $this->optionsSerialized->phrases['wc_confirm_email_subject'] = esc_attr($_POST['wc_confirm_email_subject']);
+            $this->optionsSerialized->phrases['wc_confirm_email_message'] = ($_POST['wc_confirm_email_message']);
+            $this->optionsSerialized->phrases['wc_error_empty_text'] = esc_attr($_POST['wc_error_empty_text']);
+            $this->optionsSerialized->phrases['wc_error_email_text'] = esc_attr($_POST['wc_error_email_text']);
+            $this->optionsSerialized->phrases['wc_error_url_text'] = esc_attr($_POST['wc_error_url_text']);
+            $this->optionsSerialized->phrases['wc_year_text'] = esc_attr($_POST['wc_year_text']);
+            $this->optionsSerialized->phrases['wc_year_text_plural'] = esc_attr($_POST['wc_year_text_plural']);
+            $this->optionsSerialized->phrases['wc_month_text'] = esc_attr($_POST['wc_month_text']);
+            $this->optionsSerialized->phrases['wc_month_text_plural'] = esc_attr($_POST['wc_month_text_plural']);
+            $this->optionsSerialized->phrases['wc_day_text'] = esc_attr($_POST['wc_day_text']);
+            $this->optionsSerialized->phrases['wc_day_text_plural'] = esc_attr($_POST['wc_day_text_plural']);
+            $this->optionsSerialized->phrases['wc_hour_text'] = esc_attr($_POST['wc_hour_text']);
+            $this->optionsSerialized->phrases['wc_hour_text_plural'] = esc_attr($_POST['wc_hour_text_plural']);
+            $this->optionsSerialized->phrases['wc_minute_text'] = esc_attr($_POST['wc_minute_text']);
+            $this->optionsSerialized->phrases['wc_minute_text_plural'] = esc_attr($_POST['wc_minute_text_plural']);
+            $this->optionsSerialized->phrases['wc_second_text'] = esc_attr($_POST['wc_second_text']);
+            $this->optionsSerialized->phrases['wc_second_text_plural'] = esc_attr($_POST['wc_second_text_plural']);
+            $this->optionsSerialized->phrases['wc_right_now_text'] = esc_attr($_POST['wc_right_now_text']);
+            $this->optionsSerialized->phrases['wc_ago_text'] = esc_attr($_POST['wc_ago_text']);
+            $this->optionsSerialized->phrases['wc_you_must_be_text'] = esc_attr($_POST['wc_you_must_be_text']);
+            $this->optionsSerialized->phrases['wc_logged_in_as'] = esc_attr($_POST['wc_logged_in_as']);
+            $this->optionsSerialized->phrases['wc_log_out'] = esc_attr($_POST['wc_log_out']);
+            $this->optionsSerialized->phrases['wc_log_in'] = esc_attr($_POST['wc_log_in']);
+            $this->optionsSerialized->phrases['wc_login_please'] = esc_attr($_POST['wc_login_please']);
+            $this->optionsSerialized->phrases['wc_logged_in_text'] = esc_attr($_POST['wc_logged_in_text']);
+            $this->optionsSerialized->phrases['wc_to_post_comment_text'] = esc_attr($_POST['wc_to_post_comment_text']);
+            $this->optionsSerialized->phrases['wc_vote_counted'] = esc_attr($_POST['wc_vote_counted']);
+            $this->optionsSerialized->phrases['wc_vote_up'] = esc_attr($_POST['wc_vote_up']);
+            $this->optionsSerialized->phrases['wc_vote_down'] = esc_attr($_POST['wc_vote_down']);
+            $this->optionsSerialized->phrases['wc_held_for_moderate'] = esc_attr($_POST['wc_held_for_moderate']);
+            $this->optionsSerialized->phrases['wc_vote_only_one_time'] = esc_attr($_POST['wc_vote_only_one_time']);
+            $this->optionsSerialized->phrases['wc_voting_error'] = esc_attr($_POST['wc_voting_error']);
+            $this->optionsSerialized->phrases['wc_self_vote'] = esc_attr($_POST['wc_self_vote']);
+            $this->optionsSerialized->phrases['wc_deny_voting_from_same_ip'] = esc_attr($_POST['wc_deny_voting_from_same_ip']);
+            $this->optionsSerialized->phrases['wc_login_to_vote'] = esc_attr($_POST['wc_login_to_vote']);
+            $this->optionsSerialized->phrases['wc_invalid_captcha'] = esc_attr($_POST['wc_invalid_captcha']);
+            $this->optionsSerialized->phrases['wc_invalid_field'] = esc_attr($_POST['wc_invalid_field']);
+            $this->optionsSerialized->phrases['wc_new_comment_button_text'] = esc_attr($_POST['wc_new_comment_button_text']);
+            $this->optionsSerialized->phrases['wc_new_comments_button_text'] = esc_attr($_POST['wc_new_comments_button_text']);
+            $this->optionsSerialized->phrases['wc_new_reply_button_text'] = esc_attr($_POST['wc_new_reply_button_text']);
+            $this->optionsSerialized->phrases['wc_new_replies_button_text'] = esc_attr($_POST['wc_new_replies_button_text']);
+            $this->optionsSerialized->phrases['wc_comment_not_updated'] = esc_attr($_POST['wc_comment_not_updated']);
+            $this->optionsSerialized->phrases['wc_comment_edit_not_possible'] = esc_attr($_POST['wc_comment_edit_not_possible']);
+            $this->optionsSerialized->phrases['wc_comment_not_edited'] = esc_attr($_POST['wc_comment_not_edited']);
+            $this->optionsSerialized->phrases['wc_comment_edit_save_button'] = esc_attr($_POST['wc_comment_edit_save_button']);
+            $this->optionsSerialized->phrases['wc_comment_edit_cancel_button'] = esc_attr($_POST['wc_comment_edit_cancel_button']);
+            $this->optionsSerialized->phrases['wc_msg_input_min_length'] = esc_attr($_POST['wc_msg_input_min_length']);
+            $this->optionsSerialized->phrases['wc_msg_input_max_length'] = esc_attr($_POST['wc_msg_input_max_length']);
+            $this->optionsSerialized->phrases['wc_read_more'] = esc_attr($_POST['wc_read_more']);
+            $this->optionsSerialized->phrases['wc_anonymous'] = esc_attr($_POST['wc_anonymous']);
+            $this->optionsSerialized->phrases['wc_msg_required_fields'] = esc_attr($_POST['wc_msg_required_fields']);
+            $this->optionsSerialized->phrases['wc_connect_with'] = esc_attr($_POST['wc_connect_with']);
+            $this->optionsSerialized->phrases['wc_subscribed_to'] = esc_attr($_POST['wc_subscribed_to']);
+            $this->optionsSerialized->phrases['wc_form_subscription_submit'] = esc_attr($_POST['wc_form_subscription_submit']);
+            $this->optionsSerialized->phrases['wc_comment_approved_email_subject'] = esc_attr($_POST['wc_comment_approved_email_subject']);
+            $this->optionsSerialized->phrases['wc_comment_approved_email_message'] = ($_POST['wc_comment_approved_email_message']);
+            $this->optionsSerialized->phrases['wc_roles_cannot_comment_message'] = esc_attr($_POST['wc_roles_cannot_comment_message']);
+            $this->optionsSerialized->phrases['wc_stick_comment_btn_title'] = esc_attr($_POST['wc_stick_comment_btn_title']);
+            $this->optionsSerialized->phrases['wc_stick_comment'] = esc_attr($_POST['wc_stick_comment']);
+            $this->optionsSerialized->phrases['wc_unstick_comment'] = esc_attr($_POST['wc_unstick_comment']);
+            $this->optionsSerialized->phrases['wc_sticky_comment_icon_title'] = esc_attr($_POST['wc_sticky_comment_icon_title']);
+            $this->optionsSerialized->phrases['wc_close_comment_btn_title'] = esc_attr($_POST['wc_close_comment_btn_title']);
+            $this->optionsSerialized->phrases['wc_close_comment'] = esc_attr($_POST['wc_close_comment']);
+            $this->optionsSerialized->phrases['wc_open_comment'] = esc_attr($_POST['wc_open_comment']);
+            $this->optionsSerialized->phrases['wc_closed_comment_icon_title'] = esc_attr($_POST['wc_closed_comment_icon_title']);
+            $this->optionsSerialized->phrases['wc_social_login_agreement_label'] = esc_attr($_POST['wc_social_login_agreement_label']);
+            $this->optionsSerialized->phrases['wc_social_login_agreement_desc'] = esc_attr($_POST['wc_social_login_agreement_desc']);
+            $this->optionsSerialized->phrases['wc_invisible_antispam_note'] = esc_attr($_POST['wc_invisible_antispam_note']);
+            $this->optionsSerialized->phrases['wc_agreement_button_disagree'] = esc_attr($_POST['wc_agreement_button_disagree']);
+            $this->optionsSerialized->phrases['wc_agreement_button_agree'] = esc_attr($_POST['wc_agreement_button_agree']);
+            $this->optionsSerialized->phrases['wc_content_and_settings'] = esc_attr($_POST['wc_content_and_settings']);
+            $this->optionsSerialized->phrases['wc_user_settings_activity'] = esc_attr($_POST['wc_user_settings_activity']);
+            $this->optionsSerialized->phrases['wc_user_settings_subscriptions'] = esc_attr($_POST['wc_user_settings_subscriptions']);
+            $this->optionsSerialized->phrases['wc_user_settings_follows'] = esc_attr($_POST['wc_user_settings_follows']);
+            $this->optionsSerialized->phrases['wc_user_settings_response_to'] = esc_attr($_POST['wc_user_settings_response_to']);
+            $this->optionsSerialized->phrases['wc_user_settings_email_me_delete_links'] = esc_attr($_POST['wc_user_settings_email_me_delete_links']);
+            $this->optionsSerialized->phrases['wc_user_settings_email_me_delete_links_desc'] = esc_attr($_POST['wc_user_settings_email_me_delete_links_desc']);
+            $this->optionsSerialized->phrases['wc_user_settings_no_data'] = esc_attr($_POST['wc_user_settings_no_data']);
+            $this->optionsSerialized->phrases['wc_user_settings_request_deleting_comments'] = esc_attr($_POST['wc_user_settings_request_deleting_comments']);
+            $this->optionsSerialized->phrases['wc_user_settings_cancel_subscriptions'] = esc_attr($_POST['wc_user_settings_cancel_subscriptions']);
+            $this->optionsSerialized->phrases['wc_user_settings_clear_cookie'] = esc_attr($_POST['wc_user_settings_clear_cookie']);
+            $this->optionsSerialized->phrases['wc_user_settings_delete_links'] = esc_attr($_POST['wc_user_settings_delete_links']);
+            $this->optionsSerialized->phrases['wc_user_settings_delete_all_comments'] = esc_attr($_POST['wc_user_settings_delete_all_comments']);
+            $this->optionsSerialized->phrases['wc_user_settings_delete_all_comments_message'] = wpautop($_POST['wc_user_settings_delete_all_comments_message']);
+            $this->optionsSerialized->phrases['wc_user_settings_delete_all_subscriptions'] = esc_attr($_POST['wc_user_settings_delete_all_subscriptions']);
+            $this->optionsSerialized->phrases['wc_user_settings_delete_all_subscriptions_message'] = wpautop($_POST['wc_user_settings_delete_all_subscriptions_message']);
+            $this->optionsSerialized->phrases['wc_user_settings_delete_all_follows'] = esc_attr($_POST['wc_user_settings_delete_all_follows']);
+            $this->optionsSerialized->phrases['wc_user_settings_delete_all_follows_message'] = wpautop($_POST['wc_user_settings_delete_all_follows_message']);
+            $this->optionsSerialized->phrases['wc_user_settings_subscribed_to_replies'] = esc_attr($_POST['wc_user_settings_subscribed_to_replies']);
+            $this->optionsSerialized->phrases['wc_user_settings_subscribed_to_replies_own'] = esc_attr($_POST['wc_user_settings_subscribed_to_replies_own']);
+            $this->optionsSerialized->phrases['wc_user_settings_subscribed_to_all_comments'] = esc_attr($_POST['wc_user_settings_subscribed_to_all_comments']);
+            $this->optionsSerialized->phrases['wc_user_settings_check_email'] = esc_attr($_POST['wc_user_settings_check_email']);
+            $this->optionsSerialized->phrases['wc_user_settings_email_error'] = esc_attr($_POST['wc_user_settings_email_error']);
+            $this->optionsSerialized->phrases['wc_confirm_comment_delete'] = esc_attr($_POST['wc_confirm_comment_delete']);
+            $this->optionsSerialized->phrases['wc_confirm_cancel_subscription'] = esc_attr($_POST['wc_confirm_cancel_subscription']);
+            $this->optionsSerialized->phrases['wc_confirm_cancel_follow'] = esc_attr($_POST['wc_confirm_cancel_follow']);
+            $this->optionsSerialized->phrases['wc_follow_user'] = esc_attr($_POST['wc_follow_user']);
+            $this->optionsSerialized->phrases['wc_unfollow_user'] = esc_attr($_POST['wc_unfollow_user']);
+            $this->optionsSerialized->phrases['wc_follow_success'] = esc_attr($_POST['wc_follow_success']);
+            $this->optionsSerialized->phrases['wc_follow_canceled'] = esc_attr($_POST['wc_follow_canceled']);
+            $this->optionsSerialized->phrases['wc_follow_email_confirm'] = esc_attr($_POST['wc_follow_email_confirm']);
+            $this->optionsSerialized->phrases['wc_follow_email_confirm_fail'] = esc_attr($_POST['wc_follow_email_confirm_fail']);
+            $this->optionsSerialized->phrases['wc_follow_login_to_follow'] = esc_attr($_POST['wc_follow_login_to_follow']);
+            $this->optionsSerialized->phrases['wc_follow_impossible'] = esc_attr($_POST['wc_follow_impossible']);
+            $this->optionsSerialized->phrases['wc_follow_not_added'] = esc_attr($_POST['wc_follow_not_added']);
+            $this->optionsSerialized->phrases['wc_follow_confirm'] = esc_attr($_POST['wc_follow_confirm']);
+            $this->optionsSerialized->phrases['wc_follow_cancel'] = esc_attr($_POST['wc_follow_cancel']);
+            $this->optionsSerialized->phrases['wc_follow_confirm_email_subject'] = esc_attr($_POST['wc_follow_confirm_email_subject']);
+            $this->optionsSerialized->phrases['wc_follow_confirm_email_message'] = wpautop($_POST['wc_follow_confirm_email_message']);
+            $this->optionsSerialized->phrases['wc_follow_email_subject'] = esc_attr($_POST['wc_follow_email_subject']);
+            $this->optionsSerialized->phrases['wc_follow_email_message'] = wpautop($_POST['wc_follow_email_message']);
+
             if (class_exists('Prompt_Comment_Form_Handling') && $this->optionsSerialized->usePostmaticForCommentNotification) {
-                $this->optionsSerialized->phrases['wc_postmatic_subscription_label'] = $_POST['wc_postmatic_subscription_label'];
+                $this->optionsSerialized->phrases['wc_postmatic_subscription_label'] = esc_attr($_POST['wc_postmatic_subscription_label']);
             }
             foreach ($this->optionsSerialized->blogRoles as $roleName => $roleVal) {
-                $this->optionsSerialized->phrases['wc_blog_role_' . $roleName] = $_POST['wc_blog_role_' . $roleName];
+                $this->optionsSerialized->phrases['wc_blog_role_' . $roleName] = esc_attr($_POST['wc_blog_role_' . $roleName]);
             }
             $this->dbManager->updatePhrases($this->optionsSerialized->phrases);
             add_settings_error('wpdiscuz', 'phrases_updated', __('Phrases updated', 'wpdiscuz'), 'updated');
@@ -287,33 +374,25 @@ class WpdiscuzOptions implements WpDiscuzConstants {
         include_once 'html-addons.php';
     }
 
-    private function initShareButtons() {
-        $this->shareButtons[] = 'fb';
-        $this->shareButtons[] = 'twitter';
-        $this->shareButtons[] = 'google';
-        $this->shareButtons[] = 'vk';
-        $this->shareButtons[] = 'ok';
-    }
-
     private function initAddons() {
         $this->addons = array(
-            'emoticons' => array('version' => '1.1.1', 'requires' => '4.0.0', 'class' => 'wpDiscuzSmile', 'title' => 'Emoticons', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'emoticons' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Brings an ocean of emotions to your comments. It comes with an awesome smile package.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-emoticons/'),
-            'author-info' => array('version' => '1.0.0', 'requires' => '4.0.6', 'class' => 'WpdiscuzCommentAuthorInfo', 'title' => 'Comment Author Info', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'author-info' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Extended information about comment author with Profile, Activity, Votes and Subscriptions Tabs on pop-up window.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-comment-author-info/'),
-            'online-users' => array('version' => '1.0.0', 'requires' => '4.1.0', 'class' => 'WpdiscuzOnlineUsers', 'title' => 'Online Users', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'online-users' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Real-time online user checking, pop-up notification of new online users and online/offline badges.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-online-users/'),
-            'private' => array('version' => '1.0.0', 'requires' => '5.0.0', 'class' => 'wpDiscuzPrivateComment', 'title' => 'Private Comments', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'private' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Allows to create private comment threads. Rich management options in dashboard by user roles.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-private-comments/'),
-            'subscriptions' => array('version' => '1.0.0', 'requires' => '4.0.4', 'class' => 'wpdSubscribeManager', 'title' => 'Subscription Manager', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'subscriptions' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Total control over comment subscriptions. Full list, monitor, manage, filter, unsubscribe, confirm...', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-subscribe-manager/'),
-            'ads-manager' => array('version' => '1.0.0', 'requires' => '4.0.0', 'class' => 'WpdiscuzAdsManager', 'title' => 'Ads Manager', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'ads-manager' . WPDISCUZ_DS . 'header.png'), 'desc' => __('A full-fledged tool-kit for advertising in comment section of your website. Separate banner and ad managment.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-ads-manager/'),
-            'user-mention' => array('version' => '1.0.0', 'requires' => '4.0.0', 'class' => 'Wpdiscuz_UCM', 'title' => 'User &amp; Comment Mentioning', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'user-mention' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Allows to mention comments and users in comment text using #comment-id and @username tags.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-user-comment-mentioning/'),
-            'likers' => array('version' => '1.0.0', 'requires' => '4.0.0', 'class' => 'WpdiscuzVoters', 'title' => 'Advanced Likers', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'likers' . WPDISCUZ_DS . 'header.png'), 'desc' => __('See comment likers and voters of each comment. Adds user reputation and badges based on received likes.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-advanced-likers/'),
-            'report-flagging' => array('version' => '1.1.5', 'requires' => '4.0.0', 'class' => 'wpDiscuzFlagComment', 'title' => 'Report and Flagging', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'report' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Comment reporting tools. Auto-moderates comments based on number of flags and dislikes.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-report-flagging/'),
-            'translate' => array('version' => '1.0.3', 'requires' => '4.0.0', 'class' => 'WpDiscuzTranslate', 'title' => 'Comment Translate', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'translate' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Adds a smart and intuitive AJAX "Translate" button with 60 language options. Uses free translation API.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-comment-translation/'),
-            'search' => array('version' => '1.1.0', 'requires' => '4.0.0', 'class' => 'wpDiscuzCommentSearch', 'title' => 'Comment Search', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'search' . WPDISCUZ_DS . 'header.png'), 'desc' => __('AJAX powered front-end comment search. It starts searching while you type search words. ', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-comment-search/'),
-            'widgets' => array('version' => '1.0.7', 'requires' => '4.0.0', 'class' => 'wpDiscuzWidgets', 'title' => 'wpDiscuz Widgets', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'widgets' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Most voted comments, Active comment threads, Most commented posts, Active comment authors', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-widgets/'),
-            'frontend-moderation' => array('version' => '1.0.4', 'requires' => '4.0.0', 'class' => 'frontEndModeration', 'title' => 'Front-end Moderation', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'frontend-moderation' . WPDISCUZ_DS . 'header.png'), 'desc' => __('All in one powerful yet simple admin toolkit to moderate comments on front-end.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-frontend-moderation/'),
-            'uploader' => array('version' => '1.1.0', 'requires' => '4.0.0', 'class' => 'WpdiscuzMediaUploader', 'title' => 'Media Uploader', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'uploader' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Extended comment attachment system. Allows to upload images, videos, audios and other file types.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-media-uploader/'),
-            'recaptcha' => array('version' => '1.0.5', 'requires' => '4.0.0', 'class' => 'WpdiscuzRecaptcha', 'title' => 'Google ReCaptcha', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'recaptcha' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Adds No CAPTCHA on all comment forms. Stops spam and bot comments with Google reCAPTCHA', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-recaptcha/'),
-            'mycred' => array('version' => '1.0.5', 'requires' => '4.0.0', 'class' => 'myCRED_Hook_wpDiscuz_Vote', 'title' => 'myCRED Integration', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'mycred' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Integrates myCRED Badges and Ranks. Converts wpDiscuz comment votes/likes to myCRED points. ', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-mycred/'),
-            'censure' => array('version' => '1.0.2', 'requires' => '4.0.0', 'class' => 'CommentCensure', 'title' => 'Comment Censure', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'censure' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Allows censoring comment words. Filters comments and replaces those phrases with custom words.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/comments-censure-pro/'),
+            'bundle' => array('version' => '1.0.0', 'requires' => '5.1.0', 'class' => 'Bundle', 'title' => 'Addons Bundle', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'bundle' . WPDISCUZ_DS . 'header.png'), 'desc' => __('All 16 addons in one bundle. Save 90% and get Unlimited Site License with one year premium support.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-addons-bundle/'),
+            'emoticons' => array('version' => '1.1.1', 'requires' => '5.1.0', 'class' => 'wpDiscuzSmile', 'title' => 'Emoticons', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'emoticons' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Brings an ocean of emotions to your comments. It comes with an awesome smile package.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-emoticons/'),
+            'author-info' => array('version' => '1.0.0', 'requires' => '5.1.0', 'class' => 'WpdiscuzCommentAuthorInfo', 'title' => 'Comment Author Info', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'author-info' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Extended information about comment author with Profile, Activity, Votes and Subscriptions Tabs on pop-up window.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-comment-author-info/'),
+            'online-users' => array('version' => '1.0.0', 'requires' => '5.1.0', 'class' => 'WpdiscuzOnlineUsers', 'title' => 'Online Users', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'online-users' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Real-time online user checking, pop-up notification of new online users and online/offline badges.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-online-users/'),
+            'private' => array('version' => '1.0.0', 'requires' => '5.1.0', 'class' => 'wpDiscuzPrivateComment', 'title' => 'Private Comments', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'private' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Allows to create private comment threads. Rich management options in dashboard by user roles.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-private-comments/'),
+            'subscriptions' => array('version' => '1.0.0', 'requires' => '5.1.0', 'class' => 'wpdSubscribeManager', 'title' => 'Subscription Manager', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'subscriptions' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Total control over comment subscriptions. Full list, monitor, manage, filter, unsubscribe, confirm...', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-subscribe-manager/'),
+            'ads-manager' => array('version' => '1.0.0', 'requires' => '5.1.0', 'class' => 'WpdiscuzAdsManager', 'title' => 'Ads Manager', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'ads-manager' . WPDISCUZ_DS . 'header.png'), 'desc' => __('A full-fledged tool-kit for advertising in comment section of your website. Separate banner and ad managment.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-ads-manager/'),
+            'user-mention' => array('version' => '1.0.0', 'requires' => '5.1.0', 'class' => 'Wpdiscuz_UCM', 'title' => 'User &amp; Comment Mentioning', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'user-mention' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Allows to mention comments and users in comment text using #comment-id and @username tags.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-user-comment-mentioning/'),
+            'likers' => array('version' => '1.0.0', 'requires' => '5.1.0', 'class' => 'WpdiscuzVoters', 'title' => 'Advanced Likers', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'likers' . WPDISCUZ_DS . 'header.png'), 'desc' => __('See comment likers and voters of each comment. Adds user reputation and badges based on received likes.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-advanced-likers/'),
+            'report-flagging' => array('version' => '1.1.5', 'requires' => '5.1.0', 'class' => 'wpDiscuzFlagComment', 'title' => 'Report and Flagging', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'report' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Comment reporting tools. Auto-moderates comments based on number of flags and dislikes.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-report-flagging/'),
+            'translate' => array('version' => '1.0.3', 'requires' => '5.1.0', 'class' => 'WpDiscuzTranslate', 'title' => 'Comment Translate', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'translate' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Adds a smart and intuitive AJAX "Translate" button with 60 language options. Uses free translation API.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-comment-translation/'),
+            'search' => array('version' => '1.1.0', 'requires' => '5.1.0', 'class' => 'wpDiscuzCommentSearch', 'title' => 'Comment Search', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'search' . WPDISCUZ_DS . 'header.png'), 'desc' => __('AJAX powered front-end comment search. It starts searching while you type search words. ', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-comment-search/'),
+            'widgets' => array('version' => '1.0.7', 'requires' => '5.1.0', 'class' => 'wpDiscuzWidgets', 'title' => 'wpDiscuz Widgets', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'widgets' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Most voted comments, Active comment threads, Most commented posts, Active comment authors', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-widgets/'),
+            'frontend-moderation' => array('version' => '1.0.4', 'requires' => '5.1.0', 'class' => 'wpDiscuzFrontEndModeration', 'title' => 'Front-end Moderation', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'frontend-moderation' . WPDISCUZ_DS . 'header.png'), 'desc' => __('All in one powerful yet simple admin toolkit to moderate comments on front-end.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-frontend-moderation/'),
+            'uploader' => array('version' => '1.1.0', 'requires' => '5.1.0', 'class' => 'WpdiscuzMediaUploader', 'title' => 'Media Uploader', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'uploader' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Extended comment attachment system. Allows to upload images, videos, audios and other file types.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-media-uploader/'),
+            'recaptcha' => array('version' => '1.0.5', 'requires' => '5.1.0', 'class' => 'WpdiscuzRecaptcha', 'title' => 'Google ReCaptcha', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'recaptcha' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Adds No CAPTCHA on all comment forms. Stops spam and bot comments with Google reCAPTCHA', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-recaptcha/'),
+            'mycred' => array('version' => '1.0.5', 'requires' => '5.1.0', 'class' => 'myCRED_Hook_wpDiscuz_Vote', 'title' => 'myCRED Integration', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'mycred' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Integrates myCRED Badges and Ranks. Converts wpDiscuz comment votes/likes to myCRED points. ', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-mycred/'),
         );
     }
 
@@ -373,21 +452,28 @@ class WpdiscuzOptions implements WpDiscuzConstants {
     public function addonNote() {
 
         $lastHash = get_option('wpdiscuz-addon-note-dismissed');
-        if (!$lastHash)
-            return false;
+        //if (!$lastHash) return false;
         $lastHashArray = explode(',', $lastHash);
-        $currentHash = $this->addonHash();
-        if ($lastHash != $currentHash) {
+        //$currentHash = $this->addonHash();
+        $currentHash = 'wpDiscuz Addon Bundle';
+        if (strpos($_SERVER['REQUEST_URI'], 'edit-comments.php?') === FALSE && strpos($_SERVER['REQUEST_URI'], 'edit.php?post_type=wpdiscuz_form') === FALSE) {
+            return false;
+        }
+        if ($lastHash != $currentHash && !in_array('Addons Bundle', $lastHashArray) ) {
             ?>
             <div class="updated notice wpdiscuz_addon_note is-dismissible" style="margin-top:10px;">
-                <p style="font-weight:normal; font-size:15px; border-bottom:1px dotted #DCDCDC; padding-bottom:10px; width:95%;"><?php _e('New Addons are available for wpDiscuz Comments Plugin'); ?></p>
+                <p style="font-weight:normal; font-size:15px; border-bottom:1px dotted #DCDCDC; padding-bottom:10px; clear: both;">
+                    <?php //_e('New Addons are available for wpDiscuz Comments Plugin'); ?>
+                    <?php _e('Finally wpDiscuz Addons Bundle is ready for You!', 'wpdiscuz'); ?>
+                </p>
                 <div style="font-size:14px;">
                     <?php
                     foreach ($this->addons as $key => $addon) {
+                        if( $addon['class'] != 'Bundle' ) continue;
                         if (in_array($addon['title'], $lastHashArray))
                             continue;
                         ?>
-                        <div style="display:inline-block; min-width:27%; padding-right:10px; margin-bottom:10px;"><img src="<?php echo $addon['thumb'] ?>" style="height:40px; width:auto; vertical-align:middle; margin:0px 10px; text-decoration:none;" />  <a href="<?php echo admin_url('edit-comments.php?page=' . self::PAGE_ADDONS) ?>" style="color:#444; text-decoration:none;" title="<?php _e('Go to wpDiscuz Addons subMenu'); ?>"><?php echo $addon['title']; ?></a></div>
+                        <div style="display:inline-block; min-width:27%; padding-right:10px; margin-bottom:10px;"><img src="<?php echo $addon['thumb'] ?>" style="height:40px; width:auto; vertical-align:middle; margin:0px 10px; text-decoration:none;" />  <a href="<?php echo esc_url( $addon['url'] ) ?>" target="_blank" style="color:#444; text-decoration:none;" title="<?php _e('View Addons Bundle', 'wpdiscuz'); ?>"><?php echo $addon['title']; ?></a></div>
                         <?php
                     }
                     ?>

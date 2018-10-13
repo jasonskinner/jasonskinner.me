@@ -124,7 +124,7 @@ abstract class Field {
             $cleanData['name'] = $name ? $name : $this->fieldDefaultData['name'];
         }
         if (isset($data['desc'])) {
-            $cleanData['desc'] = trim(strip_tags($data['desc']));
+            $cleanData['desc'] = trim($data['desc']);
         }
 
         if (isset($data['values'])) {
@@ -159,7 +159,7 @@ abstract class Field {
         $action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRING);
         if ($uniqueID) {
             $commentParent = strstr($uniqueID, '_');
-            $isParent =  ($action == 'editedcomment' && $commentParent == '_0') || ($action == 'saveEditedComment' && $commentParent == '_0') || ($action == 'addComment' && $uniqueID == '0_0')? true : false;
+            $isParent =  ($action == 'editedcomment' && $commentParent == '_0') || ($action == 'wpdSaveEditedComment' && $commentParent == '_0') || ($action == 'wpdAddComment' && $uniqueID == '0_0')? true : false;
         }
         return $isParent;
     }

@@ -34,6 +34,9 @@ class Captcha extends Field {
                 <p class="wpd-info"><?php _e('Field specific short description or some rule related to inserted information.', 'wpdiscuz'); ?></p>
             </div>
             <div class="wpd-field-option">
+                <p class="wpd-info"><?php _e('For an advanced antispam protection please check <a target="blank" href="https://gvectors.com/product/wpdiscuz-recaptcha/">wpDiscuz - Google reCAPTCHA</a> addon.', 'wpdiscuz'); ?></p>
+            </div>
+            <div class="wpd-field-option">
                 <label for="wpd_captcha_show_for_guests"><?php _e('Show for guests', 'wpdiscuz'); ?>:</label> 
                 <input id="wpd_captcha_show_for_guests"  type="checkbox" value="1" <?php checked($this->fieldData['show_for_guests'], 1, true); ?> name="<?php echo $this->fieldInputName; ?>[show_for_guests]" />
             </div>
@@ -50,14 +53,19 @@ class Captcha extends Field {
         if ($options->isGoodbyeCaptchaActive) {
             echo $options->goodbyeCaptchaTocken;
         } else {
-            if ($this->isShowCaptcha($currentUser->ID, $args)) {
-                if (class_exists("wpDiscuzReCaptcha")) {
-                    global $wpDiscuzReCaptcha;
-                    $wpDiscuzReCaptcha->recaptchaHtml($uniqueId);
-                } else {
-                    $this->generateCaptchaHtml($args, $options);
-                }
+            $args = apply_filters('wpdiscuz_captcha_args', $args, $currentUser, $uniqueId, $isMainForm);
+            if ($this->isShowCaptcha($currentUser->ID, $args) && !isset($args['wpdiscuz_recaptcha'])) {
+                $this->generateCaptchaHtml($args, $options);
+            } else if (!isset($args['wpdiscuz_recaptcha']) && $options->displayAntispamNote && !$currentUser->exists()) {
+                ?>
+                <div class="wc-field-captcha wpdiscuz-item">
+                    <div class="wc-bin-captcha">
+                        <i class="fas fa-shield-alt"></i><?php echo $options->phrases['wc_invisible_antispam_note']; ?>
+                    </div>
+                </div>
+                <?php
             }
+            do_action('wpdiscuz_captcha_field', $args, $currentUser, $uniqueId, $isMainForm);
         }
     }
 

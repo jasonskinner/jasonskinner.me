@@ -14,13 +14,15 @@ if (!defined('ABSPATH')) {
         <ul class="resp-tabs-list tools_tab_id">
             <li><?php _e('Export options', 'wpdiscuz'); ?></li>
             <li><?php _e('Import options', 'wpdiscuz'); ?></li>
-            <li><?php _e('Import subscriptions', 'wpdiscuz'); ?></li>
+            <li><?php _e('Import subscriptions', 'wpdiscuz'); ?></li>            
+            <li><?php _e('Other', 'wpdiscuz'); ?></li>
         </ul>
         <div class="resp-tabs-container tools_tab_id">
             <?php
             include 'tools-layouts/options-export.php';
             include 'tools-layouts/options-import.php';
             include 'tools-layouts/subscriptions-import.php';
+            include 'tools-layouts/tools-other.php';
             ?>
         </div>
     </div>

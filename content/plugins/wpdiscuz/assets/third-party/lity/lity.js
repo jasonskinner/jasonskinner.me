@@ -298,8 +298,8 @@
 
     function winHeight() {
         return document.documentElement.clientHeight
-                ? document.documentElement.clientHeight
-                : Math.round(_win.height());
+                ? document.documentElement.clientHeight * 0.9
+                : Math.round(_win.height() * 0.9);
     }
 
     function keydown(e) {

@@ -1,5 +1,11 @@
 .wc-form table.wp-list-table td, .wc-form table.wp-list-table th{ padding: 12px 5px;}
-.wc-form tr:nth-child(even){background:#fff}.wc-form tr:nth-child(odd){background:#f9f9f9}.form-table.wc-form-table tr{background:transparent}.wpdiscuz_options_page .wc-phrases-settings-form input[type="text"],.wpdiscuz_options_page .wc-phrases-settings-form textarea{width:300px}.wpdiscuz_wrap {	height: 50px;width: 100%;}.wpdiscuz_progressbar {height: 50px;text-align: center;background: #f00;width: 0;}
+.wc-form tr:nth-child(even){background:#fff}
+.wc-form tr:nth-child(odd){background:#f9f9f9}
+.form-table.wc-form-table tr{background:transparent}
+.wpdiscuz_options_page .wc-phrases-settings-form input[type="text"],
+.wpdiscuz_options_page .wc-phrases-settings-form textarea{width:300px}
+.wpdiscuz_wrap {height: 50px;width: 100%;}
+.wpdiscuz_progressbar {height: 50px;text-align: center;background: #f00;width: 0;}
 .wpdiscuz-share-buttons {display: inline-block; width: 18px; height: 18px;}
 .wc-form input.wc_share_button {display: none;}
 .wc-form input[type="text"].regular-text{ width:160px; }
@@ -37,6 +43,8 @@
 .wc-form .wpdxb th .wpd-switch-field label:first-of-type {border-radius: 4px 0 0 4px;}
 .wc-form .wpdxb th .wpd-switch-field label:last-of-type {border-radius: 0 4px 4px 0;}
 .wc-form .widefat th input{ margin: 0px;}
+.wc-form .widefat th{ position: relative;}
+.wc-form .widefat td{ position: relative;}
 
 .wpdiscuz_options_page .widefat a{color:#08a082;}
 .wpdiscuz_options_page .widefat a:hover{color:#10b493;}
@@ -54,21 +62,77 @@
 .wpdiscuz_addons_page .wpdiscuz-addon-block .addon-button{ margin-bottom:10px;}
 .wpdiscuz_addons_page .wpdiscuz-addon-block .note-installed { padding:10px 20px; background:#fff; border: 1px solid #ddd; box-shadow: 0 3px 3px rgba(0, 0, 0, 0.04); color:#07B290; font-size:14px; margin-top:20px; }
 
-.wpdiscuz-rating { border: none; float: left;}
-.wpdiscuz-rating > input { display: none; } 
-.wpdiscuz-rating > label:before { margin: 5px; font-size: 1.25em; }
-.wpdiscuz-rating > .half:before { position: absolute; }
-.wpdiscuz-rating > label { color: #ddd;  float: right;  }
-
-/***** CSS Magic to Highlight Stars on Hover *****/
-
-.wpdiscuz-rating > input:checked ~ label, /* show gold star when clicked */
-.wpdiscuz-rating:not(:checked) > label:hover, /* hover current star */
-.wpdiscuz-rating:not(:checked) > label:hover ~ label { color: #FFD700;  } /* hover previous stars in list */
-
-.wpdiscuz-rating > input:checked + label:hover, /* hover current star when changing rating */
-.wpdiscuz-rating > input:checked ~ label:hover,
-.wpdiscuz-rating > label:hover ~ input:checked ~ label, /* lighten current selection */
-.wpdiscuz-rating > input:checked ~ label:hover ~ label { color: #FFED85;  }
-
 .import-percentage {vertical-align: middle;color: #444;margin-left: 5px;}
+
+.wpd-social-login td label{margin-right: 5px; }
+.wc-form table.wp-list-table.wpd-social-login td, .wc-form table.wp-list-table.wpd-social-login th{padding: 9px 10px 5px 10px;}
+.wpd-social-login .wpd-social-lable {font-size: 18px;}
+.wpd-social-login .wpd-social-lable i{padding-right: 10px; font-size: 34px; display: inline-block; bottom: -5px; position: relative;}
+.wpd-social-login td input[type="text"]{width: 50%; padding: 5px 10px; font-size: 14px;}
+
+.wpd-social-login .wpd-social-lable.wpd-facebook{color: #4267B2; border-bottom: 2px solid #9fbbff; }
+.wpd-social-login .wpd-social-lable.wpd-twitter{color: #1DA1F2; border-bottom: 2px solid #97dafe; }
+.wpd-social-login .wpd-social-lable.wpd-google{color: #D84538; border-bottom: 2px solid #ffa48e;}
+.wpd-social-login .wpd-social-lable.wpd-ok{color: #EE7808; border-bottom: 2px solid #ffc369;}
+.wpd-social-login .wpd-social-lable.wpd-vk{color: #4A76A8; border-bottom: 2px solid #a3c1ff;}
+
+.widefat .wpd-color-wrap{padding: 7px 5px; min-width: 300px; float: left;}
+.widefat .wpd-color-wrap input{width: 80px!important; padding: 3px 5px!important; font-size: 13px!important; text-align: center!important;}
+.widefat .wpd-color-wrap label{font-weight: normal!important; display: inline-block!important; margin: 0px 5px!important;}
+.wpdiscuz_options_page i.fa-question-circle{ font-size: 16px; right: 15px; top: 15px; position: absolute;}
+[dir=rtl] .wpdiscuz_options_page i.fa-question-circle{ font-size: 16px; right: auto; left: 15px; top: 15px; position: absolute;}
+
+/*======== RATING ===============*/
+
+.wpd-top-custom-fields .wpd-custom-field.wpd-cf-rating .wpd-cf-label{ background:transparent; border:none; padding: 2px 10px 2px 2px; }
+.wpd-top-custom-fields .wpd-custom-field.wpd-cf-rating .wpd-cf-value{font-size: 16px; border-bottom:none; padding: 1px 10px; }
+
+.wpdiscuz-item.wpd-field-group.wpd-field-rating{ border-bottom:1px dotted #ddd; height:77px; margin-bottom:0px;}
+.wpdiscuz-item .wpdiscuz-rating {border: none; float: left; margin:0px; padding:5px 0px 5px 1px; margin-left:-5px;}
+.wpdiscuz-item .wpdiscuz-rating > input { visibility:hidden; position:absolute;} 
+.wpdiscuz-item .wpdiscuz-rating > label:before { margin: 3px; line-height: 18px; font-size: 1.4em;  cursor:pointer;}
+.wpdiscuz-item .wpdiscuz-rating > .half:before {position: absolute; cursor:pointer;}
+.wpdiscuz-item .wpdiscuz-rating > label { float: right; }
+.wpd-form-col-full .wpdiscuz-item.wpd-field-rating.wpd-has-desc .wpd-field-desc{ right:0px; top:0px; position:relative; font-size:14px; margin-left:5px; padding: 0 7px;}
+.wpd-form-col-full .wpdiscuz-item.wpd-field-rating.wpd-has-desc .wpd-field-desc i.far{ font-size:17px;}
+.wpd-form-col-full .wpd-field-group .wpd-field-group-title{ display:inline-block; vertical-align:baseline; padding:0px 0px 2px 0px; margin-top:-2px;}
+.wpd-form-col-full .wpdiscuz-item .wpdiscuz-rating{ padding:0px 6px 0px 0px; vertical-align:middle; line-height: 14px;}
+.wpd-form-col-full .wpd-item-wrap{ display:inline-block; float:left; padding-right:7px; vertical-align:baseline; padding:0px 1px 1px 1px;}
+.wpdiscuz-stars-label{ line-height:20px; padding:10px 0px 2px 3px; font-size:14px;}
+.wpdiscuz-stars-wrapper{ display:block;}
+.wpdiscuz-stars-wrapper-inner{ position: absolute;}
+.wpdiscuz-activ-stars{ position: absolute; display: flex; font-size: 22px; top: 0; left:0;}
+.wpdiscuz-pasiv-stars{ font-size: 22px; display: flex;}
+.wpdiscuz-activ-stars{ overflow:hidden;}
+.wpdiscuz-pasiv-stars i.wpdiscuz-pasiv-star, .wpdiscuz-activ-stars i.wpdiscuz-activ-star{ padding:0px 2px; font-size:20px;}
+.wpdiscuz-post-rating-wrap.wpd-custom-field{display: flex;flex-wrap: wrap;}
+.wpdiscuz-post-rating-wrap.wpd-custom-field > [class ^= wpdiscuz-post-rating-wrap-custom_field]{flex-basis: 25%;margin-bottom: 10px;}
+@media screen and (max-width: 1024px){
+    .wpdiscuz-post-rating-wrap.wpd-custom-field > [class ^= wpdiscuz-post-rating-wrap-custom_field]{flex-basis: 33%;margin-bottom: 10px;}
+}
+@media screen and (max-width:650px){
+    .wpdiscuz-post-rating-wrap.wpd-custom-field > [class ^= wpdiscuz-post-rating-wrap-custom_field]{
+        flex-basis: 50%;
+        margin-bottom: 10px;
+    }
+}
+@media screen and (max-width:420px){
+    .wpdiscuz-post-rating-wrap.wpd-custom-field > [class ^= wpdiscuz-post-rating-wrap-custom_field]{
+        flex-basis: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+.wpdiscuz-item .wpdiscuz-rating > label {color: #DDDDDD;}
+.wpdiscuz-item .wpdiscuz-rating > input[type="radio"] ~ label:hover,
+.wpdiscuz-item .wpdiscuz-rating > input[type="radio"]:not(:checked) ~ label:hover ~ label,
+.wpdiscuz-item .wpdiscuz-rating > input[type="radio"]:not(:checked) ~ label:hover ~ label{color: #FFED85;}
+.wpdiscuz-item .wpdiscuz-rating > input[type="radio"]:checked ~ label:hover,
+.wpdiscuz-item .wpdiscuz-rating > input[type="radio"]:checked ~ label:hover,
+.wpdiscuz-item .wpdiscuz-rating > label[type="radio"]:hover ~ input:checked ~ label,
+.wpdiscuz-item .wpdiscuz-rating > input[type="radio"]:checked + label:hover ~ label,
+.wpdiscuz-item .wpdiscuz-rating > input[type="radio"]:checked + label::before,
+.wpdiscuz-item .wpdiscuz-rating > input[type="radio"]:checked ~ label:hover ~ label, 
+.wpd-custom-field .wcf-activ-star,
+.wpdiscuz-item .wpdiscuz-rating > input[type="radio"]:checked ~ label{ color:#FFD700;}
+.wpd-custom-field .wcf-pasiv-star, .wpdiscuz-item .wpdiscuz-rating > label {color: #DDDDDD;}

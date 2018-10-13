@@ -280,7 +280,7 @@ msgstr "Pomyślnie potwierdziłeś(aś) swoją subskrypcję."
 #: options/class.WpdiscuzOptionsSerialized.php:505
 #: options/phrases-layouts/phrases-email.php:96
 #: utils/class.WpdiscuzEmailHelper.php:45
-msgid "Subscribe Confirmation"
+msgid "Subscription Confirmation"
 msgstr "Potwierdzenie subskrypcji"
 
 #: options/class.WpdiscuzOptionsSerialized.php:506
@@ -1123,11 +1123,11 @@ msgid "Ignore Subscription"
 msgstr "Zignoruj subskrypcję"
 
 #: options/phrases-layouts/phrases-email.php:92
-msgid "Subscribe Confirmation Email Subject"
+msgid "Subscription Confirmation Email Subject"
 msgstr "Temat e-mail potwierdzenia subskrypcji"
 
 #: options/phrases-layouts/phrases-email.php:102
-msgid "Subscribe Confirmation Email Content"
+msgid "Subscription Confirmation Email Content"
 msgstr "Zawartość e-mail potwierdzenia subskrypcji"
 
 #: options/phrases-layouts/phrases-form.php:7

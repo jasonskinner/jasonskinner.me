@@ -344,7 +344,7 @@ msgstr "Sikeresen visszaigazoltad a feliratkozásod"
 #: options/class.WpdiscuzOptionsSerialized.php:491
 #: options/phrases-layouts/phrases-email.php:96
 #: utils/class.WpdiscuzEmailHelper.php:45
-msgid "Subscribe Confirmation"
+msgid "Subscription Confirmation"
 msgstr "Feliratkozás visszaigazolása"
 
 #: options/class.WpdiscuzOptionsSerialized.php:492
@@ -1056,11 +1056,11 @@ msgid "Ignore Subscription"
 msgstr ""
 
 #: options/phrases-layouts/phrases-email.php:92
-msgid "Subscribe Confirmation Email Subject"
+msgid "Subscription Confirmation Email Subject"
 msgstr ""
 
 #: options/phrases-layouts/phrases-email.php:102
-msgid "Subscribe Confirmation Email Content"
+msgid "Subscription Confirmation Email Content"
 msgstr ""
 
 #: options/phrases-layouts/phrases-form.php:7

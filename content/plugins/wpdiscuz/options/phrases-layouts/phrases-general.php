@@ -12,18 +12,6 @@ if (!defined('ABSPATH')) {
                 <td colspan="3"><input type="text" value="<?php echo $this->optionsSerialized->phrases['wc_be_the_first_text']; ?>" name="wc_be_the_first_text" id="wc_be_the_first_text" /></td>
             </tr>
             <tr valign="top">
-                <th scope="row"><label for="wc_header_text"><?php _e('Comment', 'wpdiscuz'); ?></label></th>
-                <td colspan="3"><input type="text" value="<?php echo $this->optionsSerialized->phrases['wc_header_text']; ?>" name="wc_header_text" id="wc_header_text" /></td>
-            </tr>
-            <tr valign="top">
-                <th scope="row"><label for="wc_header_text_plural"><?php _e('Comment (Plural Form)', 'wpdiscuz'); ?></label></th>
-                <td colspan="3"><input type="text" value="<?php echo $this->optionsSerialized->phrases['wc_header_text_plural']; ?>" name="wc_header_text_plural" id="wc_header_text_plural" /></td>
-            </tr>
-            <tr valign="top">
-                <th scope="row"><label for="wc_header_on_text"><?php _e('On', 'wpdiscuz'); ?></label></th>
-                <td colspan="3"><input type="text" value="<?php echo $this->optionsSerialized->phrases['wc_header_on_text']; ?>" name="wc_header_on_text" id="wc_header_on_text" /></td>
-            </tr>
-            <tr valign="top">
                 <th scope="row"><label for="wc_load_more_submit_text"><?php _e('Load More Button', 'wpdiscuz'); ?></label></th>
                 <td colspan="3"><input type="text" value="<?php echo $this->optionsSerialized->phrases['wc_load_more_submit_text']; ?>" name="wc_load_more_submit_text" id="wc_load_more_submit_text" /></td>
             </tr>
@@ -46,10 +34,6 @@ if (!defined('ABSPATH')) {
             <tr valign="top">
                 <th scope="row"><label for="wc_new_replies_button_text"><?php _e('Button text if has new replies (Plural Form)', 'wpdiscuz'); ?></label></th>
                 <td colspan="3"><input type="text" value="<?php echo $this->optionsSerialized->phrases['wc_new_replies_button_text']; ?>" name="wc_new_replies_button_text" id="wc_new_replies_button_text" /></td>
-            </tr>
-            <tr valign="top">
-                <th scope="row"><label for="wc_new_comments_text"><?php _e('Text on load more button if has new comment(s)', 'wpdiscuz'); ?></label></th>
-                <td colspan="3"><input type="text" value="<?php echo $this->optionsSerialized->phrases['wc_new_comments_text']; ?>" name="wc_new_comments_text" id="wc_new_comments_text" /></td>
             </tr>
         </tbody>
     </table>

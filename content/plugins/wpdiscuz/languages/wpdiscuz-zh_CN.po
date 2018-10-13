@@ -343,7 +343,7 @@ msgstr "你已成功确认订阅"
 #: options/class.WpdiscuzOptionsSerialized.php:613
 #: options/phrases-layouts/phrases-email.php:96
 #: utils/class.WpdiscuzEmailHelper.php:47
-msgid "Subscribe Confirmation"
+msgid "Subscription Confirmation"
 msgstr "订阅确认"
 
 #: options/class.WpdiscuzOptionsSerialized.php:614
@@ -1141,7 +1141,7 @@ msgid "label color"
 msgstr "标签色"
 
 #: options/options-layouts/settings-style.php:100
-msgid "Disable font awesome css loading"
+msgid "Do not load Font Awesome css lib"
 msgstr "禁用font awesome css加载"
 
 #: options/options-layouts/settings-style.php:108
@@ -1326,11 +1326,11 @@ msgid "Ignore Subscription"
 msgstr "忽略订阅"
 
 #: options/phrases-layouts/phrases-email.php:92
-msgid "Subscribe Confirmation Email Subject"
+msgid "Subscription Confirmation Email Subject"
 msgstr "订阅确认的邮件标题"
 
 #: options/phrases-layouts/phrases-email.php:102
-msgid "Subscribe Confirmation Email Content"
+msgid "Subscription Confirmation Email Content"
 msgstr "订阅确认邮件内容"
 
 #: options/phrases-layouts/phrases-form.php:7

@@ -98,7 +98,7 @@ class CheckboxField extends Field {
                 </div>
                 <?php if ($args['desc']) { ?>
                     <div class="wpd-field-desc">
-                        <i class="far fa-question-circle" aria-hidden="true"></i><span><?php echo esc_html($args['desc']); ?></span>
+                        <i class="far fa-question-circle" aria-hidden="true"></i><span><?php echo $args['desc']; ?></span>
                     </div>
                 <?php } ?>
             </div>

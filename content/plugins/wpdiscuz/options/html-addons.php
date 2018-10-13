@@ -37,11 +37,14 @@ if (!defined('ABSPATH')) {
         </tr>
     </table>
     <br style="clear:both" />
-
+    <div style="max-width: 83%; padding: 15px; background: #ffffff; margin-bottom: 15px; box-sizing: border-box;">
+        <a href="https://gvectors.com/product/wpdiscuz-addons-bundle/" target="_blank" title="<?php _e('View wpDiscuz Addons Bundle','wpdiscuz');?>"><img src="<?php echo plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'bundle' . WPDISCUZ_DS . 'wpdiscuz-bundle.png') ?>" alt="<?php _e('wpDiscuz Addons Bundle', 'default'); ?>" style="width: 100%;"/></a>
+    </div>
     <div class="wpdiscuz-addons-wrapper">
         <?php
         foreach ($this->addons as $key => $addon) {
             $installed = (class_exists($addon['class'])) ? true : false;
+            if( $addon['class'] == 'Bundle' ) continue;
             ?>
             <div class="wpdiscuz-addon-block">
                 <div id="wpdiscuz-addon-<?php echo $key ?>" class="addon-thumb" style="background:url(<?php echo ($installed) ? str_replace('.png', '-off.png', $addon['thumb']) : $addon['thumb']; ?>) top center no-repeat;">
@@ -54,10 +57,15 @@ if (!defined('ABSPATH')) {
                         <?php } else { ?>
                             <h3 style="font-weight:normal; font-size:22px; line-height: 25px; margin-bottom:2px; text-shadow: 0 0 2px #999;"><?php echo $addon['title'] ?></h3>
                             <ul>
-                                <li style="line-height:16px;"><?php _e('Version', 'default'); ?>: <?php echo $addon['version']; ?></li> 
-                                <li style="line-height:16px;">wpDiscuz: <?php _e('at least', 'default'); ?> <?php echo $addon['requires']; ?></li> 
+                                <!--<li style="line-height:16px;"><?php //_e('Version', 'default'); ?>: <?php //echo $addon['version']; ?></li>--> 
+                                <li style="line-height:16px;">wpDiscuz: <?php _e('at least', 'default'); ?> <?php echo $addon['requires']; ?></li>
                             </ul>
-                            <a class="button button-primary addon-button" href="<?php echo $addon['url']; ?>" target="_blank" style="font-size:14px;"><?php echo __('Live Preview | Buy', 'wpdiscuz'); ?></a>
+                            <?php if( $addon['class'] == 'Bundle' ): ?>
+                                <a class="button button-primary addon-button" href="<?php echo $addon['url']; ?>" target="_blank" style="font-size:14px;"><?php echo __('More Info &raquo;', 'wpdiscuz'); ?></a>
+                            <?php else: ?>
+                                <a class="button button-primary addon-button" href="<?php echo $addon['url']; ?>" target="_blank" style="font-size:14px;"><?php echo __('Live Preview | Buy', 'wpdiscuz'); ?></a>
+                            <?php endif; ?>
+
                         <?php } ?>
                     </div>
                 </div>

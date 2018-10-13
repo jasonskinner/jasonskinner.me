@@ -675,16 +675,16 @@ msgid "You've successfully confirmed your subscription."
 msgstr "Вы успешпо подтвердили подписку"
 
 #: options/phrases-layout/phrases-email.php:92
-msgid "Subscribe Confirmation Email Subject"
+msgid "Subscription Confirmation Email Subject"
 msgstr "Тема подписки по электронной почте"
 
 #: options/phrases-layout/phrases-email.php:96
 #: options/wc-options-serialize.php:463 wc.php:941
-msgid "Subscribe Confirmation"
+msgid "Subscription Confirmation"
 msgstr "Подтверждение подписки"
 
 #: options/phrases-layout/phrases-email.php:103
-msgid "Subscribe Confirmation Email Content"
+msgid "Subscription Confirmation Email Content"
 msgstr "Содержание формы подписки"
 
 #: options/phrases-layout/phrases-email.php:107

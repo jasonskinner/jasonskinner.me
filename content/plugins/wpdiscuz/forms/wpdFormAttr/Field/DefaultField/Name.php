@@ -50,9 +50,9 @@ class Name extends Field {
                 <div class="wpd-field-icon"><i class="<?php echo strpos(trim($args['icon']), ' ') ? $args['icon'] : 'fas '.$args['icon']; ?>"></i></div>
                 <?php } ?>
                 <?php $required = $args['required'] ? 'required="required"' : ''; ?>
-                <input value="<?php echo $author; ?>" <?php echo $required; ?> class="<?php echo $name; ?> wpd-field" type="text" name="<?php echo $name; ?>" value="" placeholder="<?php _e($args['name'],'wpdiscuz')//echo $args['name']; ?>" maxlength="<?php echo $options->commenterNameMaxLength; ?>" <?php echo $nameLengthRange; ?> title="">
+                <input value="<?php echo $author; ?>" <?php echo $required; ?> class="<?php echo $name; ?> wpd-field" type="text" name="<?php echo $name; ?>" value="" placeholder="<?php _e($args['name'],'wpdiscuz'); echo !empty($args['required']) ? '*' : ''; ?>" maxlength="<?php echo $options->commenterNameMaxLength; ?>" <?php echo $nameLengthRange; ?> title="">
                 <?php if ($args['desc']) { ?>
-                    <div class="wpd-field-desc"><i class="far fa-question-circle" aria-hidden="true"></i><span><?php echo esc_html($args['desc']); ?></span></div>
+                    <div class="wpd-field-desc"><i class="far fa-question-circle" aria-hidden="true"></i><span><?php echo $args['desc']; ?></span></div>
                 <?php } ?>
             </div>
             <?php

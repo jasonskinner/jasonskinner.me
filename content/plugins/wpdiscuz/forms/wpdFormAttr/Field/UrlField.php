@@ -82,9 +82,9 @@ class UrlField extends Field {
                 <div class="wpd-field-icon"><i style="opacity: 0.8;" class="<?php echo strpos(trim($args['icon']), ' ') ? $args['icon'] : 'fas '.$args['icon']; ?>"></i></div>
             <?php } ?>
             <?php $required = $args['required'] ? 'required="required"' : ''; ?>
-            <input <?php echo $required; ?> class="<?php echo $name; ?> wpd-field" type="url" name="<?php echo $name; ?>" value="" placeholder="<?php _e($args['name'], 'wpdiscuz'); ?>">
+            <input <?php echo $required; ?> class="<?php echo $name; ?> wpd-field" type="url" name="<?php echo $name; ?>" value="" placeholder="<?php _e($args['name'], 'wpdiscuz'); echo !empty($args['required']) ? '*' : ''; ?>">
             <?php if ($args['desc']) { ?>
-                <div class="wpd-field-desc"><i class="far fa-question-circle" aria-hidden="true"></i><span><?php echo esc_html($args['desc']); ?></span></div>
+                <div class="wpd-field-desc"><i class="far fa-question-circle" aria-hidden="true"></i><span><?php echo $args['desc']; ?></span></div>
                     <?php } ?>
         </div>
         <?php

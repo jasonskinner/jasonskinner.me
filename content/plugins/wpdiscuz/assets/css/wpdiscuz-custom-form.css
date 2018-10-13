@@ -36,7 +36,7 @@
 #TB_ajaxContent .wpd-field-body{ background:#FDFDFD; padding:15px; text-align:left; margin:20px 0px 15px 0px; border:1px solid #eee;}
 #TB_ajaxContent .wpd-field-option { width:100%; margin:7px 0px;}
 #TB_ajaxContent .wpd-field-option textarea { width:98%; margin:7px 0px;}
-#TB_ajaxContent .wpd-field-option label{ display:inline-block; width:40%; font-size:14px; vertical-align: bottom;}
+#TB_ajaxContent .wpd-field-option label{ display:inline-block; width:50%; font-size:14px; vertical-align: bottom;}
 #TB_ajaxContent .wpd-field-option input[type="text"],
 #TB_ajaxContent .wpd-field-option select{padding:3px 5px; font-size:13px; display:inline-block; width:55%; box-sizing:border-box;}
 #TB_ajaxContent .wpd-field-option input[type="checkbox"]{cursor:pointer;}
@@ -62,6 +62,7 @@
 .wpd-form-row-body {display: flex;flex-flow: row wrap;align-items: flex-start;}
 .wpd-form-col{flex: 1 1 40%; padding: 7px 10px 7px 7px;margin: 7px;background: #fff; border: 2px dotted #ddd;}
 .wpd-form-row-body .col-body{min-height: 10px;}
+.wpd-form-row-body .wpd-field-body textarea{width: 100%;}
 .wpdFieldLoad{bottom: 0; left: 0; right: 0;  top:0; position: absolute;  margin: auto;}
 
 .wpd-invalid-field{ border: 1px solid red;}

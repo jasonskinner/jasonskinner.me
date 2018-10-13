@@ -14,6 +14,8 @@ interface wpdFormConst {
     const WPDISCUZ_META_FORMS_GENERAL_OPTIONS         = 'wpdiscuz_form_general_options';
     const WPDISCUZ_META_FORMS_FIELDS                  = 'wpdiscuz_form_fields';
     const WPDISCUZ_META_FORMS_CSS                     = 'wpd_form_custom_css';
+    const WPDISCUZ_RATING_COUNT                       = 'wpdiscuz_rating_count';
+    const WPDISCUZ_RATINGS_UPDATE_DATE                = '_wpd_ratings_update_date';
     /* === DEFAULT FIELDS NAMES ===*/
     const WPDISCUZ_FORMS_NAME_FIELD                   = 'wc_name';
     const WPDISCUZ_FORMS_EMAIL_FIELD                  = 'wc_email';
@@ -23,4 +25,11 @@ interface wpdFormConst {
     /* === CAPTCHA === */
     const CAPTCHA_LENGTH                              = 5;
     const CAPTCHA_DIR                                 = '/wpdiscuz/captcha/';
+    /* === SOCIAL LOGIN */
+    const WPDISCUZ_SOCIAL_PROVIDER_KEY                = 'wpdiscuz_social_provider';
+    const WPDISCUZ_SOCIAL_AVATAR_KEY                  = 'wpdiscuz_social_avatar';
+    const WPDISCUZ_SOCIAL_USER_ID_KEY                 = 'wpdiscuz_social_userid';
+    const WPDISCUZ_OAUTH_STATE_PROVIDER               = '_wpdiscuz_social_oauth_provider';
+    const WPDISCUZ_OAUTH_STATE_TOKEN                  = '_wpdiscuz_social_oauth_token';
+    const WPDISCUZ_OAUTH_CURRENT_POSTID               = '_wpdiscuz_social_oauth_postid';
 }

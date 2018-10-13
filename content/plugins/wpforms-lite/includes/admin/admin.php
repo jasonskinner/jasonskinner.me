@@ -10,30 +10,6 @@
  */
 
 /**
- * Helper function to determine if viewing an WPForms related admin page.
- *
- * Here we determine if the current administration page is owned/created by
- * WPForms. This is done in compliance with WordPress best practices for
- * development, so that we only load required WPForms CSS and JS files on pages
- * we create. As a result we do not load our assets admin wide, where they might
- * conflict with other plugins needlessly, also leading to a better, faster user
- * experience for our users.
- *
- * @since 1.3.9
- *
- * @return boolean
- */
-function wpforms_is_admin_page() {
-
-	// Bail if we're not on a WPForms screen or page (also exclude form builder).
-	if ( ! is_admin() || empty( $_REQUEST['page'] ) || strpos( $_REQUEST['page'], 'wpforms' ) === false || 'wpforms-builder' === $_REQUEST['page'] ) {
-		return false;
-	}
-
-	return true;
-}
-
-/**
  * Load styles for all WPForms-related admin screens.
  *
  * @since 1.3.9
@@ -67,7 +43,7 @@ function wpforms_admin_styles() {
 		'wpforms-font-awesome',
 		WPFORMS_PLUGIN_URL . 'assets/css/font-awesome.min.css',
 		null,
-		'4.4.0'
+		'4.7.0'
 	);
 
 	// Main admin styles.
@@ -123,6 +99,15 @@ function wpforms_admin_scripts() {
 		false
 	);
 
+	// jQuery Conditionals.
+	wp_enqueue_script(
+		'jquery-conditionals',
+		WPFORMS_PLUGIN_URL . "assets/js/jquery.conditionals.min.js",
+		array( 'jquery' ),
+		'1.0.1',
+		false
+	);
+
 	// Main admin script.
 	wp_enqueue_script(
 		'wpforms-admin',
@@ -138,6 +123,8 @@ function wpforms_admin_scripts() {
 		'addon_deactivate'                => esc_html__( 'Deactivate', 'wpforms' ),
 		'addon_inactive'                  => esc_html__( 'Inactive', 'wpforms' ),
 		'addon_install'                   => esc_html__( 'Install Addon', 'wpforms' ),
+		'addon_error'                     => esc_html__( 'Could not install addon. Please download from wpforms.com and install manually.', 'wpforms' ),
+		'addon_search'                    => esc_html__( 'Searching Addons', 'wpforms' ),
 		'ajax_url'                        => admin_url( 'admin-ajax.php' ),
 		'cancel'                          => esc_html__( 'Cancel', 'wpforms' ),
 		'close'                           => esc_html__( 'Close', 'wpforms' ),
@@ -304,38 +291,14 @@ add_action( 'admin_print_scripts', 'wpforms_admin_hide_unrelated_notices' );
  * available globally in 1.3.9.
  *
  * @since 1.3.9
+ *
+ * @param string $medium utm_medium URL parameter.
+ *
+ * @return string.
  */
-function wpforms_admin_upgrade_link() {
+function wpforms_admin_upgrade_link( $medium = 'link' ) {
 
-	// Check if there's a constant.
-	$shareasale_id = '';
-	if ( defined( 'WPFORMS_SHAREASALE_ID' ) ) {
-		$shareasale_id = WPFORMS_SHAREASALE_ID;
-	}
-
-	// If there's no constant, check if there's an option.
-	if ( empty( $shareasale_id ) ) {
-		$shareasale_id = get_option( 'wpforms_shareasale_id', '' );
-	}
-
-	// Whether we have an ID or not, filter the ID.
-	$shareasale_id = apply_filters( 'wpforms_shareasale_id', $shareasale_id );
-
-	// If at this point we still don't have an ID, we really don't have one!
-	// Just return the standard upgrade URL.
-	if ( empty( $shareasale_id ) ) {
-		return 'https://wpforms.com/lite-upgrade/?utm_source=WordPress&amp;utm_medium=link&amp;utm_campaign=liteplugin';
-	}
-
-	// Whether we have a specific redirect URL to use
-	$shareasale_redirect = apply_filters( 'wpforms_shareasale_redirect', get_option( 'wpforms_shareasale_redirect', '' ) );
-
-	// Build final URL
-	$shareasale_url = sprintf( 'http://www.shareasale.com/r.cfm?B=837827&U=%s&M=64312&urllink=%s', $shareasale_id, $shareasale_redirect );
-
-	// If here, we have a ShareASale ID
-	// Return ShareASale URL with redirect.
-	return esc_url( $shareasale_url );
+	return apply_filters( 'wpforms_upgrade_link', 'https://wpforms.com/lite-upgrade/?discount=LITEUPGRADE&amp;utm_source=WordPress&amp;utm_medium=' . sanitize_key( apply_filters( 'wpforms_upgrade_link_medium', $medium ) ) . '&amp;utm_campaign=liteplugin' );
 }
 
 /**
@@ -345,8 +308,8 @@ function wpforms_admin_upgrade_link() {
  */
 function wpforms_check_php_version() {
 
-	// Display for PHP below 5.3.
-	if ( version_compare( PHP_VERSION, '5.3.0', '>=' ) ) {
+	// Display for PHP below 5.4.
+	if ( version_compare( PHP_VERSION, '5.4', '>=' ) ) {
 		return;
 	}
 
@@ -378,15 +341,15 @@ function wpforms_check_php_version() {
 			'<strong>WPForms</strong>',
 			'https://wpforms.com/docs/supported-php-version/'
 		) .
-		'<br><br>' .
+		'<br><br><em>' .
 		wp_kses(
-			__( '<em><strong>Please Note:</strong> After April 2018, WPForms will be deactivated if not further action is taken.</em>', 'wpforms' ),
+			__( '<strong>Please Note:</strong> After September 2018, if no further action is taken, WPForms functionality will be disabled.', 'wpforms' ),
 			array(
 				'strong' => array(),
 				'em'     => array(),
 			)
 		) .
-		'</p>'
+		'</em></p>'
 	);
 }
 add_action( 'admin_init', 'wpforms_check_php_version' );

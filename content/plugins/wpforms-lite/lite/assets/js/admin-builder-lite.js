@@ -50,17 +50,17 @@
 				}
 			});
 
-			// WPForms upgrade template modal
-			$(document).on('click', '.wpforms-template-select', function(e) {
-				if ($(this).closest('.wpforms-template').hasClass('upgrade-modal')){
+			// WPForms upgrade providers modal
+			$(document).on('click', '.wpforms-panel-sidebar-section', function(e) {
+				if ($(this).hasClass('upgrade-modal')){
 					e.preventDefault();
 					e.stopImmediatePropagation();
-					WPFormsBuilderLite.upgradeModal($(this).data('template-name'));
+					WPFormsBuilderLite.upgradeModal($(this).data('name'));
 				}
 			});
 
-			// WPForms upgrade providers modal
-			$(document).on('click', '.wpforms-panel-sidebar-section', function(e) {
+			// WPForms upgrade notifications/confirmation modeal
+			$(document).on('click', '.wpforms-builder-settings-block-add', function(e) {
 				if ($(this).hasClass('upgrade-modal')){
 					e.preventDefault();
 					e.stopImmediatePropagation();
@@ -76,11 +76,16 @@
 		 */
 		upgradeModal: function(feature) {
 
-			var message = wpforms_builder_lite.upgrade_message.replace(/%name%/g,feature)
+			var message = wpforms_builder_lite.upgrade_message.replace(/%name%/g, feature);
 			$.alert({
-				title: feature+' '+wpforms_builder_lite.upgrade_title,
+				title: feature+ ' ' + wpforms_builder_lite.upgrade_title,
 				icon: 'fa fa-lock',
 				content: message,
+				boxWidth: '550px',
+				onOpenBefore: function () {
+					this.$btnc.after( '<div class="discount-note">' + wpforms_builder_lite.upgrade_bonus + wpforms_builder_lite.upgrade_doc + '</div>');
+					this.$body.find( '.jconfirm-content' ).addClass( 'lite-upgrade' );
+				},
 				buttons: {
 					confirm: {
 						text: wpforms_builder_lite.upgrade_button,
@@ -103,9 +108,6 @@
 								}
 							});
 						}
-					},
-					cancel: {
-						text: wpforms_builder.ok
 					}
 				}
 			});

@@ -16,12 +16,13 @@ if (!defined('ABSPATH')) {
                             <li><?php _e('User Pro', 'wpdiscuz'); ?></li>
                             <li><?php _e('Ultimate Member', 'wpdiscuz'); ?></li>
                             <li><?php _e('MyCred', 'wpdiscuz'); ?></li>
+                            <li><?php _e('PeepSo', 'wpdiscuz'); ?></li>
                         </ul>
                         <div class="resp-tabs-container integrationsChild">
                             <div>
                                 <div style="width:100%; display:block;">
-                                    <h3 style="margin-bottom:5px;"><?php _e('Please add the code below in current active theme\'s functions.php file','wpdiscuz');?> </h3>
-                                    <p><?php _e('This code will integrate BuddyPress profile URL with wpDiscuz. BuddyPress Display Names and Avatars will be integrated automatically.','wpdiscuz');?></p>
+                                    <h3 style="margin-bottom:5px;"><?php _e('Please add the code below in current active theme\'s functions.php file', 'wpdiscuz'); ?> </h3>
+                                    <p><?php _e('This code will integrate BuddyPress profile URL with wpDiscuz. BuddyPress Display Names and Avatars will be integrated automatically.', 'wpdiscuz'); ?></p>
                                     <pre style="color:#006666; background-color:#FFF4EA; font-size:12px; padding:10px 20px 10px 20px; width:98%; overflow:auto;box-sizing:border-box;">
 ////////////////////////////////////////////////////////////////////////
 // BuddyPress Profile URL Integration //////////////////////////////////
@@ -38,8 +39,8 @@ function wpdiscuz_bp_profile_url($profile_url, $user) {
                             </div>
                             <div>
                                 <div style="width:100%; display:block;">
-                                    <h3 style="margin-bottom:5px;"><?php _e('Please add the code below in current active theme\'s functions.php file','wpdiscuz');?> </h3>
-                                    <p><?php _e('This code will integrate Users Ultra profile URL with wpDiscuz. Users Ultra Display Names and Avatars will be integrated automatically.','wpdiscuz');?></p>
+                                    <h3 style="margin-bottom:5px;"><?php _e('Please add the code below in current active theme\'s functions.php file', 'wpdiscuz'); ?> </h3>
+                                    <p><?php _e('This code will integrate Users Ultra profile URL with wpDiscuz. Users Ultra Display Names and Avatars will be integrated automatically.', 'wpdiscuz'); ?></p>
                                     <pre style="color:#006666; background-color:#FFF4EA; font-size:12px; padding:10px 20px 10px 20px; width:98%; overflow:auto;box-sizing:border-box;">
 ////////////////////////////////////////////////////////////////////////
 // Users Ultra Profile URL Integration /////////////////////////////////
@@ -56,8 +57,8 @@ function wpdiscuz_uu_profile_url($profile_url, $user) {
                             </div>
                             <div>
                                 <div style="width:100%; display:block;">
-                                    <h3 style="margin-bottom:5px;"><?php _e('Please add the code below in current active theme\'s functions.php file','wpdiscuz');?> </h3>
-                                    <p><?php _e('This code will integrate User Pro profile URL with wpDiscuz. User Pro Display Names and Avatars will be integrated automatically.','wpdiscuz');?></p>
+                                    <h3 style="margin-bottom:5px;"><?php _e('Please add the code below in current active theme\'s functions.php file', 'wpdiscuz'); ?> </h3>
+                                    <p><?php _e('This code will integrate User Pro profile URL with wpDiscuz. User Pro Display Names and Avatars will be integrated automatically.', 'wpdiscuz'); ?></p>
                                     <pre style="color:#006666; background-color:#FFF4EA; font-size:12px; padding:10px 20px 10px 20px; width:98%; overflow:auto;box-sizing:border-box;">
 ////////////////////////////////////////////////////////////////////////
 // User Pro Profile URL Integration ////////////////////////////////////
@@ -87,8 +88,8 @@ function wpdiscuz_up_after_label_html($afterLabelHtml, $comment) {
                             <div>
 
                                 <div style="width:100%; display:block;">
-                                    <h3 style="margin-bottom:5px;"><?php _e('Please add the code below in current active theme\'s functions.php file','wpdiscuz');?> </h3>
-                                    <p><?php _e('This code consists of two parts, which will integrate Ultimate Member profile Display Name and Profile URL with wpDiscuz. UM Avatars will be integrated automatically.','wpdiscuz');?></p>
+                                    <h3 style="margin-bottom:5px;"><?php _e('Please add the code below in current active theme\'s functions.php file', 'wpdiscuz'); ?> </h3>
+                                    <p><?php _e('This code consists of two parts, which will integrate Ultimate Member profile Display Name and Profile URL with wpDiscuz. UM Avatars will be integrated automatically.', 'wpdiscuz'); ?></p>
                                     <pre style="color:#006666; background-color:#FFF4EA; font-size:12px; padding:10px 20px 10px 20px; width:98%; overflow:auto;box-sizing:border-box;">             
 ////////////////////////////////////////////////////////////////////////
 // Ultimate Member Profile Display Name Integration ////////////////////
@@ -121,8 +122,8 @@ function wpdiscuz_um_profile_url($profile_url, $user) {
                             </div>
                             <div>
                                 <div style="width:100%; display:block;">
-                                    <h3 style="margin-bottom:5px;"><?php _e('Please add the code below in current active theme\'s functions.php file','wpdiscuz');?> </h3>
-                                    <p><?php _e('This code will integrate MyCred User Ranks and Badges under comment author avatar.','wpdiscuz');?></p>
+                                    <h3 style="margin-bottom:5px;"><?php _e('Please add the code below in current active theme\'s functions.php file', 'wpdiscuz'); ?> </h3>
+                                    <p><?php _e('This code will integrate MyCred User Ranks and Badges under comment author avatar.', 'wpdiscuz'); ?></p>
                                     <pre style="color:#006666; background-color:#FFF4EA; font-size:12px; padding:10px 20px 10px 20px; width:98%; overflow:auto;box-sizing:border-box;">
 ////////////////////////////////////////////////////////////////////////
 // MyCred User Ranks and Badges Integration ////////////////////////////
@@ -144,6 +145,26 @@ function wpdiscuz_mc_after_label_html($afterLabelHtml, $comment) {
         }        
     }
     return $afterLabelHtml;
+}
+                                    </pre>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="width:100%; display:block;">
+                                    <h3 style="margin-bottom:5px;"><?php _e('Please add the code below in current active theme\'s functions.php file', 'wpdiscuz'); ?> </h3>
+                                    <p><?php _e('This code will integrate PeepSo profile url with wpDiscuz.', 'wpdiscuz'); ?></p>
+                                    <pre style="color:#006666; background-color:#FFF4EA; font-size:12px; padding:10px 20px 10px 20px; width:98%; overflow:auto;box-sizing:border-box;">
+////////////////////////////////////////////////////////////////////////
+// PeepSo User Profile URL Integration ////////////////////////////
+////////////////////////////////////////////////////////////////////////
+add_filter('wpdiscuz_profile_url','peepso_wpdiscuz_profile_url',10,2);
+
+function peepso_wpdiscuz_profile_url($profileUrl, $user) {
+    if (class_exists('PeepSo') && $user && $user->ID) {
+        $peepsoUser = PeepSoUser::get_instance($user->ID);
+        $profileUrl = $peepsoUser->get_profileurl();
+    }
+    return $profileUrl;
 }
                                     </pre>
                                 </div>

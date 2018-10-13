@@ -38,6 +38,7 @@ class WpdiscuzCache implements WpDiscuzConstants {
         }
         add_action('admin_post_purgeExpiredGravatarsCaches', array(&$this, 'purgeExpiredGravatarsCaches'));
         add_action('admin_post_purgeGravatarsCaches', array(&$this, 'purgeGravatarsCaches'));
+        add_action('admin_post_purgeStatisticsCache', array(&$this, 'purgeStatisticsCache'));
     }
 
     public function preGetGravatar($avatar, $idOrEmail, $args) {
@@ -106,10 +107,10 @@ class WpdiscuzCache implements WpDiscuzConstants {
                     $fileUrlHash = $cacheFileUrl . $fileNameHash;
                     $url = $fileUrlHash;
                     $this->gravatars[$md5FileName] = array(
-                        'user_id' => intval($args['wpdiscuz_gravatar_user_id']),
-                        'user_email' => trim($args['wpdiscuz_gravatar_user_email']),
-                        'url' => trim($url),
-                        'hash' => trim($md5FileName),
+                        'user_id' => $args['wpdiscuz_gravatar_user_id'],
+                        'user_email' => $args['wpdiscuz_gravatar_user_email'],
+                        'url' => $url,
+                        'hash' => $md5FileName,
                         'cached' => 1
                     );
                 }
@@ -129,10 +130,10 @@ class WpdiscuzCache implements WpDiscuzConstants {
             $md5FileName = $this->getMD5FieldName($args['wpdiscuz_gravatar_field']);
             if ($md5FileName) {
                 $this->gravatars[$md5FileName] = array(
-                    'user_id' => intval($args['wpdiscuz_gravatar_user_id']),
-                    'user_email' => trim($args['wpdiscuz_gravatar_user_email']),
-                    'url' => trim($url),
-                    'hash' => trim($md5FileName),
+                    'user_id' => $args['wpdiscuz_gravatar_user_id'],
+                    'user_email' => $args['wpdiscuz_gravatar_user_email'],
+                    'url' => $url,
+                    'hash' => $md5FileName,
                     'cached' => 0
                 );
             }
@@ -181,6 +182,13 @@ class WpdiscuzCache implements WpDiscuzConstants {
     public function purgeGravatarsCaches() {
         if (current_user_can('manage_options') && isset($_GET['_wpnonce']) && wp_verify_nonce($_GET['_wpnonce'], 'purgeGravatarsCaches')) {
             $this->deleteGravatars();
+        }
+        wp_redirect(admin_url('edit-comments.php?page=' . self::PAGE_SETTINGS));
+    }
+
+    public function purgeStatisticsCache() {
+        if (current_user_can('manage_options') && isset($_GET['_wpnonce']) && wp_verify_nonce($_GET['_wpnonce'], 'purgeStatisticsCache')) {
+            $this->dbManager->deleteStatisticCaches();
         }
         wp_redirect(admin_url('edit-comments.php?page=' . self::PAGE_SETTINGS));
     }

@@ -17,6 +17,7 @@ if (!defined('ABSPATH')) {
                 <td>
                     <input type="checkbox" <?php checked($this->optionsSerialized->isLoadOnlyParentComments == 1) ?> value="1" name="isLoadOnlyParentComments" id="isLoadOnlyParentComments" />
                     <label for="isLoadOnlyParentComments"></label>
+                    <a href="https://wpdiscuz.com/docs/wpdiscuz-documentation/settings/comment-list-settings/#view-replies" title="<?php _e('Read the documentation', 'wpdiscuz') ?>" target="_blank"><i class="far fa-question-circle"></i></a>
                 </td>
             </tr>
             <tr valign="top">
@@ -27,6 +28,7 @@ if (!defined('ABSPATH')) {
                 <td>
                     <input type="checkbox" <?php checked($this->optionsSerialized->showSortingButtons == 1) ?> value="1" name="show_sorting_buttons" id="show_sorting_buttons" />
                     <label for="show_sorting_buttons"></label>
+                    <a href="https://wpdiscuz.com/docs/wpdiscuz-documentation/settings/comment-list-settings/#sorting_buttons" title="<?php _e('Read the documentation', 'wpdiscuz') ?>" target="_blank"><i class="far fa-question-circle"></i></a>
                 </td>
             </tr>
             <tr valign="top">
@@ -36,6 +38,7 @@ if (!defined('ABSPATH')) {
                 <td>
                     <input type="checkbox" <?php checked($this->optionsSerialized->mostVotedByDefault == 1) ?> value="1" name="mostVotedByDefault" id="mostVotedByDefault" />
                     <label for="mostVotedByDefault"></label>
+                    <a href="https://wpdiscuz.com/docs/wpdiscuz-documentation/settings/comment-list-settings/#Most_voted_by_default" title="<?php _e('Read the documentation', 'wpdiscuz') ?>" target="_blank"><i class="far fa-question-circle"></i></a>
                 </td>
             </tr>
             <tr valign="top">
@@ -45,6 +48,7 @@ if (!defined('ABSPATH')) {
                 <td>
                     <input type="checkbox" <?php checked($this->optionsSerialized->reverseChildren == 1) ?> value="1" name="reverseChildren" id="reverseChildren" />
                     <label for="reverseChildren"></label>
+                    <a href="https://wpdiscuz.com/docs/wpdiscuz-documentation/settings/comment-list-settings/#reverse_child" title="<?php _e('Read the documentation', 'wpdiscuz') ?>" target="_blank"><i class="far fa-question-circle"></i></a>
                 </td>
             </tr>
             <tr valign="top">
@@ -74,6 +78,7 @@ if (!defined('ABSPATH')) {
                             <span><?php _e('Lazy load comments on scrolling', 'wpdiscuz') ?></span>
                         </label> &nbsp;<br/>
                     </fieldset>
+                    <a href="https://wpdiscuz.com/docs/wpdiscuz-documentation/settings/comment-list-settings/#pagination" title="<?php _e('Read the documentation', 'wpdiscuz') ?>" target="_blank"><i class="far fa-question-circle"></i></a>
                 </th>
             </tr>    
             <tr valign="top">
@@ -83,7 +88,10 @@ if (!defined('ABSPATH')) {
                         <?php _e('Set this option value 0, to turn off comment text breaking function.', 'wpdiscuz'); ?>
                     </p>
                 </th>
-                <td><input type="number" value="<?php echo isset($this->optionsSerialized->commentReadMoreLimit) ? $this->optionsSerialized->commentReadMoreLimit : 100; ?>" name="commentWordsLimit" id="commentWordsLimit" style="width:100px;" /></td>
+                <td>
+                    <input type="number" value="<?php echo isset($this->optionsSerialized->commentReadMoreLimit) ? $this->optionsSerialized->commentReadMoreLimit : 100; ?>" name="commentWordsLimit" id="commentWordsLimit" style="width:100px;" />
+                    <a href="https://wpdiscuz.com/docs/wpdiscuz-documentation/settings/comment-list-settings/#read_more_link" title="<?php _e('Read the documentation', 'wpdiscuz') ?>" target="_blank"><i class="far fa-question-circle"></i></a>
+                </td>
             </tr>
             <tr valign="top">
                 <th scope="row">
@@ -102,14 +110,16 @@ if (!defined('ABSPATH')) {
                         </div>
                         <div style="clear: both;"></div>
                     </fieldset>
+                    <a href="https://wpdiscuz.com/docs/wpdiscuz-documentation/settings/comment-list-settings/#components" title="<?php _e('Read the documentation', 'wpdiscuz') ?>" target="_blank"><i class="far fa-question-circle"></i></a>
                 </th>
             </tr>
             <tr valign="top">
                 <th scope="row">
-                    <label><?php _e('Hide Voting buttons', 'wpdiscuz'); ?></label>
+                    <label for="wc_voting_buttons_show_hide"><?php _e('Hide Voting buttons', 'wpdiscuz'); ?></label>
                 </th>
                 <td>
                     <input type="checkbox" <?php checked($this->optionsSerialized->votingButtonsShowHide == 1) ?> value="1" name="wc_voting_buttons_show_hide" id="wc_voting_buttons_show_hide" /> <label for="wc_voting_buttons_show_hide"></label>
+                    <a href="https://wpdiscuz.com/docs/wpdiscuz-documentation/settings/comment-list-settings/#liking_buttons" title="<?php _e('Read the documentation', 'wpdiscuz') ?>" target="_blank"><i class="far fa-question-circle"></i></a>
                 </td>
             </tr>
             <tr valign="top">
@@ -128,6 +138,7 @@ if (!defined('ABSPATH')) {
                         <input type="radio" <?php checked($this->optionsSerialized->votingButtonsIcon == 'fa-smile|fa-frown') ?> value="fa-smile|fa-frown" name="votingButtonsIcon" id="votingButtonsIconSmileFrown" class="votingButtonsIconSmileFrown" style="vertical-align: bottom;"/>
                         <label for="votingButtonsIconSmileFrown" style="min-width:60px;"><i class="far fa-smile"></i> <i class="far fa-frown"></i></label>  
                     </div>
+                    <a href="https://wpdiscuz.com/docs/wpdiscuz-documentation/settings/comment-list-settings/#liking_buttons" title="<?php _e('Read the documentation', 'wpdiscuz') ?>" target="_blank"><i class="far fa-question-circle"></i></a>
                 </th>
             </tr>
             <tr valign="top">
@@ -139,6 +150,7 @@ if (!defined('ABSPATH')) {
                         <input type="radio" <?php checked($this->optionsSerialized->votingButtonsStyle == 0) ?> value="0" name="votingButtonsStyle" id="votingButtonsStyleTotal" class="votingButtonsStyle"/><label for="votingButtonsStyleTotal"><?php _e('total count', 'wpdiscuz'); ?></label> &nbsp;
                         <input type="radio" <?php checked($this->optionsSerialized->votingButtonsStyle == 1) ?> value="1" name="votingButtonsStyle" id="votingButtonsStyleSeparate" class="votingButtonsStyle"/><label for="votingButtonsStyleSeparate"><?php _e('separate count', 'wpdiscuz'); ?></label>
                     </div>
+                    <a href="https://wpdiscuz.com/docs/wpdiscuz-documentation/settings/comment-list-settings/#liking_buttons" title="<?php _e('Read the documentation', 'wpdiscuz') ?>" target="_blank"><i class="far fa-question-circle"></i></a>
                 </th>
             </tr>
             <tr valign="top">
@@ -148,30 +160,8 @@ if (!defined('ABSPATH')) {
                 <td style="padding: 7px 5px;">
                     <input type="checkbox" <?php checked($this->optionsSerialized->isGuestCanVote == 1) ?> value="1" name="wc_is_guest_can_vote" id="wc_is_guest_can_vote" />
                     <label for="wc_is_guest_can_vote" ></label>
+                    <a href="https://wpdiscuz.com/docs/wpdiscuz-documentation/settings/comment-list-settings/#liking_buttons" title="<?php _e('Read the documentation', 'wpdiscuz') ?>" target="_blank"><i class="far fa-question-circle"></i></a>
                 </td>
-            </tr>
-            <tr valign="top">
-                <th scope="row">
-                    <label><?php _e('Show Share Buttons', 'wpdiscuz'); ?></label>
-                </th>
-                <th>
-                    <?php
-                    $shareButtons = $this->shareButtons;
-                    foreach ($shareButtons as $btn) {
-                        $checked = in_array($btn, $this->optionsSerialized->shareButtons) ? 'checked="checked"' : '';
-                        ?>
-                        <label class="wpdiscuz-share-buttons share-button-<?php echo $btn; ?>" for="wc_share_button_<?php echo $btn; ?>" style="display: inline-block;">
-                            <input type="checkbox" <?php echo $checked ?> value="<?php echo $btn; ?>" name="wpdiscuz_share_buttons[]" id="wc_share_button_<?php echo $btn; ?>" class="wc_share_button" />
-                        </label>
-                        <?php
-                    }
-                    ?>
-                    <div style="height: 8px;"></div><fieldset>
-                        <?php $facbookAppContShow = in_array('fb', $this->optionsSerialized->shareButtons) ? '' : 'style="display:none;"'; ?>
-                        <label for="facebookAppID"  id="wpc-fb-api-cont"  <?php echo $facbookAppContShow; ?> style="padding: 0px;">
-                            <input type="text" value="<?php echo $this->optionsSerialized->facebookAppID; ?>" name="facebookAppID" id="facebookAppID"  style="margin: 0px;"/> &nbsp; <?php _e('Facebook Application ID', 'wpdiscuz'); ?>
-                        </label></fieldset>
-                </th>
             </tr>
             <tr valign="top">
                 <th scope="row">
@@ -185,6 +175,7 @@ if (!defined('ABSPATH')) {
                         <label for="displayRatingOnPostAfter"><?php _e('After Content', 'wpdiscuz'); ?></label><br>
                         <input type="checkbox" <?php checked($this->optionsSerialized->ratingCssOnNoneSingular == 1) ?> value="1" name="ratingCssOnNoneSingular" id="ratingCssOnNoneSingular" /> <label for="ratingCssOnNoneSingular"><?php _e('Display ratings on none singular pages', 'wpdiscuz'); ?></label>
                     </fieldset>
+                    <a href="https://wpdiscuz.com/docs/wpdiscuz-documentation/settings/comment-list-settings/#display_ratings" title="<?php _e('Read the documentation', 'wpdiscuz') ?>" target="_blank"><i class="far fa-question-circle"></i></a>
                 </th>
             </tr>
             <tr valign="top">
@@ -194,6 +185,7 @@ if (!defined('ABSPATH')) {
                 <td>
                     <input type="checkbox" <?php checked($this->optionsSerialized->disableProfileURLs == 1) ?> value="1" name="disableProfileURLs" id="disableProfileURLs" />
                     <label for="disableProfileURLs"></label>
+                    <a href="https://wpdiscuz.com/docs/wpdiscuz-documentation/settings/comment-list-settings/#disable_profiles_URL" title="<?php _e('Read the documentation', 'wpdiscuz') ?>" target="_blank"><i class="far fa-question-circle"></i></a>
                 </td>
             </tr>
 

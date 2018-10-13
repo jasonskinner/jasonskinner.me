@@ -366,7 +366,7 @@ msgstr "U heeft uw aanmelding met succes bevestigd."
 #: options/class.WpdiscuzOptionsSerialized.php:613
 #: options/phrases-layouts/phrases-email.php:96
 #: utils/class.WpdiscuzEmailHelper.php:47
-msgid "Subscribe Confirmation"
+msgid "Subscription Confirmation"
 msgstr "Aanmeldingsbevestiging"
 
 #: options/class.WpdiscuzOptionsSerialized.php:614
@@ -1195,7 +1195,7 @@ msgid "label color"
 msgstr "label kleur"
 
 #: options/options-layouts/settings-style.php:100
-msgid "Disable font awesome css loading"
+msgid "Do not load Font Awesome css lib"
 msgstr "Laden Font Awesome CSS uitzetten"
 
 #: options/options-layouts/settings-style.php:108
@@ -1387,11 +1387,11 @@ msgid "Ignore Subscription"
 msgstr "Vergeet Aanmelding"
 
 #: options/phrases-layouts/phrases-email.php:92
-msgid "Subscribe Confirmation Email Subject"
+msgid "Subscription Confirmation Email Subject"
 msgstr "Aanmelding bevestigingsmail onderwerp"
 
 #: options/phrases-layouts/phrases-email.php:102
-msgid "Subscribe Confirmation Email Content"
+msgid "Subscription Confirmation Email Content"
 msgstr "Aanmelding bevestigingsmail inhoud"
 
 #: options/phrases-layouts/phrases-form.php:7

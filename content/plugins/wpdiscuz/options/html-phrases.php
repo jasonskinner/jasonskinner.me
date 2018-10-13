@@ -24,6 +24,10 @@ if (!defined('ABSPATH')) {
                 <li><?php _e('Date/Time', 'wpdiscuz'); ?></li>
                 <li><?php _e('Email', 'wpdiscuz'); ?></li>
                 <li><?php _e('Notification', 'wpdiscuz'); ?></li>
+                <li><?php _e('Follow', 'wpdiscuz'); ?></li>
+                <li><?php _e('Social Login', 'wpdiscuz'); ?></li>
+                <li><?php _e('User Settings', 'wpdiscuz'); ?></li>
+                <li><?php _e('Errors', 'wpdiscuz'); ?></li>
             </ul>
             <div class="resp-tabs-container phrases_tab_id">
                 <?php include 'phrases-layouts/phrases-general.php'; ?>
@@ -32,6 +36,10 @@ if (!defined('ABSPATH')) {
                 <?php include 'phrases-layouts/phrases-datetime.php'; ?>
                 <?php include 'phrases-layouts/phrases-email.php'; ?>
                 <?php include 'phrases-layouts/phrases-notification.php'; ?>
+                <?php include 'phrases-layouts/phrases-follow.php'; ?>
+                <?php include 'phrases-layouts/phrases-social-login.php'; ?>
+                <?php include 'phrases-layouts/phrases-user-settings.php'; ?>
+                <?php include 'phrases-layouts/phrases-error.php'; ?>
             </div>
         </div>
         <script type="text/javascript">
@@ -56,12 +64,7 @@ if (!defined('ABSPATH')) {
                     Cookies.set('phrasesActiveTabIndex', activeTabIndex, {expires: 30});
                 });
                 var savedIndex = Cookies.get('phrasesActiveTabIndex') >= 0 ? Cookies.get('phrasesActiveTabIndex') : 0;
-                $('.resp-tabs-list.phrases_tab_id li').removeClass('resp-tab-active');
-                $('.resp-tabs-container.phrases_tab_id > div').removeClass('resp-tab-content-active');
-                $('.resp-tabs-container.phrases_tab_id > div').css('display', 'none');
-                $('.resp-tabs-list.phrases_tab_id li').eq(savedIndex).addClass('resp-tab-active');
-                $('.resp-tabs-container.phrases_tab_id > div').eq(savedIndex).addClass('resp-tab-content-active');
-                $('.resp-tabs-container.phrases_tab_id > div').eq(savedIndex).css('display', 'block');
+                $('.resp-tabs-list.phrases_tab_id li').eq(savedIndex).click();
             });
         </script>
         <table class="form-table wc-form-table">
@@ -69,6 +72,8 @@ if (!defined('ABSPATH')) {
                 <tr valign="top">
                     <td colspan="4">
                         <p class="submit">
+                            <?php $resetPhrasesUrl = admin_url('admin-post.php?action=resetPhrases'); ?>
+                            <a id="wpdiscuz-reset-phrases" href="<?php echo wp_nonce_url($resetPhrasesUrl, 'reset_phrases_nonce'); ?>" class="button button-secondary" style="margin-left: 5px;"><?php _e('Reset Phrases', 'wpdiscuz'); ?></a>
                             <input type="submit" class="button button-primary" name="wc_submit_phrases" value="<?php _e('Save Changes', 'wpdiscuz'); ?>" style="float: right;" />
                         </p>
                     </td>

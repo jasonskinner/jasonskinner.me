@@ -776,7 +776,7 @@ msgstr ""
 #: options/class.WpdiscuzOptionsSerialized.php:588
 #: options/phrases-layouts/phrases-email.php:96
 #: utils/class.WpdiscuzEmailHelper.php:47
-msgid "Subscribe Confirmation"
+msgid "Subscription Confirmation"
 msgstr ""
 
 #: options/class.WpdiscuzOptionsSerialized.php:589
@@ -1667,11 +1667,11 @@ msgid "Rating Stars Hover Color"
 msgstr ""
 
 #: options/options-layouts/settings-style.php:103
-msgid "Rating Stars Inactiv Color"
+msgid "Rating Stars Inactive Color"
 msgstr ""
 
 #: options/options-layouts/settings-style.php:112
-msgid "Rating Stars Activ Color"
+msgid "Rating Stars Active Color"
 msgstr ""
 
 #: options/options-layouts/settings-style.php:127
@@ -1679,7 +1679,7 @@ msgid "label color"
 msgstr ""
 
 #: options/options-layouts/settings-style.php:138
-msgid "Disable font awesome css loading"
+msgid "Do not load Font Awesome css lib"
 msgstr ""
 
 #: options/options-layouts/settings-style.php:146
@@ -1850,11 +1850,11 @@ msgid "Ignore Subscription"
 msgstr ""
 
 #: options/phrases-layouts/phrases-email.php:92
-msgid "Subscribe Confirmation Email Subject"
+msgid "Subscription Confirmation Email Subject"
 msgstr ""
 
 #: options/phrases-layouts/phrases-email.php:102
-msgid "Subscribe Confirmation Email Content"
+msgid "Subscription Confirmation Email Content"
 msgstr ""
 
 #: options/phrases-layouts/phrases-form.php:7

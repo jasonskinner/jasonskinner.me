@@ -349,7 +349,7 @@ abstract class WPForms_Field {
 			// Code Block. ----------------------------------------------------//
 
 			case 'code':
-				$value   = ! empty( $field['code'] ) ? esc_attr( $field['code'] ) : '';
+				$value   = ! empty( $field['code'] ) ? esc_textarea( $field['code'] ) : '';
 				$tooltip = esc_html__( 'Enter code for the form field.', 'wpforms' );
 				$output  = $this->field_element( 'label',    $field, array( 'slug' => 'code', 'value' => esc_html__( 'Code', 'wpforms' ), 'tooltip' => $tooltip ), false );
 				$output .= $this->field_element( 'textarea', $field, array( 'slug' => 'code', 'value' => $value ), false );
@@ -360,6 +360,7 @@ abstract class WPForms_Field {
 
 			case 'choices':
 				$values  = ! empty( $field['choices'] ) ? $field['choices'] : $this->defaults;
+				$label   = ! empty( $args['label'] ) ? esc_html( $args['label'] ) : esc_html__( 'Choices', 'wpforms' );
 				$class   = array();
 
 				if ( ! empty( $field['show_values'] ) ) {
@@ -378,7 +379,7 @@ abstract class WPForms_Field {
 					$field,
 					array(
 						'slug'          => 'choices',
-						'value'         => esc_html__( 'Choices', 'wpforms' ),
+						'value'         => $label,
 						'tooltip'       => esc_html__( 'Add choices for the form field.', 'wpforms' ),
 						'after_tooltip' => '<a href="#" class="toggle-bulk-add-display"><i class="fa fa-download"></i> <span>' . esc_html__( 'Bulk Add', 'wpforms' ) . '</span></a>',
 					),
@@ -974,9 +975,9 @@ abstract class WPForms_Field {
 				}
 
 				// Build output.
-				if ( in_array( $field['type'], array( 'checkbox', 'payment-multiple', 'radio' ), true ) ) {
+				if ( in_array( $field['type'], array( 'checkbox', 'gdpr-checkbox', 'payment-multiple', 'radio' ), true ) ) {
 
-					if ( 'checkbox' === $field['type'] ) {
+					if ( in_array( $field['type'], array( 'checkbox', 'gdpr-checkbox' ), true ) ) {
 						$type = 'checkbox';
 					} else {
 						$type = 'radio';
@@ -1021,8 +1022,10 @@ abstract class WPForms_Field {
 
 								$output .= '<label>';
 
-									$output .= sprintf( '<span class="wpforms-image-choices-image"><img src="%s"></span>',
-										! empty( $value['image'] ) ? esc_url( $value['image'] ) : WPFORMS_PLUGIN_URL . 'assets/images/placeholder-200x125.png'
+									$output .= sprintf( '<span class="wpforms-image-choices-image"><img src="%s" alt="%s"%s></span>',
+										! empty( $value['image'] ) ? esc_url( $value['image'] ) : WPFORMS_PLUGIN_URL . 'assets/images/placeholder-200x125.png',
+										esc_attr( $value['label'] ),
+										! empty( $value['label'] ) ? ' title="' . esc_attr( $value['label'] ) . '"' : ''
 									);
 
 									if ( 'none' === $field['choices_images_style'] ) {
