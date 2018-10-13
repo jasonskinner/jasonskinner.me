@@ -12,7 +12,7 @@
 
 					<?php get_template_part( 'parts/about/content', 'workplayexplore' ); ?>
 
-					<?php get_template_part( 'parts/about/content', 'instagram' ); ?>
+					<?php //get_template_part( 'parts/about/content', 'instagram' ); ?>
 
 					<?php get_template_part( 'parts/about/content', 'resume' ); ?>
 
