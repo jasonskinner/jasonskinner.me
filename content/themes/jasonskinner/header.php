@@ -22,6 +22,17 @@ If you have any questions about the code below, just ask me:  me [at] jasonskinn
 <html class="no-js"  <?php language_attributes(); ?>>
 
 	<head>
+		<!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-38660367-1"></script>
+		<script>
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+
+			gtag('config', 'UA-38660367-1');
+		</script>
+
+
 		<meta charset="utf-8">
 		
 		<!-- Force IE to use the latest rendering engine available -->

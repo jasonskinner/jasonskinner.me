@@ -12,6 +12,7 @@ backupbuddy_temp/
 _notes/
 wordfence-waf.php
 .gitkeep
+content/plugins/crayon-syntax-highlighter/log.txt
 
 nginx.conf
 content/w3tc-config/master.php
