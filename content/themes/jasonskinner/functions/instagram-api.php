@@ -4,7 +4,7 @@ function jss_instagram_feed( $count = 4 ) {
 	$slug = "instagram_feed_self";
 
 	//instagram access token
-	$token = '3017494.d3489de.cc7de89f9cca48fcb954f50764143007';
+	$token = '3017494.d3489de.28743198bc8743b4a2312a05a13cb8a7';
 
 	//get self use id
 	$ig_user_id = 'self';
