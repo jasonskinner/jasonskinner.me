@@ -58,7 +58,7 @@ class Captcha extends Field {
                 $this->generateCaptchaHtml($args, $options);
             } else if (!isset($args['wpdiscuz_recaptcha']) && $options->displayAntispamNote && !$currentUser->exists()) {
                 ?>
-                <div class="wc-field-captcha wpdiscuz-item">
+                <div class="wc-field-captcha wpdiscuz-item <?php echo $name, '-wrapper'; ?>">
                     <div class="wc-bin-captcha">
                         <i class="fas fa-shield-alt"></i><?php echo $options->phrases['wc_invisible_antispam_note']; ?>
                     </div>
@@ -140,7 +140,7 @@ class Captcha extends Field {
 
     private function generateCaptchaHtml($args, $options) {
         ?>
-        <div class="wc-field-captcha wpdiscuz-item">
+        <div class="wc-field-captcha wpdiscuz-item wc_captcha-wrapper">
             <div class="wc-captcha-input">
                 <input type="text" maxlength="5" value="" autocomplete="off" required="required" name="wc_captcha"  class="wpd-field wc_field_captcha" placeholder="<?php echo $args['name']; ?>" title="<?php _e('Insert the CAPTCHA code', 'wpdiscuz'); ?>">
             </div>

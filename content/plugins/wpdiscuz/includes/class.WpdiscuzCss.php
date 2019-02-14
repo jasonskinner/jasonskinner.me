@@ -59,7 +59,7 @@ class WpdiscuzCss {
                 #wpcomm .wpdiscuz-readmore{cursor:pointer;color:<?php echo $this->optionsSerialized->primaryColor; ?>;}
                 #wpcomm .wpdiscuz-textarea-wrap{border:<?php echo $this->optionsSerialized->inputBorderColor; ?> 1px solid;} .wpd-custom-field .wcf-pasiv-star, #wpcomm .wpdiscuz-item .wpdiscuz-rating > label {color: <?php echo $this->optionsSerialized->ratingInactivColor; ?>;}
                 #wpcomm .wpdiscuz-item .wpdiscuz-rating:not(:checked) > label:hover,.wpdiscuz-rating:not(:checked) > label:hover ~ label {   }#wpcomm .wpdiscuz-item .wpdiscuz-rating > input ~ label:hover, #wpcomm .wpdiscuz-item .wpdiscuz-rating > input:not(:checked) ~ label:hover ~ label, #wpcomm .wpdiscuz-item .wpdiscuz-rating > input:not(:checked) ~ label:hover ~ label{color: <?php echo $this->optionsSerialized->ratingHoverColor; ?>;} 
-                #wpcomm .wpdiscuz-item .wpdiscuz-rating > input:checked ~ label:hover, #wpcomm .wpdiscuz-item .wpdiscuz-rating > input:checked ~ label:hover, #wpcomm .wpdiscuz-item .wpdiscuz-rating > label:hover ~ input:checked ~ label, #wpcomm .wpdiscuz-item .wpdiscuz-rating > input:checked + label:hover ~ label, #wpcomm .wpdiscuz-item .wpdiscuz-rating > input:checked ~ label:hover ~ label, .wpd-custom-field .wcf-activ-star, #wpcomm .wpdiscuz-item .wpdiscuz-rating > input:checked ~ label{ color:<?php echo $this->optionsSerialized->ratingActivColor; ?>;}
+                #wpcomm .wpdiscuz-item .wpdiscuz-rating > input:checked ~ label:hover, #wpcomm .wpdiscuz-item .wpdiscuz-rating > input:checked ~ label:hover, #wpcomm .wpdiscuz-item .wpdiscuz-rating > label:hover ~ input:checked ~ label, #wpcomm .wpdiscuz-item .wpdiscuz-rating > input:checked + label:hover ~ label, #wpcomm .wpdiscuz-item .wpdiscuz-rating > input:checked ~ label:hover ~ label, .wpd-custom-field .wcf-active-star, #wpcomm .wpdiscuz-item .wpdiscuz-rating > input:checked ~ label{ color:<?php echo $this->optionsSerialized->ratingActivColor; ?>;}
                 #wpcomm .wc-comment-header{border-top: 1px solid #dedede;}
                 #wpcomm .wc-reply .wc-comment-header{border-top: 1px solid #dedede;}
                 /* Buttons */
@@ -94,12 +94,9 @@ class WpdiscuzCss {
                 #wpcomm .wc-footer-right .wc-toggle a,
                 #wpcomm .wc-footer-right .wc-toggle i{color:<?php echo $this->optionsSerialized->primaryColor; ?>;}
                 /* STICKY COMMENT HEADER */
-                #wpcomm .wc-sticky-comment.wc-comment .wc-comment-header{}
                 #wpcomm .wc-sticky-comment.wc-comment .wc-comment-header .wpd-sticky{background: #1ecea8; color: #ffffff; }
-                #wpcomm .wc-closed-comment.wc-comment .wc-comment-header{}
                 #wpcomm .wc-closed-comment.wc-comment .wc-comment-header .wpd-closed{background: #aaaaaa; color: #ffffff;}
                 /* PRIVATE COMMENT HEADER */
-                #wpcomm .wc-private-comment.wc-comment .wc-comment-header{}
                 #wpcomm .wc-private-comment.wc-comment .wc-comment-header .wpd-private{background: #999999; color: #ffffff;}
                 /* FOLLOW LINK */
 

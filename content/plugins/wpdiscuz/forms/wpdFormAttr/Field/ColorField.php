@@ -59,7 +59,7 @@ class ColorField extends Field {
         if ($comment->comment_parent && !$data['is_show_sform']) {
             return '';
         }
-        $html = '<tr><td class="first">';
+        $html = '<tr class="' . $key . '-wrapper"><td class="first">';
         $html .= '<label for = "' . $key . '">' . $data['name'] . ': </label>';
         $html .= '</td><td>';
         $html .= '<div class="wpdiscuz-item">';
@@ -77,15 +77,15 @@ class ColorField extends Field {
         $hasIcon = $args['icon'] ? true : false;
         $hasDesc = $args['desc'] ? true : false;
         ?>
-        <div class="wpdiscuz-item wpd-field-color <?php echo $hasIcon ? 'wpd-has-icon' : '' ?> <?php echo $hasDesc ? 'wpd-has-desc' : '' ?>">
+        <div class="wpdiscuz-item wpd-field-color <?php echo $name, '-wrapper', ($hasIcon ? ' wpd-has-icon' : ''), ($hasDesc ? ' wpd-has-desc' : ''); ?>">
             <div class="wpd-field-title">
                 <?php echo $args['name']; ?>
             </div>
             <?php if ($hasIcon) { ?>
-                <div class="wpd-field-icon"><i style="opacity: 0.8;" class="<?php echo strpos(trim($args['icon']), ' ') ? $args['icon'] : 'fas '.$args['icon']; ?>"></i></div>
+                <div class="wpd-field-icon"><i style="opacity: 0.8;" class="<?php echo strpos(trim($args['icon']), ' ') ? $args['icon'] : 'fas ' . $args['icon']; ?>"></i></div>
             <?php } ?>
             <?php $required = $args['required'] ? 'required="required"' : ''; ?>
-            <input <?php echo $required; ?> class="<?php echo $name; ?> wpd-field wpd-field-color" type="color" name="<?php echo $name; ?>" value="" placeholder="#ff8040"  pattern="^\#[A-Za-z0-9]{6}$" title="#ff8040">
+            <input <?php echo $required; ?> class="<?php echo $name; ?> wpd-field wpd-field-color" type="color" name="<?php echo $name; ?>" value="#000000" placeholder="#ff8040"  pattern="^\#[A-Za-z0-9]{6}$" title="#ff8040">
             <?php if ($args['desc']) { ?>
                 <div class="wpd-field-desc"><i class="far fa-question-circle" aria-hidden="true"></i><span><?php echo $args['desc']; ?></span></div>
                     <?php } ?>
@@ -94,9 +94,6 @@ class ColorField extends Field {
     }
 
     public function frontHtml($value, $args) {
-        if (!$args['is_show_on_comment']) {
-            return '';
-        }
         $html = '<div class="wpd-custom-field wpd-cf-color">';
         $html .= '<div class="wpd-cf-label">' . $args['name'] . '</div> <div class="wpd-cf-value" style="background:' . $value . ';"> ' . apply_filters('wpdiscuz_custom_field_color', $value, $args) . ' </div>';
         $html .= '</div>';

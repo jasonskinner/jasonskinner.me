@@ -64,7 +64,7 @@ class PersonalDataExporter implements wpdFormConst {
                 $data = array();
                 $commentMeta = get_metadata('comment', $commentId);
                 foreach ($this->fields as $key => $field) {
-                    if (key_exists($key, $commentMeta)) {
+                    if (isset($commentMeta[$key])) {
                         $value = $this->generateFieldData($commentMeta[$key][0]);
                         if (empty($value)) {
                             continue;

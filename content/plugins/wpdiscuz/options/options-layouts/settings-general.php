@@ -25,6 +25,16 @@ if (!defined('ABSPATH')) {
                     <input type="checkbox" <?php checked($this->optionsSerialized->isNativeAjaxEnabled == 1) ?> value="1" name="isNativeAjaxEnabled" id="isNativeAjaxEnabled" /><label for="isNativeAjaxEnabled"></label>
                     <a href="https://wpdiscuz.com/docs/wpdiscuz-documentation/settings/general-settings/#use_wordpress_native_ajax" title="<?php _e('Read the documentation', 'wpdiscuz') ?>" target="_blank"><i class="far fa-question-circle"></i></a>
                 </td>
+            </tr>
+            <tr valign="top">
+                <th scope="row">
+                    <label for="isLoadScriptsInFooter"><?php _e('Load scripts in footer', 'wpdiscuz'); ?> </label>
+                </th>
+                <td>
+                    <div class="wpd-switch-field">
+                        <input type="checkbox" <?php checked($this->optionsSerialized->isLoadScriptsInFooter == 1) ?> value="1" name="isLoadScriptsInFooter" id="isLoadScriptsInFooter" /><label for="isLoadScriptsInFooter"></label>
+                    </div>
+                </td>
             </tr>            
             <tr valign="top">
                 <th scope="row">
@@ -38,32 +48,32 @@ if (!defined('ABSPATH')) {
                     <a href="https://wpdiscuz.com/docs/wpdiscuz-documentation/settings/general-settings/#guest_email_to_detect_account" title="<?php _e('Read the documentation', 'wpdiscuz') ?>" target="_blank"><i class="far fa-question-circle"></i></a>
                 </td>
             </tr>
-            <?php if(is_ssl()){?>
-            <tr valign="top">
-                <th scope="row"><?php _e('Secure comment content in HTTPS protocol.', 'wpdiscuz'); ?>
-                    <p class="wpd-desc">
-                        <?php _e('This option detects images and other contents with non-https source URLs and fix according to your selected logic.', 'wpdiscuz'); ?>
-                    </p>
-                </th>
-                <th>
-                    <fieldset class="commentLinkFilter">
-                        <?php $commentLinkFilter = isset($this->optionsSerialized->commentLinkFilter) ? $this->optionsSerialized->commentLinkFilter : 1; ?>
-                        <label>
-                            <input  type="radio" value="1" <?php checked('1' == $commentLinkFilter); ?> name="commentLinkFilter" id="http-to-link" />
-                            <span style="display: inline;"><?php _e('Replace non-https content to simple link URLs', 'wpdiscuz') ?></span>
-                        </label> &nbsp;<br/>
-                        <label>
-                            <input type="radio" value="2" <?php checked('2' == $commentLinkFilter); ?> name="commentLinkFilter" id="http-to-https" /> 
-                            <span style="display: inline;"><?php _e('Just replace http protocols to https (https may not be supported by content provider)', 'wpdiscuz') ?></span>
-                        </label><br>   
-                        <label>
-                            <input type="radio" value="3" <?php checked('3' == $commentLinkFilter); ?> name="commentLinkFilter" id="ignore-https" /> 
-                            <span style="display: inline;"><?php _e('Ignore non-https content', 'wpdiscuz') ?></span>
-                        </label><br> 
-                    </fieldset>
-                </td>
-            </tr>
-            <?php }?>
+            <?php if (is_ssl()) { ?>
+                <tr valign="top">
+                    <th scope="row"><?php _e('Secure comment content in HTTPS protocol.', 'wpdiscuz'); ?>
+                        <p class="wpd-desc">
+                            <?php _e('This option detects images and other contents with non-https source URLs and fix according to your selected logic.', 'wpdiscuz'); ?>
+                        </p>
+                    </th>
+                    <th>
+                        <fieldset class="commentLinkFilter">
+                            <?php $commentLinkFilter = isset($this->optionsSerialized->commentLinkFilter) ? $this->optionsSerialized->commentLinkFilter : 1; ?>
+                            <label>
+                                <input  type="radio" value="1" <?php checked('1' == $commentLinkFilter); ?> name="commentLinkFilter" id="http-to-link" />
+                                <span style="display: inline;"><?php _e('Replace non-https content to simple link URLs', 'wpdiscuz') ?></span>
+                            </label> &nbsp;<br/>
+                            <label>
+                                <input type="radio" value="2" <?php checked('2' == $commentLinkFilter); ?> name="commentLinkFilter" id="http-to-https" /> 
+                                <span style="display: inline;"><?php _e('Just replace http protocols to https (https may not be supported by content provider)', 'wpdiscuz') ?></span>
+                            </label><br>   
+                            <label>
+                                <input type="radio" value="3" <?php checked('3' == $commentLinkFilter); ?> name="commentLinkFilter" id="ignore-https" /> 
+                                <span style="display: inline;"><?php _e('Ignore non-https content', 'wpdiscuz') ?></span>
+                            </label><br> 
+                        </fieldset>
+                        </td>
+                </tr>
+            <?php } ?>
             <tr valign="top">
                 <th scope="row">
                     <label><?php _e('Redirect first commenter to', 'wpdiscuz'); ?></label>
@@ -116,7 +126,7 @@ if (!defined('ABSPATH')) {
                         <input type="checkbox" <?php checked($this->optionsSerialized->showPluginPoweredByLink == 1) ?> value="1" name="wc_show_plugin_powerid_by" id="wc_show_plugin_powerid_by" />
                         <span id="wpdiscuz_thank_you" style="color:#006600; font-size:13px;"> &nbsp;<?php _e('Thank you!', 'wpdiscuz'); ?></span>
                     </label>
-                </td>
+                    </td>
             </tr>
         </tbody>
     </table>

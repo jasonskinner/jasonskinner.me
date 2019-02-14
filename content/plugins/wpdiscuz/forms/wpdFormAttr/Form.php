@@ -183,7 +183,7 @@ class Form {
         foreach ($this->fieldsBeforeSave as $mettaKey => $data) {
             if ($this->ratingsExists && $this->formCustomFields[$mettaKey]['type'] == 'wpdFormAttr\Field\RatingField') {
                 $oldCommentRating = get_comment_meta($commentID, $mettaKey, true);
-                if ($oldCommentRating && $commentApproved) {
+                if ($oldCommentRating && $commentApproved === '1') {
                     $postID = $comment->comment_post_ID;
                     $postRatingMeta = get_post_meta($postID, wpdFormConst::WPDISCUZ_RATING_COUNT, true);
                     $oldCommentRatingCount = $postRatingMeta[$mettaKey][$oldCommentRating] - 1;
@@ -205,13 +205,13 @@ class Form {
             }
             $gRating = round($ratingSum / count($this->ratings));
             update_comment_meta($commentID, 'rating', $gRating);
-            if ($commentApproved) {
-                $this->saveProstRatingMeta($comment, $gRating);
+            if ($commentApproved === '1') {
+                $this->savePostRatingMeta($comment, $gRating);
             }
         }
     }
 
-    private function saveProstRatingMeta($comment, $rating) {
+    private function savePostRatingMeta($comment, $rating) {
         $postID = $comment->comment_post_ID;
         if (class_exists('WooCommerce') && get_post_type($postID) == 'product') {
             $ratingCount = get_post_meta($postID, '_wc_rating_count', true);
@@ -315,17 +315,29 @@ class Form {
     }
 
     public function getRatingMetaHtml($atts = array()) {
-        global $post;
         $html = '';
         $atts = shortcode_atts(array(
             'metakey' => 'all',
             'show-lable' => true,
             'show-count' => true,
             'show-average' => true,
-            'itemprop' => true
+            'itemprop' => true,
+            'post_id' => null,
                 ), $atts);
+        if ($atts['post_id']) {
+            $post = get_post($atts['post_id']);
+            wp_enqueue_style('wpdiscuz-font-awesome');
+            wp_enqueue_style('wpdiscuz-ratings');
+            if (is_rtl()) {
+                wp_enqueue_style('wpdiscuz-ratings-rtl');
+            }
+            $ratingByPostId = true;
+        } else {
+            global $post;
+            $ratingByPostId = false;
+        }
         $this->initFormFields();
-        if ($this->ratingsExists && (($this->wpdOptions->ratingCssOnNoneSingular && !is_singular()) || is_singular())) {
+        if ($this->ratingsExists && (($this->wpdOptions->ratingCssOnNoneSingular && !is_singular()) || is_singular() || $ratingByPostId)) {
             $wpdiscuzRatingCountMeta = get_post_meta($post->ID, wpdFormConst::WPDISCUZ_RATING_COUNT, true);
             $wpdiscuzRatingCount = $wpdiscuzRatingCountMeta && is_array($wpdiscuzRatingCountMeta) ? $wpdiscuzRatingCountMeta : array();
             $ratingList = array();
@@ -387,11 +399,11 @@ class Form {
                                                <i class="' . $icon . ' wcf-pasiv-star"></i>
                                          </div>
                                          <div class="wpdiscuz-activ-stars" style="width:' . $ratingData['average'] * 100 / 5 . '%;">
-                                               <i class="' . $icon . ' wcf-activ-star"></i>
-                                               <i class="' . $icon . ' wcf-activ-star"></i>
-                                               <i class="' . $icon . ' wcf-activ-star"></i>
-                                               <i class="' . $icon . ' wcf-activ-star"></i>
-                                               <i class="' . $icon . ' wcf-activ-star"></i>
+                                               <i class="' . $icon . ' wcf-active-star"></i>
+                                               <i class="' . $icon . ' wcf-active-star"></i>
+                                               <i class="' . $icon . ' wcf-active-star"></i>
+                                               <i class="' . $icon . ' wcf-active-star"></i>
+                                               <i class="' . $icon . ' wcf-active-star"></i>
                                          </div></div></div><div style="display:inline-block; position:relative;"></div>';
             $html .= '</div>';
             if ($args['itemprop'] && $ratingData['count']) {
@@ -535,7 +547,7 @@ class Form {
                 $metaValuen = isset($meta[$key][0]) ? maybe_unserialize($meta[$key][0]) : '';
                 if (is_callable($fieldType . '::getInstance') && $metaValuen) {
                     $field = call_user_func($fieldType . '::getInstance');
-                    $html .= $field->frontHtml($metaValuen, $value);
+                    $html .= $field->drawContent($metaValuen, $value);
                 }
             }
         }
@@ -577,7 +589,7 @@ class Form {
                                     <div class="wc-field-avatararea">
                                         <?php
                                         $avatarSize = $isMain ? 40 : 48;
-                                        echo get_avatar($currentUser->ID, $avatarSize, '', $authorName);
+                                        echo get_avatar($currentUser->ID, $avatarSize, '', $authorName, array('wpdiscuz_current_user' => $currentUser));
                                         ?>
                                     </div>
                                 <?php } ?>

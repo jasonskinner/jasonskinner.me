@@ -71,12 +71,14 @@ class WpdiscuzHelperOptimization implements WpDiscuzConstants {
      * @param type $commentId the current comment id
      * @return type comment
      */
-    public function getCommentRoot($commentId) {
+    public function getCommentRoot($commentId, $commentStatusIn) {
         $comment = get_comment($commentId);
-        if ($comment && $comment->comment_parent) {
-            return $this->getCommentRoot($comment->comment_parent);
-        } else {
-            return $comment;
+        if (in_array($comment->comment_approved, $commentStatusIn)) {
+            if ($comment && $comment->comment_parent) {
+                return $this->getCommentRoot($comment->comment_parent, $commentStatusIn);
+            } else {
+                return $comment;
+            }
         }
     }
 

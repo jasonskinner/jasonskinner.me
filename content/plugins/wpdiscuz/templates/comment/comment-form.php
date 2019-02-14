@@ -2,6 +2,8 @@
 if (!defined('ABSPATH')) {
     exit();
 }
+
+$loadStartTime = WpdiscuzHelper::getMicrotime();
 global $post;
 $wpdiscuz = wpDiscuz();
 if (!function_exists('wpdiscuz_close_divs')) {
@@ -325,11 +327,12 @@ if (!post_password_required($post->ID)) {
                                 </div> 
                                 <?php if (!$currentUser->ID && $form->isShowSubscriptionBarAgreement()): ?>
                                     <div class="wpdiscuz-subscribe-agreement">
-                                        <input id="show_subscription_agreement" type="checkbox" checked="checked" required="required" name="show_subscription_agreement" value="1">
+                                        <input id="show_subscription_agreement" type="checkbox" required="required" name="show_subscription_agreement" value="1">
                                         <label for="show_subscription_agreement"><?php echo $form->subscriptionBarAgreementLabel(); ?></label>
                                     </div>
                                 <?php endif; ?>
                                 <?php wp_nonce_field('wpdiscuz_subscribe_form_nonce_action', 'wpdiscuz_subscribe_form_nonce'); ?>
+                                <?php do_action('wpdiscuz_after_subscription_form'); ?>
                                 <input type="hidden" value="<?php echo $post->ID; ?>" name="wpdiscuzSubscriptionPostId" />
                             </form>
                         <?php } ?>
@@ -360,16 +363,8 @@ if (!post_password_required($post->ID)) {
                 <div id="wcThreadWrapper" class="wc-thread-wrapper">
                     <?php
                     $args = array('first_load' => 1, 'orderby' => $wpdiscuzCommentsOrderBy);
-                    $showLoadeMore = 1;
-
-                    if (isset($_COOKIE[WpDiscuzCore::COOKIE_LAST_VISIT])) {
-                        $args[WpDiscuzCore::COOKIE_LAST_VISIT] = $_COOKIE[WpDiscuzCore::COOKIE_LAST_VISIT];
-                    }
-
                     $args['orderby'] = $wpdiscuzCommentsOrderBy;
                     $args['order'] = $wpdiscuzCommentsOrder;
-
-
                     $commentData = $wpdiscuz->getWPComments($args);
                     echo $commentData['comment_list'];
                     ?>                
@@ -410,4 +405,10 @@ if (!post_password_required($post->ID)) {
         </div>
         <div id="wpdiscuz-loading-bar" class="wpdiscuz-loading-bar <?php echo ($currentUser->ID) ? 'wpdiscuz-loading-bar-auth' : 'wpdiscuz-loading-bar-unauth'; ?>"></div>
         <?php
+        $loadEndTime = WpdiscuzHelper::getMicrotime();
+        if (isset($_GET['wpdLoadTime'])) {
+            ?>
+            <div><?php echo $loadEndTime - $loadStartTime; ?></div>
+            <?php
+        }
     }

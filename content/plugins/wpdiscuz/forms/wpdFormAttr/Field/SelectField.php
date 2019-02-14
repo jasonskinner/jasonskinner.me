@@ -63,7 +63,7 @@ class SelectField extends Field {
         if ($comment->comment_parent && !$data['is_show_sform']) {
             return '';
         }
-        $html = '<tr><td class="first">';
+        $html = '<tr class="' . $key . '-wrapper"><td class="first">';
         $html .= '<label for = "' . $key . '">' . $data['name'] . ': </label>';
         $html .= '</td><td>';
         $required = $data['required'] ? ' required="required" ' : '';
@@ -87,7 +87,7 @@ class SelectField extends Field {
         $hasDesc = $args['desc'] ? true : false;
         ?>
         <?php $required = $args['required'] ? ' required="required" ' : ''; ?>
-        <div class="wpdiscuz-item wpd-field-group wpd-field-select <?php echo $hasDesc ? 'wpd-has-desc' : '' ?>">
+        <div class="wpdiscuz-item wpd-field-group wpd-field-select <?php echo $name, '-wrapper', ($hasDesc ? ' wpd-has-desc' : ''); ?>">
             <select <?php echo $required; ?> name="<?php echo $name; ?>" class="<?php echo $name; ?> wpd-field wpdiscuz_select">
                 <option value=""><?php echo $args['name']; ?></option>
                 <?php foreach ($args['values'] as $index => $val): ?>
@@ -102,9 +102,6 @@ class SelectField extends Field {
     }
 
     public function frontHtml($value, $args) {
-        if(!$args['is_show_on_comment']){
-            return '';
-        }
         $html = '<div class="wpd-custom-field wpd-cf-text">';
         $html .= '<div class="wpd-cf-label">' . $args['name'] . '</div> <div class="wpd-cf-value"> ' . apply_filters('wpdiscuz_custom_field_select', $value , $args) . '</div>';
         $html .= '</div>';

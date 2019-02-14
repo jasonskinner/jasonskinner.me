@@ -43,10 +43,15 @@ jQuery(document).ready(function ($) {
     loginButtonsClone();
 
     if (!wpdiscuzAjaxObj.wpdiscuz_options.wordpressIsPaginate && isCookiesEnabled) {
+        Cookies.remove('wordpress_last_visit', {path: ''});
         var wpdiscuzLastVisitKey = wpdiscuzAjaxObj.wpdiscuz_options.lastVisitKey;
-        var wpdiscuzLastVisit = wpdiscuzAjaxObj.wpdiscuz_options.lastVisitCookie;
-        var wpdiscuzLastVisitExpires = wpdiscuzAjaxObj.wpdiscuz_options.lastVisitExpires;
-        Cookies.set(wpdiscuzLastVisitKey, (JSON.stringify(wpdiscuzLastVisit)), {expires: wpdiscuzLastVisitExpires, path: window.location});
+        if (wpdiscuzAjaxObj.wpdiscuz_options.enableLastVisitCookie) {
+            var wpdiscuzLastVisit = wpdiscuzAjaxObj.wpdiscuz_options.lastVisitCookie;
+            var wpdiscuzLastVisitExpires = wpdiscuzAjaxObj.wpdiscuz_options.lastVisitExpires;
+            Cookies.set(wpdiscuzLastVisitKey, wpdiscuzLastVisit, {expires: wpdiscuzLastVisitExpires, path: window.location});
+        } else {
+            Cookies.remove(wpdiscuzLastVisitKey, {path: ''});
+        }
     }
 
     $('#wc_unsubscribe_message, #wc_delete_content_message, #wc_follow_message').delay(3000).fadeOut(1500, function () {
@@ -65,7 +70,13 @@ jQuery(document).ready(function ($) {
     });
 
     $(document).delegate('.wc-comment-img-link', 'click', function () {
-        $(this).parents('.wc-comment-img-link-wrap').find('span').toggleClass('wc-comment-img-link-show');
+        var el = $('<input/>');
+        var val = $(this).data('comment-url');
+        el.appendTo('body').css({'position': 'absolute', 'top': '-10000000px'}).val(val);
+        el.select();
+        document.execCommand('copy');
+        el.remove();
+        alert(val + '\r\nCopied to clipboard!');
     });
 
     $(document).delegate('textarea.wc_comment', 'focus', function () {
@@ -306,15 +317,6 @@ jQuery(document).ready(function ($) {
                                 $('#wc-secondary-form-wrapper-' + messageKey).after(message.replace('wc-reply', 'wc-reply wc-no-left-margin'));
                             }
                         }
-                        if (r.held_moderate && isCookiesEnabled) {
-                            var moderateCommentTime = 30 * 24 * 60 * 60;
-                            var moderateComments = '';
-                            if (Cookies.get('wc_moderate_comments_' + wpdiscuzPostId)) {
-                                moderateComments = Cookies.get('wc_moderate_comments_' + wpdiscuzPostId);
-                            }
-                            moderateComments += r.new_comment_id + ',';
-                            Cookies.set('wc_moderate_comments_' + wpdiscuzPostId, moderateComments, {expires: moderateCommentTime, path: '/'});
-                        }
                         notifySubscribers(r);
                         wpdiscuzRedirect(r);
                         if (isCookiesEnabled && wpdCookiesConsent) {
@@ -339,15 +341,7 @@ jQuery(document).ready(function ($) {
                         }
                         wpdiscuzAjaxObj.setCommentMessage(wcForm, messageKey, message, true);
                     }
-                    if (r.callbackFunctions != null && r.callbackFunctions != 'undefined' && r.callbackFunctions.length) {
-                        $.each(r.callbackFunctions, function (i) {
-                            if (typeof wpdiscuzAjaxObj[r.callbackFunctions[i]] === "function") {
-                                wpdiscuzAjaxObj[r.callbackFunctions[i]](messageKey, wcForm);
-                            } else {
-                                console.log(r.callbackFunctions[i] + " is not a function");
-                            }
-                        });
-                    }
+                    runCallbacks(r, wcForm);
                 } catch (e) {
                     if (response.indexOf('<') >= 0 && response.indexOf('>') >= 0) {
                         message = e;
@@ -435,6 +429,9 @@ jQuery(document).ready(function ($) {
     var wcCommentTextBeforeEditing;
 
     $(document).delegate('.wc_editable_comment', 'click', function () {
+        if (wcCommentTextBeforeEditing && $('.wpdiscuz-edit-form-wrap').length) {
+            wcCancelOrSave(getUniqueID($('.wpdiscuz-edit-form-wrap'), 0), wcCommentTextBeforeEditing);
+        }
         var uniqueID = getUniqueID($(this), 0);
         var commentID = getCommentID(uniqueID);
         var editButton = $(this);
@@ -505,19 +502,14 @@ jQuery(document).ready(function ($) {
                     var message = '';
                     if (parseInt(messageKey) >= 0) {
                         wcCancelOrSave(uniqueID, r.message);
+                        if (r.twitterShareLink) {
+                            $('#wc-comm-' + uniqueID + ' #comment-' + commentID + '.wc-comment-right .wc-comment-header .wc-share-link .wc_tw').attr('href', r.twitterShareLink);
+                        }
                     } else {
                         message = wpdiscuzAjaxObj.wpdiscuz_options[messageKey];
                         wpdiscuzAjaxObj.setCommentMessage(saveButton, messageKey, message, false);
                     }
-                    if (r.callbackFunctions != null && r.callbackFunctions != 'undefined' && r.callbackFunctions.length) {
-                        $.each(r.callbackFunctions, function (i) {
-                            if (typeof wpdiscuzAjaxObj[r.callbackFunctions[i]] === "function") {
-                                wpdiscuzAjaxObj[r.callbackFunctions[i]](messageKey, commentID, commentContent);
-                            } else {
-                                console.log(r.callbackFunctions[i] + " is not a function");
-                            }
-                        });
-                    }
+                    runCallbacks(r, commentID);
                 } catch (e) {
                     if (response.indexOf('<') >= 0 && response.indexOf('>') >= 0) {
                         message = e;
@@ -589,7 +581,9 @@ jQuery(document).ready(function ($) {
         data.append('orderBy', wpdiscuzCommentsOrderBy);
         data.append('order', wpdiscuzCommentsOrder);
         data.append('lastParentId', getLastParentID());
-        data.append(wpdiscuzLastVisitKey, Cookies.get(wpdiscuzLastVisitKey));
+        if (wpdiscuzAjaxObj.wpdiscuz_options.enableLastVisitCookie) {
+            data.append(wpdiscuzLastVisitKey, Cookies.get(wpdiscuzLastVisitKey));
+        }
         wpdiscuzLoadCount++;
         var ajax = isNativeAjaxEnabled ? getAjaxObj(true, data) : getCustomAjaxObj(true, data);
         ajax.done(function (response) {
@@ -619,15 +613,7 @@ jQuery(document).ready(function ($) {
             $('#wpdiscuzHasMoreComments').val(1);
         }
 
-        if (r.callbackFunctions != null && r.callbackFunctions != 'undefined' && r.callbackFunctions.length) {
-            $.each(r.callbackFunctions, function (i) {
-                if (typeof wpdiscuzAjaxObj[r.callbackFunctions[i]] === "function") {
-                    wpdiscuzAjaxObj[r.callbackFunctions[i]]();
-                } else {
-                    console.log(r.callbackFunctions[i] + " is not a function");
-                }
-            });
-        }
+        runCallbacks(r);
     }
 
 //============================== LOAD MORE ============================== // 
@@ -672,15 +658,7 @@ jQuery(document).ready(function ($) {
                     message = wpdiscuzAjaxObj.wpdiscuz_options[messageKey];
                     wpdiscuzAjaxObj.setCommentMessage(currentVoteBtn, messageKey, message, false);
                 }
-                if (r.callbackFunctions != null && r.callbackFunctions != 'undefined' && r.callbackFunctions.length) {
-                    $.each(r.callbackFunctions, function (i) {
-                        if (typeof wpdiscuzAjaxObj[r.callbackFunctions[i]] === "function") {
-                            wpdiscuzAjaxObj[r.callbackFunctions[i]](messageKey, commentID, voteType);
-                        } else {
-                            console.log(r.callbackFunctions[i] + " is not a function");
-                        }
-                    });
-                }
+                runCallbacks(r, commentID, voteType);
             } catch (e) {
                 console.log(e);
             }
@@ -764,15 +742,7 @@ jQuery(document).ready(function ($) {
                             $('.wc-thread-wrapper').prepend(r.message);
                         }
 
-                        if (r.callbackFunctions != null && r.callbackFunctions != 'undefined' && r.callbackFunctions.length) {
-                            $.each(r.callbackFunctions, function (i) {
-                                if (typeof wpdiscuzAjaxObj[r.callbackFunctions[i]] === "function") {
-                                    wpdiscuzAjaxObj[r.callbackFunctions[i]]();
-                                } else {
-                                    console.log(r.callbackFunctions[i] + " is not a function");
-                                }
-                            });
-                        }
+                        runCallbacks(r);
 
                         $('html, body').animate({
                             scrollTop: $(scrollToSelector).offset().top - 32
@@ -896,6 +866,7 @@ jQuery(document).ready(function ($) {
                     $('#comment-' + commentId + ' .wc-comment-text').html(' ' + r.message);
                     $('#wpdiscuz-readmore-' + uniqueId).remove();
                 }
+                runCallbacks(r);
             } catch (e) {
                 console.log(e);
             }
@@ -1095,22 +1066,14 @@ jQuery(document).ready(function ($) {
         var ajax = isNativeAjaxEnabled ? getAjaxObj(true, data) : getCustomAjaxObj(true, data);
         ajax.done(function (response) {
             try {
-                var obj = $.parseJSON(response);
-                if (obj.code == 1) {
-                    $('#wc-comm-' + uniqueId).replaceWith(obj.data);
+                var r = $.parseJSON(response);
+                if (r.code == 1) {
+                    $('#wc-comm-' + uniqueId).replaceWith(r.data);
                     $('#wc-comm-' + uniqueId + ' .wc-toggle .fas').removeClass('fa-chevron-down').addClass('fa-chevron-up').removeClass('wpdiscuz-show-replies').attr('title', wpdiscuzAjaxObj.wpdiscuz_options.wc_hide_replies_text);
                     var toggle = $('#wc-comm-' + uniqueId + ' .wc-toggle');
                     $('.wpdiscuz-children-button-text', toggle).text(wpdiscuzAjaxObj.wpdiscuz_options.wc_hide_replies_text);
 
-                    if (obj.callbackFunctions != null && obj.callbackFunctions != 'undefined' && obj.callbackFunctions.length) {
-                        $.each(obj.callbackFunctions, function (i) {
-                            if (typeof wpdiscuzAjaxObj[obj.callbackFunctions[i]] === "function") {
-                                wpdiscuzAjaxObj[obj.callbackFunctions[i]]();
-                            } else {
-                                console.log(obj.callbackFunctions[i] + " is not a function");
-                            }
-                        });
-                    }
+                    runCallbacks(r);
                 } else {
                     console.log('Unknown error occured');
                 }
@@ -1208,15 +1171,7 @@ jQuery(document).ready(function ($) {
                         scrollToSelector = '#comment-' + r.commentId;
                     }
 
-                    if (r.callbackFunctions != null && r.callbackFunctions != 'undefined' && r.callbackFunctions.length) {
-                        $.each(r.callbackFunctions, function (i) {
-                            if (typeof wpdiscuzAjaxObj[r.callbackFunctions[i]] === "function") {
-                                wpdiscuzAjaxObj[r.callbackFunctions[i]]();
-                            } else {
-                                console.log(r.callbackFunctions[i] + " is not a function");
-                            }
-                        });
-                    }
+                    runCallbacks(r);
 
                     $('html, body').animate({
                         scrollTop: $(scrollToSelector).offset().top - 32
@@ -1256,15 +1211,7 @@ jQuery(document).ready(function ($) {
                         toggle.trigger('click');
                     }
 
-                    if (r.callbackFunctions != null && r.callbackFunctions != 'undefined' && r.callbackFunctions.length) {
-                        $.each(r.callbackFunctions, function (i) {
-                            if (typeof wpdiscuzAjaxObj[r.callbackFunctions[i]] === "function") {
-                                wpdiscuzAjaxObj[r.callbackFunctions[i]]();
-                            } else {
-                                console.log(r.callbackFunctions[i] + " is not a function");
-                            }
-                        });
-                    }
+                    runCallbacks(r);
 
                     $('html, body').animate({
                         scrollTop: $(scrollToSelector).offset().top - 32
@@ -1332,6 +1279,62 @@ jQuery(document).ready(function ($) {
         });
     });
 
+    function addCommentsAfterSticky(comment) {
+        if ($('.wc-sticky-comment').last()[0]) {
+            $(comment).insertAfter($('.wc-sticky-comment').last()[0]);
+        } else {
+            $('.wc-thread-wrapper').prepend(comment);
+        }
+    }
+
+    function showHideNotificationType(current) {
+        if (current) {
+            if (!current.prop('required')) {
+                if (current.val()) {
+                    current.parents('form').find('[name=wpdiscuz_notification_type]').parent().css('display', 'inline-block');
+                } else {
+                    current.parents('form').find('[name=wpdiscuz_notification_type]').parent().css('display', 'none');
+                }
+            }
+        } else {
+            $.each($('.wc_email'), function (i, val) {
+                var obj = $(val);
+                if (!obj.prop('required')) {
+                    if (obj.val()) {
+                        obj.parents('form').find('[name=wpdiscuz_notification_type]').parent().css('display', 'inline-block');
+                    } else {
+                        obj.parents('form').find('[name=wpdiscuz_notification_type]').parent().css('display', 'none');
+                    }
+                }
+            });
+        }
+    }
+    showHideNotificationType();
+
+    $(document).delegate('.wc_email', 'keyup', function () {
+        showHideNotificationType($(this));
+    });
+
+    $(document).delegate('#wpdiscuz-subscribe-form', 'submit', function (e) {
+        $('<input />').attr('type', 'hidden')
+                .attr('name', "ahk")
+                .attr('value', wpdiscuzAjaxObj.wpdiscuz_options.ahk)
+                .appendTo('#wpdiscuz-subscribe-form');
+        return true;
+    });
+
+    function runCallbacks(r, commentID, voteType, wcForm) {
+        if (r.callbackFunctions) {
+            $.each(r.callbackFunctions, function (i) {
+                if (typeof wpdiscuzAjaxObj[r.callbackFunctions[i]] === "function") {
+                    wpdiscuzAjaxObj[r.callbackFunctions[i]](r.code, commentID, voteType, wcForm);
+                } else {
+                    console.log(r.callbackFunctions[i] + " is not a function");
+                }
+            });
+        }
+    }
+
     /**
      * @param {type} action the action key 
      * @param {type} data the request properties
@@ -1369,41 +1372,5 @@ jQuery(document).ready(function ($) {
             processData: false,
         });
     }
-
-    function addCommentsAfterSticky(comment) {
-        if ($('.wc-sticky-comment').last()[0]) {
-            $(comment).insertAfter($('.wc-sticky-comment').last()[0]);
-        } else {
-            $('.wc-thread-wrapper').prepend(comment);
-        }
-    }
-
-    function showHideNotificationType(current) {
-        if (current) {
-            if (!current.prop('required')) {
-                if (current.val()) {
-                    current.parents('form').find('[name=wpdiscuz_notification_type]').parent().css('display', 'inline-block');
-                } else {
-                    current.parents('form').find('[name=wpdiscuz_notification_type]').parent().css('display', 'none');
-                }
-            }
-        } else {
-            $.each($('.wc_email'), function (i, val) {
-                var obj = $(val);
-                if (!obj.prop('required')) {
-                    if (obj.val()) {
-                        obj.parents('form').find('[name=wpdiscuz_notification_type]').parent().css('display', 'inline-block');
-                    } else {
-                        obj.parents('form').find('[name=wpdiscuz_notification_type]').parent().css('display', 'none');
-                    }
-                }
-            });
-        }
-    }
-    showHideNotificationType();
-
-    $(document).delegate('.wc_email', 'keyup', function () {
-        showHideNotificationType($(this));
-    });
 
 });

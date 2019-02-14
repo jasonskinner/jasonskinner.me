@@ -14,7 +14,7 @@ class SocialLogin {
 
     private function __construct($options) {
         $this->generalOptions = $options;
-        add_action('wp_enqueue_scripts', array(&$this, 'socialScripts'));
+        add_action('wpdiscuz_front_scripts', array(&$this, 'socialScripts'));
         add_action('comment_main_form_bar_top', array(&$this, 'getButtons'));
         add_action('comment_reply_form_bar_top', array(&$this, 'getReplyFormButtons'));
         add_action('wp_ajax_wpd_social_login', array(&$this, 'login'));
@@ -249,7 +249,7 @@ class SocialLogin {
             $accessToken = $twitter->oauth('oauth/access_token', array('oauth_verifier' => $oauthVerifier));
             $connection = new TwitterOAuth($this->generalOptions->twitterAppID, $this->generalOptions->twitterAppSecret, $accessToken['oauth_token'], $accessToken['oauth_token_secret']);
             $twitterUser = $connection->get('account/verify_credentials', array('include_email' => 'true'));
-            if (is_object($twitterUser) && isset($twitterUser->id)) {
+            if (!empty($twitterUser->id)) {
                 $this->setCurrentUser(Utils::addUser($twitterUser, 'twitter'));
                 $this->redirect($postURL);
             } else {
@@ -536,8 +536,7 @@ class SocialLogin {
     }
 
     public function socialScripts() {
-        global $post;
-        if (wpDiscuz()->helper->isLoadWpdiscuz($post) && ($this->generalOptions->enableFbLogin || $this->generalOptions->enableFbShare || $this->generalOptions->enableTwitterLogin || $this->generalOptions->enableGoogleLogin || $this->generalOptions->enableVkLogin || $this->generalOptions->enableOkLogin)) {
+        if ($this->generalOptions->enableFbLogin || $this->generalOptions->enableFbShare || $this->generalOptions->enableTwitterLogin || $this->generalOptions->enableGoogleLogin || $this->generalOptions->enableVkLogin || $this->generalOptions->enableOkLogin) {
             wp_register_script('wpdiscuz-social-js', plugins_url(WPDISCUZ_DIR_NAME . '/assets/js/wpdiscuz-social.js'), array('jquery'), get_option('wc_plugin_version', '1.0.0'), true);
             wp_enqueue_script('wpdiscuz-social-js');
         }

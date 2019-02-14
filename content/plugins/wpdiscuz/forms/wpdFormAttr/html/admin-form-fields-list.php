@@ -1,5 +1,5 @@
 <?php
-require_once 'default-fields.php';
+require_once WPDISCUZ_DIR_PATH . '/forms/wpdFormAttr/html/default-fields.php';
 
 $wpdiscuzCustomFields = apply_filters('wpdiscuz_form_custom_fields', array());
 ?>

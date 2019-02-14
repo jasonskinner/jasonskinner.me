@@ -45,12 +45,12 @@ class Name extends Field {
             $author = $this->commenter && is_array($this->commenter) && isset($this->commenter['comment_author']) ? urldecode($this->commenter['comment_author']) : '';
             $hasIcon = $args['icon'] ? true : false;
             $nameLengthRange = (intval($options->commenterNameMinLength) >= 1 && (intval($options->commenterNameMaxLength) >= 1 && intval($options->commenterNameMaxLength) <= 50)) ? 'pattern=".{' . $options->commenterNameMinLength . ',' . $options->commenterNameMaxLength . '}"' : ''; ?>
-            <div class="wpdiscuz-item <?php echo $hasIcon ? 'wpd-has-icon' : ''?>">
+            <div class="wpdiscuz-item <?php echo $name, '-wrapper', ($hasIcon ? ' wpd-has-icon' : ''); ?>">
                 <?php if ($args['icon']) { ?>
                 <div class="wpd-field-icon"><i class="<?php echo strpos(trim($args['icon']), ' ') ? $args['icon'] : 'fas '.$args['icon']; ?>"></i></div>
                 <?php } ?>
                 <?php $required = $args['required'] ? 'required="required"' : ''; ?>
-                <input value="<?php echo $author; ?>" <?php echo $required; ?> class="<?php echo $name; ?> wpd-field" type="text" name="<?php echo $name; ?>" value="" placeholder="<?php _e($args['name'],'wpdiscuz'); echo !empty($args['required']) ? '*' : ''; ?>" maxlength="<?php echo $options->commenterNameMaxLength; ?>" <?php echo $nameLengthRange; ?> title="">
+                <input value="<?php echo $author; ?>" <?php echo $required; ?> class="<?php echo $name; ?> wpd-field" type="text" name="<?php echo $name; ?>" placeholder="<?php _e($args['name'],'wpdiscuz'); echo !empty($args['required']) ? '*' : ''; ?>" maxlength="<?php echo $options->commenterNameMaxLength; ?>" <?php echo $nameLengthRange; ?> title="">
                 <?php if ($args['desc']) { ?>
                     <div class="wpd-field-desc"><i class="far fa-question-circle" aria-hidden="true"></i><span><?php echo $args['desc']; ?></span></div>
                 <?php } ?>

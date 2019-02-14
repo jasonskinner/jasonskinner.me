@@ -41,19 +41,20 @@ class Website extends Field {
     }
 
     public function frontFormHtml($name, $args, $options, $currentUser, $uniqueId, $isMainForm) {
-        if (!$currentUser->ID) {            
+        if (!$currentUser->ID) {
             $hasIcon = $args['icon'] ? true : false;
             if ($args['enable']) {
                 $authorUrl = $this->commenter && is_array($this->commenter) && isset($this->commenter['comment_author_url']) ? urldecode($this->commenter['comment_author_url']) : '';
                 ?>
-                <div class="wpdiscuz-item <?php echo $hasIcon ? 'wpd-has-icon' : '' ?>">
+                <div class="wpdiscuz-item <?php echo $name, '-wrapper', ($hasIcon ? ' wpd-has-icon' : ''); ?>">
                     <?php if ($hasIcon) { ?>
-                        <div class="wpd-field-icon"><i class="<?php echo strpos(trim($args['icon']), ' ') ? $args['icon'] : 'fas '.$args['icon']; ?>"></i></div>
+                        <div class="wpd-field-icon"><i class="<?php echo strpos(trim($args['icon']), ' ') ? $args['icon'] : 'fas ' . $args['icon']; ?>"></i></div>
                     <?php } ?>
-                        <input value="<?php echo $authorUrl; ?>" class="<?php echo $name; ?> wpd-field" type="text" name="<?php echo $name; ?>" value="" placeholder="<?php echo $args['name']; echo !empty($args['required']) ? '*' : ''; ?>">
-                    <?php if ($args['desc']) { ?>
+                    <input value="<?php echo $authorUrl; ?>" class="<?php echo $name; ?> wpd-field" type="text" name="<?php echo $name; ?>" placeholder="<?php echo $args['name'];
+                echo!empty($args['required']) ? '*' : ''; ?>">
+                            <?php if ($args['desc']) { ?>
                         <div class="wpd-field-desc"><i class="far fa-question-circle" aria-hidden="true"></i><span><?php echo $args['desc']; ?></span></div>
-                            <?php } ?>
+                <?php } ?>
                 </div>
                 <?php
             }
@@ -90,15 +91,17 @@ class Website extends Field {
 
     public function validateFieldData($fieldName, $args, $options, $currentUser) {
         $website_url = trim(filter_input(INPUT_POST, $fieldName, FILTER_SANITIZE_STRING));
-        if ($website_url != '' && (strpos($website_url, 'http://') !== '' && strpos($website_url, 'http://') !== 0) && (strpos($website_url, 'https://') !== '' && strpos($website_url, 'https://') !== 0)) {
-            $website_url = 'http://' . $website_url;
-        }
+        if ($website_url != '') {
+            if (strpos($website_url, 'http://') !== 0 && strpos($website_url, 'https://') !== 0) {
+                $website_url = 'http://' . $website_url;
+            }
 
-        if ($website_url != '' && (filter_var($website_url, FILTER_VALIDATE_URL) === false)) {
-            $messageArray['code'] = 'wc_error_url_text';
-            wp_die(json_encode($messageArray));
+            if (filter_var($website_url, FILTER_VALIDATE_URL) === false) {
+                $messageArray['code'] = 'wc_error_url_text';
+                wp_die(json_encode($messageArray));
+            }
         }
-        return $website_url;
+        return esc_url($website_url, array('http', 'https'));
     }
 
     public function editCommentHtml($key, $value, $data, $comment) {

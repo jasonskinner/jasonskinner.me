@@ -65,16 +65,16 @@ if (!defined('ABSPATH')) {
             </ul>
             <div class="resp-tabs-container options_tab_id">
                 <?php
-                include 'options-layouts/settings-general.php';
-                include 'options-layouts/settings-form.php';
-                include 'options-layouts/settings-list.php';
-                include 'options-layouts/settings-live-update.php';
-                include 'options-layouts/settings-subscription.php';
-                include 'options-layouts/settings-style.php';
-                include 'options-layouts/settings-cache.php';
-                include 'options-layouts/settings-social.php';
-                include 'options-layouts/settings-integrations.php';
-                include 'options-layouts/settings-addons.php';
+                include_once WPDISCUZ_DIR_PATH . '/options/options-layouts/settings-general.php';
+                include_once WPDISCUZ_DIR_PATH . '/options/options-layouts/settings-form.php';
+                include_once WPDISCUZ_DIR_PATH . '/options/options-layouts/settings-list.php';
+                include_once WPDISCUZ_DIR_PATH . '/options/options-layouts/settings-live-update.php';
+                include_once WPDISCUZ_DIR_PATH . '/options/options-layouts/settings-subscription.php';
+                include_once WPDISCUZ_DIR_PATH . '/options/options-layouts/settings-style.php';
+                include_once WPDISCUZ_DIR_PATH . '/options/options-layouts/settings-cache.php';
+                include_once WPDISCUZ_DIR_PATH . '/options/options-layouts/settings-social.php';
+                include_once WPDISCUZ_DIR_PATH . '/options/options-layouts/settings-integrations.php';
+                include_once WPDISCUZ_DIR_PATH . '/options/options-layouts/settings-addons.php';
                 ?>
             </div>
         </div>

@@ -9,6 +9,7 @@
  * Class WPSEO_FAQ_Block
  */
 class WPSEO_FAQ_Block implements WPSEO_WordPress_Integration {
+
 	/**
 	 * Registers the how-to block as a server-side rendered block.
 	 *
@@ -19,9 +20,10 @@ class WPSEO_FAQ_Block implements WPSEO_WordPress_Integration {
 			return;
 		}
 
-		register_block_type( 'yoast/faq-block', array(
-			'render_callback' => array( $this, 'render' ),
-		) );
+		register_block_type(
+			'yoast/faq-block',
+			array( 'render_callback' => array( $this, 'render' ) )
+		);
 	}
 
 	/**
@@ -95,7 +97,7 @@ class WPSEO_FAQ_Block implements WPSEO_WordPress_Integration {
 		}
 
 		if ( ! empty( $question['jsonAnswer'] ) ) {
-			$json_ld['answerCount'] = 1;
+			$json_ld['answerCount']    = 1;
 			$json_ld['acceptedAnswer'] = array(
 				'@type' => 'Answer',
 				'text'  => $question['jsonAnswer'],

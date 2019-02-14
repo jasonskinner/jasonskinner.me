@@ -1,5 +1,5 @@
 <?php
-include_once 'autoload.php';
+include_once WPDISCUZ_DIR_PATH . '/forms/autoload.php';
 
 use wpdFormAttr\FormConst\wpdFormConst;
 use wpdFormAttr\Form;
@@ -20,7 +20,7 @@ class wpDiscuzForm implements wpdFormConst {
         $this->options = $options;
         $this->pluginVersion = $pluginVersion;
         $this->form = new Form($this->options);
-        $this->initAdminPhrazes();
+        $this->initAdminPhrases();
         $this->formContentTypeRel = $options->formContentTypeRel;
         $this->formPostRel = $options->formPostRel;
         SocialLogin::getInstance($this->options);
@@ -212,11 +212,11 @@ class wpDiscuzForm implements wpdFormConst {
 
     public function wpdiscuzFieldsDialogContent() {
         $this->canManageOptions();
-        include_once 'wpdFormAttr/html/admin-form-fields-list.php';
+        include_once WPDISCUZ_DIR_PATH . '/forms/wpdFormAttr/html/admin-form-fields-list.php';
         wp_die();
     }
 
-    private function initAdminPhrazes() {
+    private function initAdminPhrases() {
         $this->wpdFormAdminOptions = array(
             'wpdiscuz_form_structure' => wpdFormConst::WPDISCUZ_META_FORMS_STRUCTURE,
             'wpd_form_fields' => __('Field Types', 'wpdiscuz'),
@@ -292,9 +292,9 @@ class wpDiscuzForm implements wpdFormConst {
         $formID = 0;
         if (!$this->form->getFormID()) {
             $postType = get_post_type($postID);
-            if (key_exists($postID, $this->formPostRel)) {
+            if (isset($this->formPostRel[$postID])) {
                 $formID = $this->formPostRel[$postID];
-            } elseif (is_string($postType) && key_exists($postType, $this->formContentTypeRel)) {
+            } elseif (is_string($postType) && isset($this->formContentTypeRel[$postType])) {
                 $tempContentTypeRel = $this->formContentTypeRel[$postType];
                 $defaultFormID = array_shift($tempContentTypeRel);
                 $lang = get_locale();
@@ -496,7 +496,7 @@ class wpDiscuzForm implements wpdFormConst {
     public function deleteCommentRating($commentId) {
         $rating = get_comment_meta($commentId, 'rating', true);
         $comment = get_comment($commentId);
-        if ($rating && $comment->comment_approved == 1) {
+        if ($rating && $comment->comment_approved === '1') {
             $this->updatePostRating($comment, -1);
         }
     }
@@ -529,7 +529,7 @@ class wpDiscuzForm implements wpdFormConst {
             $postRatings = array($metaKey => array());
         }
         if ($commentFieldRating) {
-            if (key_exists($commentFieldRating, $postRatings[$metaKey])) {
+            if (isset($postRatings[$metaKey][$commentFieldRating])) {
                 $postRatings[$metaKey][$commentFieldRating] = $postRatings[$metaKey][$commentFieldRating] + $difference;
             } else {
                 $postRatings[$metaKey][$commentFieldRating] = $difference;

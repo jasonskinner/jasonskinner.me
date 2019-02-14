@@ -54,7 +54,7 @@ class RatingField extends Field {
         if ($comment->comment_parent) {
             return '';
         }
-        $html = '<tr><td class="first">';
+        $html = '<tr class="' . $key . '-wrapper"><td class="first">';
         $html .= '<label for = "' . $key . '">' . $data['name'] . ': </label>';
         $html .= '</td><td>';
         $uniqueId = uniqid();
@@ -76,10 +76,10 @@ class RatingField extends Field {
         if (!$isMainForm)
             return;
         $hasDesc = $args['desc'] ? true : false;
-        $required = $args['required'] ? ' wpd-required-group ' : '';
+        $required = $args['required'] ? ' wpd-required-group' : '';
         $uniqueId = uniqid($uniqueId);
         ?>
-        <div class="wpdiscuz-item wpd-field-group wpd-field-rating <?php echo $required; ?> <?php echo $hasDesc ? 'wpd-has-desc' : '' ?>">
+        <div class="wpdiscuz-item wpd-field-group wpd-field-rating <?php echo $name, '-wrapper', $required, ($hasDesc ? ' wpd-has-desc' : ''); ?>">
             <div class="wpd-field-group-title">
                 <?php _e($args['name'], 'wpdiscuz'); ?>
                 <?php if ($args['desc']) { ?>
@@ -103,13 +103,10 @@ class RatingField extends Field {
     }
 
     public function frontHtml($value, $args) {
-        if(!$args['is_show_on_comment']){
-            return '';
-        }
         $html = '<div class="wpd-custom-field wpd-cf-rating">';
         $html .='<div class="wpd-cf-label">' . $args['name'] . ' : </div><div class="wpd-cf-value">';
         for ($i = 0; $i < 5; $i++) {
-            $colorClass = ($i < $value) ? ' wcf-activ-star ' : ' wcf-pasiv-star ';
+            $colorClass = ($i < $value) ? ' wcf-active-star ' : ' wcf-pasiv-star ';
             $fa = strpos(trim($args['icon']), ' ') ? $args['icon'] : 'fas '.$args['icon'];
             $html .= '<i class="'. $fa . ' ' . $colorClass . '" aria-hidden="true"></i>&nbsp;';
         }

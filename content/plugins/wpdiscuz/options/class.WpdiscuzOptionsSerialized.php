@@ -654,6 +654,9 @@ class WpdiscuzOptionsSerialized implements WpDiscuzConstants {
     public $wordpressDefaultCommentsPage;
     public $wordpressCommentPerPage;
     public $wordpressShowAvatars;
+    
+    public $enableLastVisitCookie;
+    public $isLoadScriptsInFooter;
 
     function __construct($dbmanager) {
         $this->dbManager = $dbmanager;
@@ -785,6 +788,8 @@ class WpdiscuzOptionsSerialized implements WpDiscuzConstants {
         $this->enableCloseButton = isset($options['enableCloseButton']) ? $options['enableCloseButton'] : 0;
         $this->enableDropAnimation = isset($options['enableDropAnimation']) ? $options['enableDropAnimation'] : 0;
         $this->isNativeAjaxEnabled = isset($options['isNativeAjaxEnabled']) ? $options['isNativeAjaxEnabled'] : 0;
+        $this->enableLastVisitCookie = isset($options['enableLastVisitCookie']) ? $options['enableLastVisitCookie'] : 0;
+        $this->isLoadScriptsInFooter = isset($options['isLoadScriptsInFooter']) ? $options['isLoadScriptsInFooter'] : 0;
         do_action('wpdiscuz_init_options', $this);
     }
 
@@ -1061,6 +1066,8 @@ class WpdiscuzOptionsSerialized implements WpDiscuzConstants {
             'enableCloseButton' => $this->enableCloseButton,
             'enableDropAnimation' => $this->enableDropAnimation,
             'isNativeAjaxEnabled' => $this->isNativeAjaxEnabled,
+            'enableLastVisitCookie' => $this->enableLastVisitCookie,
+            'isLoadScriptsInFooter' => $this->isLoadScriptsInFooter,
         );
         return $options;
     }
@@ -1181,6 +1188,8 @@ class WpdiscuzOptionsSerialized implements WpDiscuzConstants {
             'enableCloseButton' => 1,
             'enableDropAnimation' => 1,
             'isNativeAjaxEnabled' => 1,
+            'enableLastVisitCookie' => 0,
+            'isLoadScriptsInFooter' => 1,
         );
         add_option(self::OPTION_SLUG_OPTIONS, serialize($options));
     }
@@ -1281,6 +1290,7 @@ class WpdiscuzOptionsSerialized implements WpDiscuzConstants {
         $js_options['enableDropAnimation'] = $this->enableDropAnimation;
         $js_options['isNativeAjaxEnabled'] = $this->isNativeAjaxEnabled;
         $js_options['cookieCommentsSorting'] = self::COOKIE_COMMENTS_SORTING;
+        $js_options['enableLastVisitCookie'] = $this->enableLastVisitCookie;
         return $js_options;
     }
 

@@ -30,16 +30,16 @@ if (!defined('ABSPATH')) {
                 <li><?php _e('Errors', 'wpdiscuz'); ?></li>
             </ul>
             <div class="resp-tabs-container phrases_tab_id">
-                <?php include 'phrases-layouts/phrases-general.php'; ?>
-                <?php include 'phrases-layouts/phrases-form.php'; ?>
-                <?php include 'phrases-layouts/phrases-comment.php'; ?>
-                <?php include 'phrases-layouts/phrases-datetime.php'; ?>
-                <?php include 'phrases-layouts/phrases-email.php'; ?>
-                <?php include 'phrases-layouts/phrases-notification.php'; ?>
-                <?php include 'phrases-layouts/phrases-follow.php'; ?>
-                <?php include 'phrases-layouts/phrases-social-login.php'; ?>
-                <?php include 'phrases-layouts/phrases-user-settings.php'; ?>
-                <?php include 'phrases-layouts/phrases-error.php'; ?>
+                <?php include_once WPDISCUZ_DIR_PATH . '/options/phrases-layouts/phrases-general.php'; ?>
+                <?php include_once WPDISCUZ_DIR_PATH . '/options/phrases-layouts/phrases-form.php'; ?>
+                <?php include_once WPDISCUZ_DIR_PATH . '/options/phrases-layouts/phrases-comment.php'; ?>
+                <?php include_once WPDISCUZ_DIR_PATH . '/options/phrases-layouts/phrases-datetime.php'; ?>
+                <?php include_once WPDISCUZ_DIR_PATH . '/options/phrases-layouts/phrases-email.php'; ?>
+                <?php include_once WPDISCUZ_DIR_PATH . '/options/phrases-layouts/phrases-notification.php'; ?>
+                <?php include_once WPDISCUZ_DIR_PATH . '/options/phrases-layouts/phrases-follow.php'; ?>
+                <?php include_once WPDISCUZ_DIR_PATH . '/options/phrases-layouts/phrases-social-login.php'; ?>
+                <?php include_once WPDISCUZ_DIR_PATH . '/options/phrases-layouts/phrases-user-settings.php'; ?>
+                <?php include_once WPDISCUZ_DIR_PATH . '/options/phrases-layouts/phrases-error.php'; ?>
             </div>
         </div>
         <script type="text/javascript">

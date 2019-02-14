@@ -38,7 +38,7 @@ if ($items && is_array($items)) {
         }
 
         if ($object && !is_wp_error($object)) {
-            include 'item.php';
+            include WPDISCUZ_DIR_PATH . '/utils/layouts/subscriptions/item.php';
         }
     }
     include WPDISCUZ_DIR_PATH . '/utils/layouts/pagination.php';

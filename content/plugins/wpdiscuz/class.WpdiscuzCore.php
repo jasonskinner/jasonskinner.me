@@ -3,7 +3,7 @@
 /*
  * Plugin Name: wpDiscuz
  * Description: Better comment system. Wordpress post comments and discussion plugin. Allows your visitors discuss, vote for comments and share.
- * Version: 5.2.2
+ * Version: 5.3.1
  * Author: gVectors Team (A. Chakhoyan, G. Zakaryan, H. Martirosyan)
  * Author URI: https://gvectors.com/
  * Plugin URI: http://wpdiscuz.com/
@@ -18,18 +18,18 @@ define('WPDISCUZ_DS', DIRECTORY_SEPARATOR);
 define('WPDISCUZ_DIR_PATH', dirname(__FILE__));
 define('WPDISCUZ_DIR_NAME', basename(WPDISCUZ_DIR_PATH));
 
-include_once 'includes/interface.WpDiscuzConstants.php';
-include_once 'utils/functions.php';
-include_once 'options/class.WpdiscuzOptions.php';
-include_once 'options/class.WpdiscuzOptionsSerialized.php';
-include_once 'utils/class.WpdiscuzHelper.php';
-include_once 'utils/class.WpdiscuzHelperEmail.php';
-include_once 'utils/class.WpdiscuzHelperOptimization.php';
-include_once 'includes/class.WpdiscuzDBManager.php';
-include_once 'includes/class.WpdiscuzCss.php';
-include_once 'forms/wpDiscuzForm.php';
-include_once 'utils/class.WpdiscuzCache.php';
-include_once 'utils/class.WpdiscuzHelperAjax.php';
+include_once WPDISCUZ_DIR_PATH . '/includes/interface.WpDiscuzConstants.php';
+include_once WPDISCUZ_DIR_PATH . '/utils/functions.php';
+include_once WPDISCUZ_DIR_PATH . '/options/class.WpdiscuzOptions.php';
+include_once WPDISCUZ_DIR_PATH . '/options/class.WpdiscuzOptionsSerialized.php';
+include_once WPDISCUZ_DIR_PATH . '/utils/class.WpdiscuzHelper.php';
+include_once WPDISCUZ_DIR_PATH . '/utils/class.WpdiscuzHelperEmail.php';
+include_once WPDISCUZ_DIR_PATH . '/utils/class.WpdiscuzHelperOptimization.php';
+include_once WPDISCUZ_DIR_PATH . '/includes/class.WpdiscuzDBManager.php';
+include_once WPDISCUZ_DIR_PATH . '/includes/class.WpdiscuzCss.php';
+include_once WPDISCUZ_DIR_PATH . '/forms/wpDiscuzForm.php';
+include_once WPDISCUZ_DIR_PATH . '/utils/class.WpdiscuzCache.php';
+include_once WPDISCUZ_DIR_PATH . '/utils/class.WpdiscuzHelperAjax.php';
 
 class WpdiscuzCore implements WpDiscuzConstants {
 
@@ -55,6 +55,9 @@ class WpdiscuzCore implements WpDiscuzConstants {
     private static $_instance = null;
 
     private function __construct() {
+        if (!is_admin() && !session_id()) {
+            session_start();
+        }
         $this->version = get_option(self::OPTION_SLUG_VERSION, '1.0.0');
         $this->dbManager = new WpdiscuzDBManager();
         $this->optionsSerialized = new WpdiscuzOptionsSerialized($this->dbManager);
@@ -273,13 +276,10 @@ class WpdiscuzCore implements WpDiscuzConstants {
     }
 
     public function updateAutomatically() {
-        $currentUser = WpdiscuzHelper::getCurrentUser();
         $messageArray = array('code' => 0);
         $postId = isset($_POST['postId']) ? intval($_POST['postId']) : 0;
         $loadLastCommentId = isset($_POST['loadLastCommentId']) ? intval($_POST['loadLastCommentId']) : 0;
         $visibleCommentIds = isset($_POST['visibleCommentIds']) ? $_POST['visibleCommentIds'] : '';
-        $sentEmail = isset($_POST['email']) ? trim($_POST['email']) : '';
-        $email = $currentUser && $currentUser->ID ? $currentUser->user_email : $sentEmail;
         if ($visibleCommentIds && $postId && $loadLastCommentId) {
             $cArgs = $this->getDefaultCommentsArgs($postId);
             $lastCommentId = $this->dbManager->getLastCommentId($cArgs);
@@ -289,11 +289,10 @@ class WpdiscuzCore implements WpDiscuzConstants {
                 $messageArray['loadLastCommentId'] = $lastCommentId;
                 $commentListArgs = $this->getCommentListArgs($postId);
                 $commentListArgs['new_loaded_class'] = 'wc-new-loaded-comment';
-                $commentListArgs['current_user'] = $currentUser;
-                $this->form = $this->wpdiscuzForm->getForm($postId);
-                $commentListArgs['can_user_comment'] = $this->form ? $this->form->isUserCanComment($currentUser, $postId) : true;
+                $sentEmail = isset($_POST['email']) ? trim($_POST['email']) : '';
+                $email = !empty($commentListArgs['current_user']->ID) ? $commentListArgs['current_user']->user_email : $sentEmail;
                 $newCommentIds = $this->dbManager->getNewCommentIds($cArgs, $loadLastCommentId, $email);
-                $newCommentIds = apply_filters('wpdiscuz_live_update_new_comment_ids', $newCommentIds, $postId, $currentUser);
+                $newCommentIds = apply_filters('wpdiscuz_live_update_new_comment_ids', $newCommentIds, $postId, $commentListArgs['current_user']);
                 if ($this->optionsSerialized->commentListUpdateType == 1) {
                     $messageArray['message'] = array();
                     foreach ($newCommentIds as $newCommentId) {
@@ -347,15 +346,11 @@ class WpdiscuzCore implements WpDiscuzConstants {
         $newCommentIds = isset($_POST['newCommentIds']) ? trim($_POST['newCommentIds']) : '';
 
         if ($postId && $newCommentIds) {
-            $currentUser = WpdiscuzHelper::getCurrentUser();
             $messageArray['code'] = 1;
             $newCommentIds = explode(',', trim($newCommentIds, ','));
             $postId = trim(intval($postId));
             $commentListArgs = $this->getCommentListArgs($postId);
             $commentListArgs['new_loaded_class'] = 'wc-new-loaded-comment';
-            $commentListArgs['current_user'] = $currentUser;
-            $this->form = $this->wpdiscuzForm->getForm($postId);
-            $commentListArgs['can_user_comment'] = $this->form ? $this->form->isUserCanComment($currentUser, $postId) : true;
             $messageArray['message'] = array();
             foreach ($newCommentIds as $newCommentId) {
                 $comment = get_comment($newCommentId);
@@ -373,12 +368,10 @@ class WpdiscuzCore implements WpDiscuzConstants {
         $uniqueId = isset($_POST['wpdiscuz_unique_id']) ? trim($_POST['wpdiscuz_unique_id']) : '';
         $postId = isset($_POST['postId']) ? intval($_POST['postId']) : '';
 
-        if (!current_user_can('moderate_comments') &&
-                ($key = trim($this->optionsSerialized->antispamKey)) &&
-                isset($_POST['ahk']) &&
-                ($ahk = trim($_POST['ahk'])) &&
-                $key != $ahk) {
-            die(__('We are sorry, but this comment cannot be posted. Please try later.', 'wpdiscuz'));
+        if (!current_user_can('moderate_comments') && $key = trim($this->optionsSerialized->antispamKey)) {
+            if (!isset($_POST['ahk']) || (!($ahk = trim($_POST['ahk'])) || $key != $ahk)) {
+                die(__('We are sorry, but this comment cannot be posted. Please try later.', 'wpdiscuz'));
+            }
         }
 
         if ($uniqueId && $postId) {
@@ -469,7 +462,7 @@ class WpdiscuzCore implements WpDiscuzConstants {
                 $form->saveCommentMeta($new_comment_id);
                 $newComment = get_comment($new_comment_id);
                 $held_moderate = 1;
-                if ($newComment->comment_approved) {
+                if ($newComment->comment_approved === '1') {
                     $held_moderate = 0;
                 }
                 if ($notificationType == WpdiscuzCore::SUBSCRIPTION_POST && class_exists('Prompt_Comment_Form_Handling') && $this->optionsSerialized->usePostmaticForCommentNotification) {
@@ -504,11 +497,8 @@ class WpdiscuzCore implements WpDiscuzConstants {
                 }
 
                 $commentListArgs = $this->getCommentListArgs($postId);
-                $commentListArgs['current_user'] = $currentUser;
                 $commentListArgs['addComment'] = $commentDepth;
                 $commentListArgs['comment_author_email'] = $email;
-                $this->form = $this->wpdiscuzForm->getForm($postId);
-                $commentListArgs['can_user_comment'] = $this->form ? $this->form->isUserCanComment($currentUser, $postId) : true;
                 $messageArray['message'] = wp_list_comments($commentListArgs, array($newComment));
                 $messageArray['message'] = wp_unslash($messageArray['message']);
             } else {
@@ -612,17 +602,21 @@ class WpdiscuzCore implements WpDiscuzConstants {
                     $commentReadMoreLimit = $this->optionsSerialized->commentReadMoreLimit;
                     if (strstr($commentContent, '[/spoiler]')) {
                         $commentReadMoreLimit = 0;
-                        $commentContent = $this->helper->spoiler($commentContent);
+                        $commentContent = WpdiscuzHelper::spoiler($commentContent);
                     }
                     if ($commentReadMoreLimit && count(explode(' ', strip_tags($commentContent))) > $commentReadMoreLimit) {
-                        $commentContent = $this->helper->getCommentExcerpt($commentContent, $uniqueId);
+                        $commentContent = WpdiscuzHelper::getCommentExcerpt($commentContent, $uniqueId, $this->optionsSerialized);
                     }
 
                     $commentHtml = '<div class="wc-comment-text">' . $commentContent;
-                    if ($comment->comment_approved == 0) {
+                    if ($comment->comment_approved === '0') {
                         $commentHtml .= '<p class="wc_held_for_moderate">' . $this->optionsSerialized->phrases['wc_held_for_moderate'] . '</p>';
                     }
                     $commentHtml .= '</div>';
+                    if ($this->optionsSerialized->enableTwitterShare) {
+                        $commentLink = get_comment_link($comment);
+                        $messageArray['twitterShareLink'] = 'https://twitter.com/intent/tweet?text=' . $this->helper->getTwitterShareContent($commentHtml, $commentLink) . '&url=' . urlencode($commentLink);
+                    }
                     $form->renderFrontCommentMetaHtml($comment->comment_ID, $commentHtml);
                     $messageArray['message'] = $commentHtml;
                 }
@@ -645,25 +639,27 @@ class WpdiscuzCore implements WpDiscuzConstants {
         $postId = isset($_POST['postId']) ? intval($_POST['postId']) : 0;
         if ($commentId && $postId && $comment && $comment->comment_post_ID == $postId) {
             $commentListArgs = $this->getCommentListArgs($postId);
-            if ($comment->comment_approved == 1 || (!$comment->comment_approved && $commentListArgs['high_level_user'])) {
-                $currentUser = WpdiscuzHelper::getCurrentUser();
-                $parentComment = $this->helperOptimization->getCommentRoot($commentId);
-                $tree = $parentComment->get_children(array(
-                    'format' => 'flat',
-                    'status' => $this->commentsArgs['status'],
-                    'orderby' => $this->commentsArgs['orderby']
-                ));
-                $comments = array_merge(array($parentComment), $tree);
+            $this->commentsArgs = $this->getDefaultCommentsArgs($postId);
+            if ($comment->comment_approved === '1' || ($comment->comment_approved === '0' && $commentListArgs['high_level_user'])) {
+                $commentStatusIn = array('1');
+                if ($this->commentsArgs['status'] === 'all') {
+                    $commentStatusIn[] = '0';
+                }
+                if ($parentComment = $this->helperOptimization->getCommentRoot($commentId, $commentStatusIn)) {
+                    $tree = $parentComment->get_children(array(
+                        'format' => 'flat',
+                        'status' => $this->commentsArgs['status'],
+                        'orderby' => $this->commentsArgs['orderby']
+                    ));
+                    $comments = array_merge(array($parentComment), $tree);
 
-                $commentListArgs['isSingle'] = true;
-                $commentListArgs['new_loaded_class'] = 'wc-new-loaded-comment';
-                $commentListArgs['current_user'] = $currentUser;
-                $this->form = $this->wpdiscuzForm->getForm($postId);
-                $commentListArgs['can_user_comment'] = $this->form ? $this->form->isUserCanComment($currentUser, $postId) : true;
-                $response['message'] = wp_list_comments($commentListArgs, $comments);
-                $response['parentCommentID'] = $parentComment->comment_ID;
-                $response['callbackFunctions'] = array();
-                $response = apply_filters('wpdiscuz_wmu_lightbox', $response);
+                    $commentListArgs['isSingle'] = true;
+                    $commentListArgs['new_loaded_class'] = 'wc-new-loaded-comment';
+                    $response['message'] = wp_list_comments($commentListArgs, $comments);
+                    $response['parentCommentID'] = $parentComment->comment_ID;
+                    $response['callbackFunctions'] = array();
+                    $response = apply_filters('wpdiscuz_image_callbacks', $response);
+                }
             }
         }
         wp_die(json_encode($response));
@@ -693,7 +689,6 @@ class WpdiscuzCore implements WpDiscuzConstants {
         $postId = isset($_POST['postId']) ? intval($_POST['postId']) : 0;
         $lastParentId = isset($_POST['lastParentId']) ? intval($_POST['lastParentId']) : 0;
         if ($lastParentId >= 0 && $postId) {
-            $this->form = $this->wpdiscuzForm->getForm($postId);
             $limit = ($this->optionsSerialized->commentListLoadType == 1) ? 0 : $this->optionsSerialized->wordpressCommentPerPage;
             $args = array('limit' => $limit);
             $orderBy = isset($_POST['orderBy']) ? trim($_POST['orderBy']) : '';
@@ -705,11 +700,10 @@ class WpdiscuzCore implements WpDiscuzConstants {
                 $args['last_parent_id'] = $lastParentId;
             }
             $args['post_id'] = $postId;
-            $args[self::COOKIE_LAST_VISIT] = isset($_POST[self::COOKIE_LAST_VISIT]) ? $_POST[self::COOKIE_LAST_VISIT] : '';
             $commentData = $this->getWPComments($args);
             $commentData['loadLastCommentId'] = $this->dbManager->getLastCommentId($this->commentsArgs);
             $commentData['callbackFunctions'] = array();
-            $commentData = apply_filters('wpdiscuz_wmu_lightbox', $commentData);
+            $commentData = apply_filters('wpdiscuz_image_callbacks', $commentData);
             wp_die(json_encode($commentData));
         }
     }
@@ -810,7 +804,7 @@ class WpdiscuzCore implements WpDiscuzConstants {
             $messageArray['is_show_load_more'] = $commentData['is_show_load_more'];
             $messageArray['message'] = $commentData['comment_list'];
             $messageArray['callbackFunctions'] = array();
-            $messageArray = apply_filters('wpdiscuz_wmu_lightbox', $messageArray);
+            $messageArray = apply_filters('wpdiscuz_image_callbacks', $messageArray);
         }
         wp_die(json_encode($messageArray));
     }
@@ -819,7 +813,7 @@ class WpdiscuzCore implements WpDiscuzConstants {
      * loads the comment content on click via ajax
      */
     public function readMore() {
-        $messageArray = array('code' => 0);
+        $response = array('code' => 0);
         $commentId = isset($_POST['commentId']) ? intval($_POST['commentId']) : 0;
         if ($commentId) {
             $comment = get_comment($commentId);
@@ -829,12 +823,14 @@ class WpdiscuzCore implements WpDiscuzConstants {
                 $commentContent = $this->helper->makeClickable($commentContent);
             }
             $commentContent = apply_filters('comment_text', $commentContent, $comment);
-            $messageArray['code'] = 1;
-            $messageArray['message'] = $commentContent;
+            $response['code'] = 1;
+            $response['message'] = $commentContent;
+            $response['callbackFunctions'] = array();
+            $response = apply_filters('wpdiscuz_image_callbacks', $response);
         } else {
-            $messageArray['message'] = 'error';
+            $response['message'] = 'error';
         }
-        wp_die(json_encode($messageArray));
+        wp_die(json_encode($response));
     }
 
     /**
@@ -842,18 +838,13 @@ class WpdiscuzCore implements WpDiscuzConstants {
      */
     public function getWPComments($args = array()) {
         global $post;
-        $currentUser = WpdiscuzHelper::getCurrentUser();
-        $postId = $post && $post->ID ? $post->ID : $args['post_id'];
+        $postId = !empty($post->ID) ? $post->ID : $args['post_id'];
         $defaults = $this->getDefaultCommentsArgs($postId);
         $this->commentsArgs = wp_parse_args($args, $defaults);
-        do_action('wpdiscuz_before_getcomments', $this->commentsArgs, $currentUser, $args);
-        $commentData = array();
         $commentListArgs = $this->getCommentListArgs($this->commentsArgs['post_id']);
+        do_action('wpdiscuz_before_getcomments', $this->commentsArgs, $commentListArgs['current_user'], $args);
+        $commentData = array();
         $commentList = $this->_getWPComments($commentListArgs, $commentData);
-        $commentListArgs['current_user'] = $currentUser;
-        $this->form = $this->wpdiscuzForm->getForm($this->commentsArgs['post_id']);
-        $commentListArgs['can_user_comment'] = $this->form ? $this->form->isUserCanComment($currentUser, $this->commentsArgs['post_id']) : true;
-        $commentListArgs[self::COOKIE_LAST_VISIT] = isset($this->commentsArgs[self::COOKIE_LAST_VISIT]) ? $this->commentsArgs[self::COOKIE_LAST_VISIT] : '';
         $wcWpComments = wp_list_comments($commentListArgs, $commentList);
         $commentData['comment_list'] = $wcWpComments;
         $this->commentsArgs['caller'] = '';
@@ -894,9 +885,8 @@ class WpdiscuzCore implements WpDiscuzConstants {
                         'status' => $this->commentsArgs['status'],
                         'orderby' => $this->commentsArgs['orderby']
                     ));
-                    $countChildren = count($children);
-                    if ($countChildren && $this->optionsSerialized->isLoadOnlyParentComments) {
-                        $commentListArgs['wpdiscuz_child_count_' . $parentComment->comment_ID] = $countChildren;
+                    if ($this->optionsSerialized->isLoadOnlyParentComments) {
+                        $commentListArgs['wpdiscuz_child_count_' . $parentComment->comment_ID] = count($children);
                     } else {
                         $commentList = array_merge($commentList, $children);
                     }
@@ -920,13 +910,10 @@ class WpdiscuzCore implements WpDiscuzConstants {
                             'status' => $this->commentsArgs['status'],
                             'orderby' => $this->commentsArgs['orderby']
                         ));
-                        $countChildren = count($children);
-                        if ($countChildren) {
-                            if ($this->optionsSerialized->isLoadOnlyParentComments) {
-                                $commentListArgs['wpdiscuz_child_count_' . $parentComment->comment_ID] = $countChildren;
-                            } else {
-                                $commentList = array_merge($commentList, $children);
-                            }
+                        if ($this->optionsSerialized->isLoadOnlyParentComments) {
+                            $commentListArgs['wpdiscuz_child_count_' . $parentComment->comment_ID] = count($children);
+                        } else {
+                            $commentList = array_merge($commentList, $children);
                         }
                     }
                 }
@@ -965,17 +952,17 @@ class WpdiscuzCore implements WpDiscuzConstants {
         if (isset($qObj->query_vars['caller']) && $qObj->query_vars['caller'] == 'wpdiscuz') {
             global $wpdb, $post, $user_ID;
             $commenter = wp_get_current_commenter();
-            $where = "WHERE ( (comment_approved = '1')";
-            if ($user_ID) {
-                $where .= "OR (user_id = $user_ID AND comment_approved = '0')";
-            } elseif (!empty($commenter['comment_author_email'])) {
-                $where .= "OR (comment_author_email = '{$commenter['comment_author_email']}' AND comment_approved = '0')";
-            }
-            $where .= ")";
+            $where = "WHERE comment_approved = '1'";
             $where .= " AND comment_post_ID = {$post->ID}";
-            $where .= " AND comment_parent = 0";
-            $where .= " AND comment_type NOT IN ('" . self::WPDISCUZ_STICKY_COMMENT . "')";
-            $where = apply_filters('wpdiscuz_found_comments_query', $where);
+            if ($this->optionsSerialized->wordpressThreadComments) {
+                $where .= " AND comment_parent = 0";
+            }
+            $typesNotIn = array(self::WPDISCUZ_STICKY_COMMENT);
+            $typesNotIn = apply_filters('wpdiscuz_found_comments_query', $typesNotIn);
+            foreach ($typesNotIn as &$type) {
+                $type = esc_sql($type);
+            }
+            $where .= " AND comment_type NOT IN ('" . implode("','", $typesNotIn) . "')";
             $q = "SELECT COUNT(*) FROM {$wpdb->comments} $where";
         }
         return $q;
@@ -1013,17 +1000,18 @@ class WpdiscuzCore implements WpDiscuzConstants {
             'date_order' => $this->optionsSerialized->wordpressCommentOrder,
             'limit' => $this->optionsSerialized->commentListLoadType == 3 ? 0 : $this->optionsSerialized->wordpressCommentPerPage,
             'is_threaded' => $this->optionsSerialized->wordpressThreadComments,
-            'status' => current_user_can('moderate_comments') ? 'all' : 'approve',
+            'status' => !$this->optionsSerialized->wordpressIsPaginate && current_user_can('moderate_comments') ? 'all' : 'approve',
             'comment__in' => '',
             'update_comment_meta_cache' => false,
             'no_found_rows' => false,
             'type__not_in' => array(self::WPDISCUZ_STICKY_COMMENT),
         );
-
-        if ($user_ID) {
-            $args['include_unapproved'] = array($user_ID);
-        } elseif (!empty($commenter['comment_author_email'])) {
-            $args['include_unapproved'] = array($commenter['comment_author_email']);
+        if (!$this->optionsSerialized->wordpressIsPaginate) {
+            if ($user_ID) {
+                $args['include_unapproved'] = array($user_ID);
+            } elseif (!empty($commenter['comment_author_email'])) {
+                $args['include_unapproved'] = array($commenter['comment_author_email']);
+            }
         }
         return apply_filters('wpdiscuz_comments_args', $args);
     }
@@ -1048,6 +1036,7 @@ class WpdiscuzCore implements WpDiscuzConstants {
         global $typenow, $pagenow;
         $wp_version = get_bloginfo('version');
         $wpdiscuzPages = apply_filters('wpdiscuz_admin_pages', array(self::PAGE_SETTINGS, self::PAGE_PHRASES, self::PAGE_TOOLS, self::PAGE_ADDONS));
+        wp_register_style('wpdiscuz-font-awesome', plugins_url(WPDISCUZ_DIR_NAME . '/assets/third-party/font-awesome-5.0.6/css/fontawesome-all.min.css'), null, $this->version);
         if ((isset($_GET['page']) && in_array($_GET['page'], $wpdiscuzPages)) || ($typenow == 'wpdiscuz_form') || $pagenow == 'edit-comments.php' || $pagenow == 'comment.php') {
             $args = array(
                 'msgConfirmResetOptions' => __('Do you really want to reset all options?', 'wpdiscuz'),
@@ -1057,7 +1046,6 @@ class WpdiscuzCore implements WpDiscuzConstants {
                 'msgConfirmPurgeStatisticsCache' => __('Do you really want to delete statistics cache?', 'wpdiscuz'),
             );
 
-            wp_register_style('wpdiscuz-font-awesome', plugins_url(WPDISCUZ_DIR_NAME . '/assets/third-party/font-awesome-5.0.6/css/fontawesome-all.min.css'), null, $this->version);
             wp_enqueue_style('wpdiscuz-font-awesome');
             wp_register_style('wpdiscuz-cp-index-css', plugins_url(WPDISCUZ_DIR_NAME . '/assets/third-party/colorpicker/css/index.css'), null, $this->version);
             wp_enqueue_style('wpdiscuz-cp-index-css');
@@ -1114,15 +1102,15 @@ class WpdiscuzCore implements WpDiscuzConstants {
         global $post;
         $this->isWpdiscuzLoaded = $this->helper->isLoadWpdiscuz($post);
         wp_register_style('wpdiscuz-font-awesome', plugins_url(WPDISCUZ_DIR_NAME . '/assets/third-party/font-awesome-5.0.6/css/fontawesome-all.min.css'), null, $this->version);
+        wp_register_style('wpdiscuz-ratings', plugins_url(WPDISCUZ_DIR_NAME . '/assets/css/wpdiscuz-ratings.css'), null, $this->version);
+        wp_register_style('wpdiscuz-ratings-rtl', plugins_url(WPDISCUZ_DIR_NAME . '/assets/css/wpdiscuz-ratings-rtl.css'), null, $this->version);
 
         if (!$this->isWpdiscuzLoaded && $this->optionsSerialized->ratingCssOnNoneSingular) {
             if (!$this->optionsSerialized->disableFontAwesome) {
                 wp_enqueue_style('wpdiscuz-font-awesome');
             }
-            wp_register_style('wpdiscuz-ratings', plugins_url(WPDISCUZ_DIR_NAME . '/assets/css/wpdiscuz-ratings.css'), null, $this->version);
             wp_enqueue_style('wpdiscuz-ratings');
             if (is_rtl()) {
-                wp_register_style('wpdiscuz-ratings-rtl', plugins_url(WPDISCUZ_DIR_NAME . '/assets/css/wpdiscuz-ratings-rtl.css'), null, $this->version);
                 wp_enqueue_style('wpdiscuz-ratings-rtl');
             }
         }
@@ -1140,9 +1128,9 @@ class WpdiscuzCore implements WpDiscuzConstants {
                 wp_enqueue_style('wpdiscuz-frontend-css');
             }
 
-            wp_register_script('wpdiscuz-cookie-js', plugins_url(WPDISCUZ_DIR_NAME . '/assets/third-party/wpdcookiejs/customcookie.js'), array('jquery'), $this->version);
+            wp_register_script('wpdiscuz-cookie-js', plugins_url(WPDISCUZ_DIR_NAME . '/assets/third-party/wpdcookiejs/customcookie.js'), array('jquery'), $this->version, $this->optionsSerialized->isLoadScriptsInFooter);
             wp_enqueue_script('wpdiscuz-cookie-js');
-            wp_register_script('autogrowtextarea-js', plugins_url(WPDISCUZ_DIR_NAME . '/assets/third-party/autogrow/jquery.autogrowtextarea.min.js'), array('jquery'), $this->version);
+            wp_register_script('autogrowtextarea-js', plugins_url(WPDISCUZ_DIR_NAME . '/assets/third-party/autogrow/jquery.autogrowtextarea.min.js'), array('jquery'), $this->version, $this->optionsSerialized->isLoadScriptsInFooter);
             wp_enqueue_script('autogrowtextarea-js');
             $form = $this->wpdiscuzForm->getForm($post->ID);
             $form->initFormMeta();
@@ -1151,8 +1139,10 @@ class WpdiscuzCore implements WpDiscuzConstants {
             $this->wpdiscuzOptionsJs['wc_post_id'] = $post->ID;
             $this->wpdiscuzOptionsJs['loadLastCommentId'] = 0;
             $this->wpdiscuzOptionsJs['lastVisitKey'] = self::COOKIE_LAST_VISIT;
-            $this->wpdiscuzOptionsJs['lastVisitExpires'] = current_time('timestamp') + MONTH_IN_SECONDS;
-            $this->wpdiscuzOptionsJs['lastVisitCookie'] = $this->getLastVisitCookie();
+            if ($this->optionsSerialized->enableLastVisitCookie) {
+                $this->wpdiscuzOptionsJs['lastVisitExpires'] = current_time('timestamp') + MONTH_IN_SECONDS;
+                $this->wpdiscuzOptionsJs['lastVisitCookie'] = $this->getLastVisitCookie();
+            }
             $this->wpdiscuzOptionsJs['isCookiesEnabled'] = has_action('set_comment_cookies');
             if ($this->optionsSerialized->commentListUpdateType) {
                 $cArgs = $this->getDefaultCommentsArgs($post->ID);
@@ -1160,13 +1150,13 @@ class WpdiscuzCore implements WpDiscuzConstants {
             }
             $this->wpdiscuzOptionsJs = apply_filters('wpdiscuz_js_options', $this->wpdiscuzOptionsJs, $this->optionsSerialized);
             wp_enqueue_script('jquery-form');
-            wp_register_script('wpdiscuz-ajax-js', plugins_url(WPDISCUZ_DIR_NAME . '/assets/js/wpdiscuz.js'), array('jquery'), $this->version);
+            wp_register_script('wpdiscuz-ajax-js', plugins_url(WPDISCUZ_DIR_NAME . '/assets/js/wpdiscuz.js'), array('jquery'), $this->version, $this->optionsSerialized->isLoadScriptsInFooter);
             wp_enqueue_script('wpdiscuz-ajax-js');
             wp_localize_script('wpdiscuz-ajax-js', 'wpdiscuzAjaxObj', array('url' => admin_url('admin-ajax.php'), 'customAjaxUrl' => plugins_url(WPDISCUZ_DIR_NAME . '/utils/ajax/wpdiscuz-ajax.php'), 'wpdiscuz_options' => $this->wpdiscuzOptionsJs));
 
             if ($this->optionsSerialized->isQuickTagsEnabled) {
                 wp_enqueue_script('quicktags');
-                wp_register_script('wpdiscuz-quicktags', plugins_url('/assets/third-party/quicktags/wpdiscuz-quictags.js', __FILE__), null, $this->version, true);
+                wp_register_script('wpdiscuz-quicktags', plugins_url('/assets/third-party/quicktags/wpdiscuz-quictags.js', __FILE__), null, $this->version, $this->optionsSerialized->isLoadScriptsInFooter);
                 wp_enqueue_script('wpdiscuz-quicktags');
             }
 
@@ -1178,14 +1168,14 @@ class WpdiscuzCore implements WpDiscuzConstants {
                 );
                 wp_register_style('wpdiscuz-user-content-css', plugins_url(WPDISCUZ_DIR_NAME . '/assets/css/wpdiscuz-user-content.css'), null, $this->version);
                 wp_enqueue_style('wpdiscuz-user-content-css');
-                wp_register_script('wpdiscuz-user-content-js', plugins_url(WPDISCUZ_DIR_NAME . '/assets/js/wpdiscuz-user-content.js'), array('jquery'), $this->version);
+                wp_register_script('wpdiscuz-user-content-js', plugins_url(WPDISCUZ_DIR_NAME . '/assets/js/wpdiscuz-user-content.js'), array('jquery'), $this->version, $this->optionsSerialized->isLoadScriptsInFooter);
                 wp_enqueue_script('wpdiscuz-user-content-js');
                 wp_localize_script('wpdiscuz-user-content-js', 'wpdiscuzUCObj', $ucArgs);
-                wp_register_script('wpdiscuz-lity-js', plugins_url(WPDISCUZ_DIR_NAME . '/assets/third-party/lity/lity.js'), array('jquery'), $this->version);
+                wp_register_script('wpdiscuz-lity-js', plugins_url(WPDISCUZ_DIR_NAME . '/assets/third-party/lity/lity.js'), array('jquery'), $this->version, $this->optionsSerialized->isLoadScriptsInFooter);
                 wp_enqueue_script('wpdiscuz-lity-js');
             }
 
-            do_action('wpdiscuz_front_scripts');
+            do_action('wpdiscuz_front_scripts', $this->optionsSerialized);
         }
     }
 
@@ -1279,7 +1269,7 @@ class WpdiscuzCore implements WpDiscuzConstants {
         global $post;
         if ($this->isWpdiscuzLoaded) {
             $this->form = $this->wpdiscuzForm->getForm($post->ID);
-            add_filter('comments_template', array(&$this, 'addCommentForm'), 10);
+            add_filter('comments_template', array(&$this, 'addCommentForm'), 9999999);
         }
     }
 
@@ -1293,13 +1283,9 @@ class WpdiscuzCore implements WpDiscuzConstants {
 
     public function getLastVisitCookie() {
         global $post;
-        $lastVisit = array();
+        $lastVisit = '';
         if ($this->isWpdiscuzLoaded) {
-            $time = current_time('timestamp');
-            if (isset($_COOKIE[self::COOKIE_LAST_VISIT])) {
-                $lastVisit = json_decode(stripslashes($_COOKIE[self::COOKIE_LAST_VISIT]), true);
-            }
-            $lastVisit[self::$CURRENT_BLOG_ID][$post->ID] = $time;
+            $lastVisit = current_time('timestamp');
         }
         return $lastVisit;
     }
@@ -1309,21 +1295,23 @@ class WpdiscuzCore implements WpDiscuzConstants {
         return $file;
     }
 
-    public function getCommentListArgs($postId) {
+    private function getCommentListArgs($postId) {
         $post = get_post($postId);
         $postsAuthors = ($post->comment_count && (!$this->optionsSerialized->disableProfileURLs || !$this->optionsSerialized->authorTitlesShowHide)) ? $this->dbManager->getPostsAuthors() : array();
         $icons = $this->optionsSerialized->votingButtonsIcon ? explode('|', $this->optionsSerialized->votingButtonsIcon) : array('fa-plus', 'fa-minus');
-        $likeIcons = array('like' => $icons[0], 'dislike' => $icons[1]);
         $currentUser = WpdiscuzHelper::getCurrentUser();
         $currentUserEmail = '';
         $isUserLoggedIn = false;
-        if ($currentUser && $currentUser->ID) {
+        if (!empty($currentUser->ID)) {
             $currentUserEmail = $currentUser->user_email;
             $isUserLoggedIn = true;
         } else if (isset($_COOKIE['comment_author_email_' . COOKIEHASH]) && $_COOKIE['comment_author_email_' . COOKIEHASH]) {
             $currentUserEmail = urldecode(trim($_COOKIE['comment_author_email_' . COOKIEHASH]));
         }
-        $userFollows = $this->dbManager->getUserFollows($currentUserEmail);
+        $this->form = $this->wpdiscuzForm->getForm($postId);
+        $high_level_user = current_user_can('moderate_comments');
+        $can_stick_or_close = $post->post_author == $currentUser->ID;
+        $post_permalink = get_permalink($postId);
         $args = array(
             'style' => 'div',
             'echo' => false,
@@ -1332,20 +1320,37 @@ class WpdiscuzCore implements WpDiscuzConstants {
             'reverse_children' => !$this->optionsSerialized->reverseChildren,
             'post_author' => $post->post_author,
             'posts_authors' => $postsAuthors,
-            'walker' => $this->wpdiscuzWalker,
-            'comment_status' => array(1),
-            'voting_icons' => $likeIcons,
-            'comments_open' => comments_open($post->ID),
-            'high_level_user' => current_user_can('moderate_comments'),
+            'voting_icons' => array('like' => $icons[0], 'dislike' => $icons[1]),
+            'high_level_user' => $high_level_user,
             'avatar_trackback' => apply_filters('wpdiscuz_avatar_trackback', plugins_url(WPDISCUZ_DIR_NAME . '/assets/img/trackback.png')),
-            'can_stick_or_close' => $post->post_author == $currentUser->ID,
-            'is_rtl' => is_rtl(),
-            'user_follows' => $userFollows,
+            'wpdiscuz_gravatar_size' => apply_filters('wpdiscuz_gravatar_size', 64),
+            'can_stick_or_close' => $can_stick_or_close,
+            'user_follows' => $this->dbManager->getUserFollows($currentUserEmail),
+            'current_user' => $currentUser,
             'current_user_email' => $currentUserEmail,
-            'comment_author_email' => $currentUserEmail,
-            'is_user_logged_in' => $isUserLoggedIn,
             'is_share_enabled' => $this->optionsSerialized->isShareEnabled(),
+            'post_permalink' => $post_permalink,
+            'can_user_reply' => comments_open($post->ID) && $this->optionsSerialized->wordpressThreadComments && (($this->form ? $this->form->isUserCanComment($currentUser, $postId) : true) || $high_level_user),
+            'can_user_follow' => $this->optionsSerialized->isFollowActive && $isUserLoggedIn && !empty($currentUserEmail),
+            'can_user_vote' => $currentUser->ID || $this->optionsSerialized->isGuestCanVote,
+            'wc_stick_btn' => $this->optionsSerialized->enableStickButton && $high_level_user || $can_stick_or_close ? '<span class="wc_stick_btn wc-cta-button"><span class="wc_stick_text">%s</span></span>' : '',
+            'wc_close_btn' => $this->optionsSerialized->enableCloseButton && $high_level_user || $can_stick_or_close ? '<span class="wc_close_btn wc-cta-button"><span class="wc_close_text">%s</span></span>' : '',
+            'share_buttons' => '',
+            'last_visit' => $this->optionsSerialized->enableLastVisitCookie && isset($_COOKIE[self::COOKIE_LAST_VISIT]) ? $_COOKIE[self::COOKIE_LAST_VISIT] : '',
+            'walker' => $this->wpdiscuzWalker,
         );
+        if ($this->optionsSerialized->enableFbShare && $this->optionsSerialized->fbAppID) {
+            $args['share_buttons'] .= '<span class="wc_fb"><i class="fab fa-facebook-f wpf-cta" aria-hidden="true" title="' . $this->optionsSerialized->phrases['wc_share_facebook'] . '"></i></span>';
+        }
+        if ($this->optionsSerialized->enableGoogleShare) {
+            $args['share_buttons'] .= '<a class="wc_go" target="_blank" href="https://plus.google.com/share?url=' . $post_permalink . '" title="' . $this->optionsSerialized->phrases['wc_share_google'] . '"><i class="fab fa-google wpf-cta" aria-hidden="true"></i></a>';
+        }
+        if ($this->optionsSerialized->enableVkShare) {
+            $args['share_buttons'] .= '<a class="wc_vk" target="_blank" href="http://vk.com/share.php?url=' . $post_permalink . '" title="' . $this->optionsSerialized->phrases['wc_share_vk'] . '"><i class="fab fa-vk wpf-cta" aria-hidden="true"></i></a>';
+        }
+        if ($this->optionsSerialized->enableOkShare) {
+            $args['share_buttons'] .= '<a class="wc_ok" target="_blank" href="http://www.odnoklassniki.ru/dk?st.cmd=addShare&st.s=1&st._surl=' . $post_permalink . '" title=""><i class="fab fa-odnoklassniki wpf-cta" aria-hidden="true"></i></a>';
+        }
         return apply_filters('wpdiscuz_comment_list_args', $args);
     }
 
@@ -1360,7 +1365,7 @@ class WpdiscuzCore implements WpDiscuzConstants {
             } elseif ($roleName == 'post_author') {
                 $this->optionsSerialized->phrases['wc_blog_role_' . $roleName] = isset($this->optionsSerialized->phrases['wc_blog_role_' . $roleName]) ? $this->optionsSerialized->phrases['wc_blog_role_' . $roleName] : __('Author', 'wpdiscuz');
             } elseif ($roleName == 'editor') {
-                $this->optionsSerialized->phrases['wc_blog_role_' . $roleName] = isset($this->optionsSerialized->phrases['wc_blog_role_' . $roleName]) ? $this->optionsSerialized->phrases['wc_blog_role_' . $roleName] : ucfirst(str_replace('_', ' ', $roleName));
+                $this->optionsSerialized->phrases['wc_blog_role_' . $roleName] = isset($this->optionsSerialized->phrases['wc_blog_role_' . $roleName]) ? $this->optionsSerialized->phrases['wc_blog_role_' . $roleName] : __('Editor', 'wpdiscuz');
             } else {
                 $this->optionsSerialized->phrases['wc_blog_role_' . $roleName] = isset($this->optionsSerialized->phrases['wc_blog_role_' . $roleName]) ? $this->optionsSerialized->phrases['wc_blog_role_' . $roleName] : __('Member', 'wpdiscuz');
             }
@@ -1376,11 +1381,7 @@ class WpdiscuzCore implements WpDiscuzConstants {
         $postId = isset($_POST['postId']) ? intval($_POST['postId']) : 0;
         $commentId = isset($_POST['commentId']) ? intval($_POST['commentId']) : 0;
         if ($postId) {
-            $currentUser = WpdiscuzHelper::getCurrentUser();
             $commentListArgs = $this->getCommentListArgs($postId);
-            $commentListArgs['current_user'] = $currentUser;
-            $this->form = $this->wpdiscuzForm->getForm($postId);
-            $commentListArgs['can_user_comment'] = $this->form ? $this->form->isUserCanComment($currentUser, $postId) : true;
             $cArgs = $this->getDefaultCommentsArgs($postId);
             $cArgs['parent'] = $commentId;
             $cArgs['limit'] = 0;
@@ -1390,15 +1391,13 @@ class WpdiscuzCore implements WpDiscuzConstants {
                 'status' => $cArgs['status'],
                 'orderby' => $cArgs['orderby'],
             ));
-            $countChildren = count($children);
-            $commentListArgs['wpdiscuz_child_count_' . $comment->comment_ID] = $countChildren;
-            $commentListArgs['wpdiscuz_hide_child_count_' . $comment->comment_ID] = 'wpdiscuz-hidden';
+            $commentListArgs['wpdiscuz_child_count_' . $comment->comment_ID] = count($children);
             $comments = array_merge(array($comment), $children);
             if ($comments) {
                 $response['code'] = 1;
                 $response['data'] = wp_list_comments($commentListArgs, $comments);
                 $response['callbackFunctions'] = array();
-                $response = apply_filters('wpdiscuz_wmu_lightbox', $response);
+                $response = apply_filters('wpdiscuz_image_callbacks', $response);
             }
         }
         wp_die(json_encode($response));
@@ -1411,8 +1410,12 @@ class WpdiscuzCore implements WpDiscuzConstants {
             $commentId = $this->dbManager->getMostReactedCommentId($postId);
             $comment = get_comment($commentId);
             if ($comment && $comment->comment_post_ID == $postId) {
-                $currentUser = WpdiscuzHelper::getCurrentUser();
-                $parentComment = $this->helperOptimization->getCommentRoot($commentId);
+                $this->commentsArgs = $this->getDefaultCommentsArgs($postId);
+                $commentStatusIn = array('1');
+                if ($this->commentsArgs['status'] === 'all') {
+                    $commentStatusIn[] = '0';
+                }
+                $parentComment = $this->helperOptimization->getCommentRoot($commentId, $commentStatusIn);
                 $tree = $parentComment->get_children(array(
                     'format' => 'flat',
                     'status' => $this->commentsArgs['status'],
@@ -1422,15 +1425,12 @@ class WpdiscuzCore implements WpDiscuzConstants {
                 $commentListArgs = $this->getCommentListArgs($postId);
                 $commentListArgs['isSingle'] = true;
                 $commentListArgs['new_loaded_class'] = 'wc-new-loaded-comment';
-                $commentListArgs['current_user'] = $currentUser;
-                $this->form = $this->wpdiscuzForm->getForm($postId);
-                $commentListArgs['can_user_comment'] = $this->form ? $this->form->isUserCanComment($currentUser, $postId) : true;
                 $response['code'] = 1;
                 $response['message'] = wp_list_comments($commentListArgs, $comments);
                 $response['commentId'] = $commentId;
                 $response['parentCommentID'] = $parentComment->comment_ID;
                 $response['callbackFunctions'] = array();
-                $response = apply_filters('wpdiscuz_wmu_lightbox', $response);
+                $response = apply_filters('wpdiscuz_image_callbacks', $response);
             }
         }
         wp_die(json_encode($response));
@@ -1457,8 +1457,12 @@ class WpdiscuzCore implements WpDiscuzConstants {
             }
 
             if ($hottestCommentId && $hottestChildren) {
-                $currentUser = WpdiscuzHelper::getCurrentUser();
-                $parentComment = $this->helperOptimization->getCommentRoot($hottestCommentId);
+                $this->commentsArgs = $this->getDefaultCommentsArgs($postId);
+                $commentStatusIn = array('1');
+                if ($this->commentsArgs['status'] === 'all') {
+                    $commentStatusIn[] = '0';
+                }
+                $parentComment = $this->helperOptimization->getCommentRoot($hottestCommentId, $commentStatusIn);
                 $tree = $parentComment->get_children(array(
                     'format' => 'flat',
                     'status' => $this->commentsArgs['status'],
@@ -1468,14 +1472,11 @@ class WpdiscuzCore implements WpDiscuzConstants {
                 $commentListArgs = $this->getCommentListArgs($postId);
                 $commentListArgs['isSingle'] = true;
                 $commentListArgs['new_loaded_class'] = 'wc-new-loaded-comment';
-                $commentListArgs['current_user'] = $currentUser;
-                $this->form = $this->wpdiscuzForm->getForm($postId);
-                $commentListArgs['can_user_comment'] = $this->form ? $this->form->isUserCanComment($currentUser, $postId) : true;
                 $response['code'] = 1;
                 $response['message'] = wp_list_comments($commentListArgs, $comments);
                 $response['commentId'] = $hottestCommentId;
                 $response['callbackFunctions'] = array();
-                $response = apply_filters('wpdiscuz_wmu_lightbox', $response);
+                $response = apply_filters('wpdiscuz_image_callbacks', $response);
             }
         }
         wp_die(json_encode($response));

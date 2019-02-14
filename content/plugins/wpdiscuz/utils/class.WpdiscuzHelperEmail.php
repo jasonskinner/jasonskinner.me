@@ -16,9 +16,17 @@ class WpdiscuzHelperEmail implements WpDiscuzConstants {
 
     public function addSubscription() {
         global $wp_rewrite;
+        $success = 0;
+        $httpReferer = filter_input(INPUT_POST, '_wp_http_referer');
+        if (!current_user_can('moderate_comments') && $key = trim($this->optionsSerialized->antispamKey)) {
+            if (!isset($_POST['ahk']) || (!($ahk = trim($_POST['ahk'])) || $key != $ahk)) {
+                $httpReferer .= $wp_rewrite->using_permalinks() ? "?wpdiscuzUrlAnchor&subscriptionSuccess=$success&subscriptionID=0#wc_unsubscribe_message" : "&wpdiscuzUrlAnchor&subscriptionSuccess=$success#wc_unsubscribe_message";
+                wp_redirect($httpReferer);
+                exit();
+            }
+        }
         $currentUser = WpdiscuzHelper::getCurrentUser();
         $subscribeFormNonce = filter_input(INPUT_POST, 'wpdiscuz_subscribe_form_nonce');
-        $httpReferer = filter_input(INPUT_POST, '_wp_http_referer');
         $subscriptionType = filter_input(INPUT_POST, 'wpdiscuzSubscriptionType');
         $postId = filter_input(INPUT_POST, 'wpdiscuzSubscriptionPostId');
         $showSubscriptionBarAgreement = filter_input(INPUT_POST, 'show_subscription_agreement', FILTER_SANITIZE_NUMBER_INT);
@@ -31,8 +39,8 @@ class WpdiscuzHelperEmail implements WpDiscuzConstants {
         if (!$currentUser->exists() && $form->isShowSubscriptionBarAgreement() && !$showSubscriptionBarAgreement && ($subscriptionType == WpdiscuzCore::SUBSCRIPTION_POST || $subscriptionType == WpdiscuzCore::SUBSCRIPTION_ALL_COMMENT)) {
             $email = '';
         }
-        $success = 0;
-        if (wp_verify_nonce($subscribeFormNonce, 'wpdiscuz_subscribe_form_nonce_action') && $email && filter_var($email, FILTER_VALIDATE_EMAIL) !== false && in_array($subscriptionType, array(self::SUBSCRIPTION_POST, self::SUBSCRIPTION_ALL_COMMENT)) && $postId) {
+        $addSubscription = apply_filters('wpdiscuz_before_subscription_added', true);
+        if ($addSubscription && wp_verify_nonce($subscribeFormNonce, 'wpdiscuz_subscribe_form_nonce_action') && $email && filter_var($email, FILTER_VALIDATE_EMAIL) !== false && in_array($subscriptionType, array(self::SUBSCRIPTION_POST, self::SUBSCRIPTION_ALL_COMMENT)) && $postId) {
             $noNeedMemberConfirm = ($currentUser->ID && $this->optionsSerialized->disableMemberConfirm);
             $noNeedGuestsConfirm = (!$currentUser->ID && $this->optionsSerialized->disableGuestsConfirm);
             if ($noNeedMemberConfirm || $noNeedGuestsConfirm) {
@@ -120,12 +128,8 @@ class WpdiscuzHelperEmail implements WpDiscuzConstants {
         $post = get_post($comment->comment_post_ID);
         $postAuthor = get_userdata($post->post_author);
 
-        if ($emailData['email'] == $postAuthor->user_email) {
-            if (get_option('moderation_notify') && !$comment->comment_approved) {
-                return;
-            } else if (get_option('comments_notify') && $comment->comment_approved) {
-                return;
-            }
+        if ($emailData['email'] == $postAuthor->user_email && ((get_option('moderation_notify') && $comment->comment_approved !== '1') || (get_option('comments_notify') && $comment->comment_approved === '1'))) {
+            return;
         }
         $sendMail = apply_filters('wpdiscuz_email_notification', true, $emailData, $comment);
         if ($sendMail) {
@@ -494,7 +498,7 @@ class WpdiscuzHelperEmail implements WpDiscuzConstants {
         );
 
         foreach ($followersData as $followerData) {
-            if (($followerData['follower_email'] == $postAuthor->user_email) && (($moderationNotify && !$comment->comment_approved) || ($commentsNotify && $comment->comment_approved))) {
+            if (($followerData['follower_email'] == $postAuthor->user_email) && (($moderationNotify && $comment->comment_approved === '0') || ($commentsNotify && $comment->comment_approved === '1'))) {
                 return;
             }
             if (strpos($message, '[COMMENT_AUTHOR]') !== false) {

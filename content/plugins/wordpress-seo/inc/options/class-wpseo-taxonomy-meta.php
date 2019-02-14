@@ -31,7 +31,6 @@ class WPSEO_Taxonomy_Meta extends WPSEO_Option {
 	 */
 	protected $defaults = array();
 
-
 	/**
 	 * @var  string  Option name - same as $option_name property, but now also available to static methods.
 	 * @static
@@ -56,9 +55,11 @@ class WPSEO_Taxonomy_Meta extends WPSEO_Option {
 		'wpseo_opengraph-title'       => '',
 		'wpseo_opengraph-description' => '',
 		'wpseo_opengraph-image'       => '',
+		'wpseo_opengraph-image-id'    => '',
 		'wpseo_twitter-title'         => '',
 		'wpseo_twitter-description'   => '',
 		'wpseo_twitter-image'         => '',
+		'wpseo_twitter-image-id'      => '',
 	);
 
 	/**
@@ -193,7 +194,6 @@ class WPSEO_Taxonomy_Meta extends WPSEO_Option {
 			return $dirty;
 		}
 
-
 		foreach ( $dirty as $taxonomy => $terms ) {
 			/* Don't validate taxonomy - may not be registered yet and we don't want to remove valid ones. */
 			if ( is_array( $terms ) && $terms !== array() ) {
@@ -290,7 +290,7 @@ class WPSEO_Taxonomy_Meta extends WPSEO_Option {
 					}
 
 					if ( 'wpseo_focuskw' === $key ) {
-						$clean[ $key ] = str_replace( array(
+						$search = array(
 							'&lt;',
 							'&gt;',
 							'&quot',
@@ -299,7 +299,9 @@ class WPSEO_Taxonomy_Meta extends WPSEO_Option {
 							'>',
 							'"',
 							'`',
-						), '', $clean[ $key ] );
+						);
+
+						$clean[ $key ] = str_replace( $search, '', $clean[ $key ] );
 					}
 					break;
 			}

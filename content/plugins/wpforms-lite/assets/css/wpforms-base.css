@@ -937,13 +937,16 @@ div.wpforms-container-full .wpforms-notice.wpforms-error .wpforms-notice-action:
 /* Gutenberg Block
 ----------------------------------------------------------------------------- */
 
-.edit-post-visual-editor .wpforms-gutenberg-form-selector-wrap h2 {
+.edit-post-visual-editor .wpforms-gutenberg-form-selector-wrap h3 {
 	width: 100%;
-	margin-bottom: 0.5em;
+	margin: 10px 0 5px;
+	font-weight: 700;
+	font-size: 20px;
 }
 
 .edit-post-visual-editor .wpforms-gutenberg-form-selector-wrap img {
 	margin-right: 25px;
+	width: initial;
 }
 
 .edit-post-visual-editor .wpforms-gutenberg-form-selector-wrap .components-base-control {

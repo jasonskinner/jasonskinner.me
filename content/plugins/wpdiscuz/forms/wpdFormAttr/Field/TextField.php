@@ -59,7 +59,7 @@ class TextField extends Field {
         if ($comment->comment_parent && !$data['is_show_sform']) {
             return '';
         }
-        $html = '<tr><td class="first">';
+        $html = '<tr class="' . $key . '-wrapper"><td class="first">';
         $html .= '<label for = "' . $key . '">' . $data['name'] . ': </label>';
         $html .= '</td><td>';
         $html .= '<div class="wpdiscuz-item">';
@@ -71,37 +71,35 @@ class TextField extends Field {
     }
 
     public function frontFormHtml($name, $args, $options, $currentUser, $uniqueId, $isMainForm) {
-        if(!$isMainForm && !$args['is_show_sform']){
+        if (!$isMainForm && !$args['is_show_sform']) {
             return;
         }
         $hasIcon = $args['icon'] ? true : false;
-		$hasDesc = $args['desc'] ? true : false;
+        $hasDesc = $args['desc'] ? true : false;
         ?>
-        <div class="wpdiscuz-item <?php echo $hasIcon ? 'wpd-has-icon' : ''?> <?php echo $hasDesc ? 'wpd-has-desc' : ''?>">
+        <div class="wpdiscuz-item <?php echo $name, '-wrapper', ($hasIcon ? ' wpd-has-icon' : ''), ($hasDesc ? ' wpd-has-desc' : ''); ?>">
             <?php if ($hasIcon) { ?>
-                <div class="wpd-field-icon"><i style="opacity: 0.8;" class="<?php echo strpos(trim($args['icon']), ' ') ? $args['icon'] : 'fas '.$args['icon']; ?>"></i></div>
+                <div class="wpd-field-icon"><i style="opacity: 0.8;" class="<?php echo strpos(trim($args['icon']), ' ') ? $args['icon'] : 'fas ' . $args['icon']; ?>"></i></div>
             <?php } ?>
             <?php $required = $args['required'] ? 'required="required"' : ''; ?>
-            <input <?php echo $required; ?> class="<?php echo $name; ?> wpd-field wpd-field-text" type="text" name="<?php echo $name; ?>" value="" placeholder="<?php _e($args['name'], 'wpdiscuz'); echo !empty($args['required']) ? '*' : ''; ?>">
-            <?php if ($args['desc']) { ?>
-            <div class="wpd-field-desc"><i class="far fa-question-circle" aria-hidden="true"></i><span><?php echo $args['desc']; ?></span></div>
-            <?php } ?>
+            <input <?php echo $required; ?> class="<?php echo $name; ?> wpd-field wpd-field-text" type="text" name="<?php echo $name; ?>" value="" placeholder="<?php _e($args['name'], 'wpdiscuz');
+        echo!empty($args['required']) ? '*' : ''; ?>">
+                    <?php if ($args['desc']) { ?>
+                <div class="wpd-field-desc"><i class="far fa-question-circle" aria-hidden="true"></i><span><?php echo $args['desc']; ?></span></div>
+        <?php } ?>
         </div>
         <?php
     }
 
     public function frontHtml($value, $args) {
-        if(!$args['is_show_on_comment']){
-            return '';
-        }
         $html = '<div class="wpd-custom-field wpd-cf-text">';
-        $html .= '<div class="wpd-cf-label">' . $args['name'] . '</div> <div class="wpd-cf-value"> ' . apply_filters('wpdiscuz_custom_field_text', $value , $args) . '</div>';
+        $html .= '<div class="wpd-cf-label">' . $args['name'] . '</div> <div class="wpd-cf-value"> ' . apply_filters('wpdiscuz_custom_field_text', $value, $args) . '</div>';
         $html .= '</div>';
         return $html;
     }
 
     public function validateFieldData($fieldName, $args, $options, $currentUser) {
-        if(!$this->isCommentParentZero() && !$args['is_show_sform']){
+        if (!$this->isCommentParentZero() && !$args['is_show_sform']) {
             return '';
         }
         $value = filter_input(INPUT_POST, $fieldName, FILTER_SANITIZE_STRING);

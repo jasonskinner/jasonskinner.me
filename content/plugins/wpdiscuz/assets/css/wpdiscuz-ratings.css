@@ -46,6 +46,6 @@
 #wpcomm .wpdiscuz-item .wpdiscuz-rating > label:hover ~ input:checked ~ label,
 #wpcomm .wpdiscuz-item .wpdiscuz-rating > input:checked + label:hover ~ label,
 #wpcomm .wpdiscuz-item .wpdiscuz-rating > input:checked ~ label:hover ~ label, 
-.wpd-custom-field .wcf-activ-star,
+.wpd-custom-field .wcf-active-star,
 #wpcomm .wpdiscuz-item .wpdiscuz-rating > input:checked ~ label{ color:#FFD700;}
 .wpd-custom-field .wcf-pasiv-star, #wpcomm .wpdiscuz-item .wpdiscuz-rating > label {color: #DDDDDD;}

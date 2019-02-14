@@ -32,13 +32,20 @@ abstract class Field {
 
     abstract protected function dashboardForm();
 
-    abstract public function editCommentHtml($key, $value, $data,$comment);
+    abstract public function editCommentHtml($key, $value, $data, $comment);
 
-    abstract public function frontFormHtml($name, $args, $options, $currentUser, $uniqueId,$isMainForm);
+    abstract public function frontFormHtml($name, $args, $options, $currentUser, $uniqueId, $isMainForm);
 
     abstract public function validateFieldData($fieldName, $args, $options, $currentUser);
 
     abstract public function frontHtml($value, $args);
+
+    public function drawContent($value, $args) {
+        if ($args['is_show_on_comment'] || is_admin()) {
+            return $this->frontHtml($value, $args);
+        }
+        return '';
+    }
 
     public function dashboardFormHtml($row, $col, $name, $args) {
         $this->display = 'none';
@@ -54,9 +61,9 @@ abstract class Field {
                     _e(' (Submit Button)', 'wpdiscuz');
                 } elseif ($args['type'] == 'wpdFormAttr\Field\DefaultField\Captcha') {
                     _e(' (CAPTCHA)', 'wpdiscuz');
-                }elseif(!strstr($args['type'], 'wpdFormAttr\Field\DefaultField')){
+                } elseif (!strstr($args['type'], 'wpdFormAttr\Field\DefaultField')) {
                     $fieldLable = str_replace('wpdFormAttr\Field\\', '', $args['type']);
-                    echo ' ( ' .str_replace('Field', '', $fieldLable) . ' )';
+                    echo ' ( ' . str_replace('Field', '', $fieldLable) . ' )';
                 }
                 ?>
                 <div class="wpd-field-actions">
@@ -142,24 +149,24 @@ abstract class Field {
         }
         if (isset($data['is_show_on_comment'])) {
             $cleanData['is_show_on_comment'] = intval($data['is_show_on_comment']);
-        }else{
+        } else {
             $cleanData['is_show_on_comment'] = 0;
         }
         if (isset($data['is_show_sform'])) {
             $cleanData['is_show_sform'] = intval($data['is_show_sform']);
-        }else{
+        } else {
             $cleanData['is_show_sform'] = 0;
         }
         return wp_parse_args($cleanData, $this->fieldDefaultData);
     }
-    
-    protected function isCommentParentZero(){
+
+    protected function isCommentParentZero() {
         $isParent = false;
         $uniqueID = filter_input(INPUT_POST, 'wpdiscuz_unique_id', FILTER_SANITIZE_STRING);
         $action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRING);
         if ($uniqueID) {
             $commentParent = strstr($uniqueID, '_');
-            $isParent =  ($action == 'editedcomment' && $commentParent == '_0') || ($action == 'wpdSaveEditedComment' && $commentParent == '_0') || ($action == 'wpdAddComment' && $uniqueID == '0_0')? true : false;
+            $isParent = ($action == 'editedcomment' && $commentParent == '_0') || ($action == 'wpdSaveEditedComment' && $commentParent == '_0') || ($action == 'wpdAddComment' && $uniqueID == '0_0') ? true : false;
         }
         return $isParent;
     }

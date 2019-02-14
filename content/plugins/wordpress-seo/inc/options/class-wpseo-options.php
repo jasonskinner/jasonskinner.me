@@ -11,9 +11,11 @@
  * Instantiates all the options and offers a number of utility methods to work with the options.
  */
 class WPSEO_Options {
+
 	/**
-	 * @var  array  Options this class uses.
-	 *              Array format:  (string) option_name  => (string) name of concrete class for the option
+	 * Options this class uses.
+	 *
+	 * @var array Array format: (string) option_name  => (string) name of concrete class for the option.
 	 * @static
 	 */
 	public static $options = array(
@@ -23,16 +25,26 @@ class WPSEO_Options {
 		'wpseo_ms'            => 'WPSEO_Option_MS',
 		'wpseo_taxonomy_meta' => 'WPSEO_Taxonomy_Meta',
 	);
+
 	/**
-	 * @var  array   Array of instantiated option objects.
+	 * Array of instantiated option objects.
+	 *
+	 * @var array
 	 */
 	protected static $option_instances = array();
+
 	/**
-	 * @var  object  Instance of this class.
+	 * Instance of this class.
+	 *
+	 * @var object
 	 */
 	protected static $instance;
 
-	/** @var WPSEO_Options_Backfill Backfill instance. */
+	/**
+	 * Backfill instance.
+	 *
+	 * @var WPSEO_Options_Backfill
+	 */
 	protected static $backfill;
 
 	/**
@@ -446,7 +458,13 @@ class WPSEO_Options {
 	public static function save_option( $wpseo_options_group_name, $option_name, $option_value ) {
 		$options                 = self::get_option( $wpseo_options_group_name );
 		$options[ $option_name ] = $option_value;
-		update_option( $wpseo_options_group_name, $options );
+
+		if ( isset( self::$option_instances[ $wpseo_options_group_name ] ) && self::$option_instances[ $wpseo_options_group_name ]->multisite_only === true ) {
+			self::update_site_option( $wpseo_options_group_name, $options );
+		}
+		else {
+			update_option( $wpseo_options_group_name, $options );
+		}
 
 		// Check if everything got saved properly.
 		$saved_option = self::get_option( $wpseo_options_group_name );
@@ -511,12 +529,15 @@ class WPSEO_Options {
 		return $pattern_table;
 	}
 
+	/* ********************* DEPRECATED METHODS ********************* */
+
 	/**
 	 * Correct the inadvertent removal of the fallback to default values from the breadcrumbs.
 	 *
 	 * @since 1.5.2.3
 	 *
 	 * @deprecated 7.0
+	 * @codeCoverageIgnore
 	 */
 	public static function bring_back_breadcrumb_defaults() {
 		_deprecated_function( __METHOD__, 'WPSEO 7.0' );

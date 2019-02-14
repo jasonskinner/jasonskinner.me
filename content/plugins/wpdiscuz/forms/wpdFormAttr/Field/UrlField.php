@@ -59,7 +59,7 @@ class UrlField extends Field {
         if ($comment->comment_parent && !$data['is_show_sform']) {
             return '';
         }
-        $html = '<tr><td class="first">';
+        $html = '<tr class="' . $key . '-wrapper"><td class="first">';
         $html .= '<label for = "' . $key . '">' . $data['name'] . ': </label>';
         $html .= '</td><td>';
         $html .= '<div class="wpdiscuz-item">';
@@ -77,7 +77,7 @@ class UrlField extends Field {
         $hasIcon = $args['icon'] ? true : false;
         $hasDesc = $args['desc'] ? true : false;
         ?>
-        <div class="wpdiscuz-item <?php echo $hasIcon ? 'wpd-has-icon' : '' ?> <?php echo $hasDesc ? 'wpd-has-desc' : '' ?>">
+        <div class="wpdiscuz-item <?php echo $name, '-wrapper', ($hasIcon ? ' wpd-has-icon' : ''), ($hasDesc ? ' wpd-has-desc' : ''); ?>">
             <?php if ($hasIcon) { ?>
                 <div class="wpd-field-icon"><i style="opacity: 0.8;" class="<?php echo strpos(trim($args['icon']), ' ') ? $args['icon'] : 'fas '.$args['icon']; ?>"></i></div>
             <?php } ?>
@@ -91,9 +91,6 @@ class UrlField extends Field {
     }
 
     public function frontHtml($value, $args) {
-        if(!$args['is_show_on_comment']){
-            return '';
-        }
         $html = '<div class="wpd-custom-field wpd-cf-text">';
         $value = apply_filters('wpdiscuz_custom_field_url', $value , $args);
         $html .= '<div class="wpd-cf-label">' . $args['name'] . '</div> <div class="wpd-cf-value"> <a href="' . esc_url($value) . '" target="_blank">' . $value . '</a></div>';

@@ -55,10 +55,10 @@ class AgreementCheckbox extends Field {
         }
         $showAagainClass = $data['donot_show_again_if_checked'] == 1 ? ' wpd_agreement_hide ' : '';
         $uniqueId = uniqid();
-        $html = '<tr><td class="first">';
+        $html = '<tr class="' . $key . '-wrapper"><td class="first">';
         $html .= '</td><td>';
-        $required = $data['required'] ? ' wpd-required-group ' : '';
-        $html .= '<div class="wpdiscuz-item ' . $required . ' wpd-field-group">';
+        $required = $data['required'] ? ' wpd-required-group' : '';
+        $html .= '<div class="wpdiscuz-item' . $required . ' wpd-field-group">';
         $html .= '<input checked="checked"  id="' . $key . '-1_' . $uniqueId . '" type="checkbox" name="' . $key . '" value="1" class="' . $key . ' wpd-field wpd-agreement-checkbox '.$showAagainClass.'" > <label class="wpd-field-label wpd-cursor-pointer" for="' . $key . '-1_' . $uniqueId . '">' . $data['label'] . '</label>';
         $html .= '</div>';
         $html .= '</td></tr >';
@@ -70,9 +70,9 @@ class AgreementCheckbox extends Field {
             return;
         $showAagainClass = $args['donot_show_again_if_checked'] == 1 ? ' wpd_agreement_hide ' : '';
         $hasDesc = $args['desc'] ? true : false;
-        $required = $args['required'] ? ' wpd-required-group ' : '';
+        $required = $args['required'] ? ' wpd-required-group' : '';
         ?>
-        <div class="wpdiscuz-item wpd-field-group wpd-field-checkbox wpd-field-agreement wpd-field-single  <?php echo $required; ?>  <?php echo $hasDesc ? 'wpd-has-desc' : '' ?>">
+        <div class="wpdiscuz-item wpd-field-group wpd-field-checkbox wpd-field-agreement wpd-field-single <?php echo $name, '-wrapper', $required, ($hasDesc ? ' wpd-has-desc' : ''); ?>">
             <div class="wpd-field-group-title">
                 <div class="wpd-item">
                     <input id="<?php echo $name . '-1_' . $uniqueId; ?>" type="checkbox" name="<?php echo $name; ?>" value="1" class="<?php echo $name; ?> wpd-field wpd-agreement-checkbox <?php echo $showAagainClass; ?>"  <?php echo $args['required'] ? 'required' : ''; ?>>
@@ -142,7 +142,7 @@ class AgreementCheckbox extends Field {
     }
 
     private function displayField($name, $args) {
-        if ($args['donot_show_again_if_checked'] == 1 && isset($_COOKIE) && key_exists($name . '_' . COOKIEHASH, $_COOKIE)) {
+        if ($args['donot_show_again_if_checked'] == 1 && key_exists($name . '_' . COOKIEHASH, $_COOKIE)) {
             return false;
         }
         return true;

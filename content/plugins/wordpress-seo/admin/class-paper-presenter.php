@@ -9,6 +9,7 @@
  * Class WPSEO_presenter_paper
  */
 class WPSEO_Paper_Presenter {
+
 	/**
 	 * @var string Title of the paper
 	 */
@@ -55,7 +56,7 @@ class WPSEO_Paper_Presenter {
 		extract( $this->get_view_variables(), EXTR_SKIP );
 
 		ob_start();
-		require WPSEO_PATH . 'admin/views/paper-collapsible.php' ;
+		require WPSEO_PATH . 'admin/views/paper-collapsible.php';
 		$rendered_output = ob_get_clean();
 
 		return $rendered_output;

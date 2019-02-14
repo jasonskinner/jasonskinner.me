@@ -22,7 +22,7 @@ if ($action && $currentUser && $currentUser->ID) {
             $fPostId = $item->post_id;
             $fKey = $item->activation_key;
             $postedDate = $this->getDate($item->follow_date);
-            include 'item.php';
+            include WPDISCUZ_DIR_PATH . '/utils/layouts/follows/item.php';
         }
         include WPDISCUZ_DIR_PATH . '/utils/layouts/pagination.php';
         ?>

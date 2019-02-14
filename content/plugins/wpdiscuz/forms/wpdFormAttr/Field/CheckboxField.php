@@ -65,11 +65,11 @@ class CheckboxField extends Field {
         }
         $valuesMeta = maybe_unserialize($value);
         $values = is_array($valuesMeta) ? $valuesMeta : array();
-        $html = '<tr><td class="first">';
+        $html = '<tr class="' . $key . '-wrapper"><td class="first">';
         $html .= '<label for = "' . $key . '">' . $data['name'] . ': </label>';
         $html .= '</td><td>';
-        $required = $data['required'] ? ' wpd-required-group ' : '';
-        $html .= '<div class="wpdiscuz-item ' . $required . ' wpd-field-group">';
+        $required = $data['required'] ? ' wpd-required-group' : '';
+        $html .= '<div class="wpdiscuz-item' . $required . ' wpd-field-group">';
         foreach ($data['values'] as $index => $val) {
             $uniqueId = uniqid();
             $checked = in_array($val, $values) ? ' checked="checked" ' : '';
@@ -85,11 +85,11 @@ class CheckboxField extends Field {
         if (empty($args['values']) || (!$isMainForm && !$args['is_show_sform']))
             return;
         $hasDesc = $args['desc'] ? true : false;
-        $required = $args['required'] ? ' wpd-required-group ' : '';
+        $required = $args['required'] ? ' wpd-required-group' : '';
 
         if (count($args['values']) == 1):
             ?>
-            <div class="wpdiscuz-item wpd-field-group wpd-field-checkbox wpd-field-single  <?php echo $required; ?>  <?php echo $hasDesc ? 'wpd-has-desc' : '' ?>">
+            <div class="wpdiscuz-item wpd-field-group wpd-field-checkbox wpd-field-single <?php echo $name, '-wrapper', $required, ($hasDesc ? ' wpd-has-desc' : ''); ?>">
                 <div class="wpd-field-group-title">
                     <div class="wpd-item">
                         <input id="<?php echo $name . '-1_' . $uniqueId; ?>" type="checkbox" name="<?php echo $name; ?>[]" value="1" class="<?php echo $name; ?> wpd-field"  <?php echo $args['required'] ? 'required' : ''; ?>>
@@ -103,7 +103,7 @@ class CheckboxField extends Field {
                 <?php } ?>
             </div>
         <?php else: ?>
-            <div class="wpdiscuz-item wpd-field-group wpd-field-checkbox <?php echo $required; ?> <?php echo $hasDesc ? 'wpd-has-desc' : '' ?>">
+            <div class="wpdiscuz-item wpd-field-group wpd-field-checkbox <?php echo $name, '-wrapper', $required, ($hasDesc ? ' wpd-has-desc' : ''); ?>">
                 <div class="wpd-field-group-title"><?php _e($args['name'], 'wpdiscuz'); ?></div>
                 <?php if ($args['desc']) { ?>
                     <div class="wpd-field-desc"><i class="far fa-question-circle" aria-hidden="true"></i><span><?php echo esc_html($args['desc']); ?></span></div>
@@ -126,9 +126,6 @@ class CheckboxField extends Field {
     }
 
     public function frontHtml($value, $args) {
-        if (!$args['is_show_on_comment']) {
-            return '';
-        }
         $html = '<div class="wpd-custom-field wpd-cf-text">';
         $html .= '<div class="wpd-cf-label">' . $args['name'] . '</div> <div class="wpd-cf-value"> ' . apply_filters('wpdiscuz_custom_field_checkbox', implode(' , ', $value), $args) . '</div>';
         $html .= '</div>';

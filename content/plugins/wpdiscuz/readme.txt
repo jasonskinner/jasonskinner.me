@@ -2,8 +2,8 @@
 Contributors: gVectors Team
 Tags: comment, comments, ajax comments, custom comment form, custom comment field
 Requires at least: 4.4
-Tested up to: 4.9
-Stable tag: 5.2.2
+Tested up to: 5.0
+Stable tag: 5.3.1
 Requires PHP: 5.4 and higher
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -19,7 +19,7 @@ Comments - wpDiscuz is Multisite and RTL ready!
 * wpDiscuz Demo: [https://wpdiscuz.com/demo/](https://wpdiscuz.com/demo/)
 * wpDiscuz GDPR: [https://wpdiscuz.com/gdpr/](https://wpdiscuz.com/gdpr/)
 * wpDiscuz Addons: [https://wpdiscuz.com/addons/](https://wpdiscuz.com/addons)
-* wpDiscuz Addons Bundle: [https://gvectors.com/product/wpdiscuz-addons-bundle/)
+* wpDiscuz Addons Bundle: [https://gvectors.com/product/wpdiscuz-addons-bundle/](https://gvectors.com/product/wpdiscuz-addons-bundle/)
 * wpDiscuz Documentation: [https://wpdiscuz.com/documentation/](https://wpdiscuz.com/documentation/)
 
 Integration with User Profile Plugins - Please read the [Integrations] Tab in wpDiscuz Settings admin page
@@ -174,14 +174,33 @@ Nothing will be lost!  **Comments - wpDiscuz** will show all old comments.
 
 == Changelog ==
 
-= Comments - wpDiscuz v5.2.2 =
+= Comments - wpDiscuz v5.3.1 =
 
-* Added: Asterisk in required fields placeholder
-* Added: Hide "Notify of new replies to this comment" button when email field is not required and not filled
-* Optimized: Avoiding CPU and Memory overloading on very busy websites
-* Fixed Bug: Child count of sticky comments when only parent comments are enabled to load
-* Fixed Bug: Comment position issue if there is a sticky
-* Fixed Bug: Reloading page after deleting comments
+* Fixed Bug: Hard dependency of comment author name on email.
+
+IMPORTANT!
+
+- Please delete all caches and press CTRL+F5 on website front-end after updating wpDiscuz
+
+
+= Comments - wpDiscuz v5.3.0 =
+
+* Boosted: Another large change in core to make it twice faster than before. Finally wpDiscuz becomes many times faster than the native WordPress comment system.
+* Adapted: Performs dozens and hundreds of thousands comments with ten levels of nesting without any issue.
+* Added: New post_id attribute for [wpdrating] shortcode
+* Added: Invisible antispam protection on subscribe form
+* Added: Option to disable cookies collected for last visit information
+* Added: Classes on custom field parent elements for CSS devs
+* Added: Option to load scripts in footer
+* Changed: Pagination issues
+* Changed: Copy comment url to clipboard
+* Changed: code optimization
+* Changed: Display custom fields in admin comments list even if display on comment option is disabled
+* Fixed Bug: Invisible antispam protection key issue
+* Fixed Bug: Get single comment issue when parent is trashed
+* Fixed Bug: Twitter link issue after editing comment
+* Fixed Bug: Issue on editing more than 1 comment
+* Fixed Bug: Agreement checkbox on subscribe form is by default unchecked now
 
 
 IMPORTANT!
@@ -194,6 +213,16 @@ IMPORTANT!
 - If you have a Cache Plugin, please delete all caches after wpDiscuz update.
 - If you use CDN and found some issue please purge it.
 - If your server PHP version is lower than 5.4, [please change it to higher](https://wordpress.org/support/topic/wpdiscuz-4-requires-php-5-4-and-higher/)
+
+= Comments - wpDiscuz v5.2.2 =
+
+* Added: Asterisk in required fields placeholder
+* Added: Hide "Notify of new replies to this comment" button when email field is not required and not filled
+* Optimized: Avoiding CPU and Memory overloading on very busy websites
+* Fixed Bug: Child count of sticky comments when only parent comments are enabled to load
+* Fixed Bug: Comment position issue if there is a sticky
+* Fixed Bug: Reloading page after deleting comments
+
 
 = Comments - wpDiscuz v5.2.0 / v5.2.1 =
 

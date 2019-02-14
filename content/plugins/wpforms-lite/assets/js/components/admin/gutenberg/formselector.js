@@ -3,6 +3,7 @@
 
 'use strict';
 
+const { __ } = wp.i18n;
 const { createElement } = wp.element;
 const { registerBlockType } = wp.blocks;
 const { InspectorControls } = wp.editor;
@@ -16,6 +17,7 @@ registerBlockType( 'wpforms/form-selector', {
 	title: wpforms_gutenberg_form_selector.i18n.title,
 	description: wpforms_gutenberg_form_selector.i18n.description,
 	icon: wpformsIcon,
+	keywords: [ wpforms_gutenberg_form_selector.i18n.form_keyword ],
 	category: 'widgets',
 	attributes: {
 		formId: {
@@ -86,7 +88,7 @@ registerBlockType( 'wpforms/form-selector', {
 					key="wpforms-gutenberg-form-selector-wrap"
 					className="wpforms-gutenberg-form-selector-wrap">
 					<img src={ wpforms_gutenberg_form_selector.logo_url }/>
-					<h2>{ wpforms_gutenberg_form_selector.i18n.title }</h2>
+					<h3>{ wpforms_gutenberg_form_selector.i18n.title }</h3>
 					<SelectControl
 						key="wpforms-gutenberg-form-selector-select-control"
 						value={ formId }

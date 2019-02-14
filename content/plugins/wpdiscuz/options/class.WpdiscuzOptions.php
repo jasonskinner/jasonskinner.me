@@ -129,11 +129,13 @@ class WpdiscuzOptions implements WpDiscuzConstants {
             $this->optionsSerialized->enableCloseButton = isset($_POST['enableCloseButton']) ? intval($_POST['enableCloseButton']) : 0;
             $this->optionsSerialized->enableDropAnimation = isset($_POST['enableDropAnimation']) ? intval($_POST['enableDropAnimation']) : 0;
             $this->optionsSerialized->isNativeAjaxEnabled = isset($_POST['isNativeAjaxEnabled']) ? intval($_POST['isNativeAjaxEnabled']) : 0;
+            $this->optionsSerialized->enableLastVisitCookie = isset($_POST['enableLastVisitCookie']) ? intval($_POST['enableLastVisitCookie']) : 0;
+            $this->optionsSerialized->isLoadScriptsInFooter = isset($_POST['isLoadScriptsInFooter']) ? intval($_POST['isLoadScriptsInFooter']) : 0;
             do_action('wpdiscuz_save_options', $_POST);
             $this->optionsSerialized->updateOptions();
             add_settings_error('wpdiscuz', 'settings_updated', __('Settings updated', 'wpdiscuz'), 'updated');
         }
-        include_once 'html-options.php';
+        include_once WPDISCUZ_DIR_PATH . '/options/html-options.php';
     }
 
     public function phrasesOptionsForm() {
@@ -316,7 +318,7 @@ class WpdiscuzOptions implements WpDiscuzConstants {
         }
         $this->optionsSerialized->initPhrasesOnLoad();
 
-        include_once 'html-phrases.php';
+        include_once WPDISCUZ_DIR_PATH . '/options/html-phrases.php';
     }
 
     public function tools() {
@@ -367,11 +369,11 @@ class WpdiscuzOptions implements WpDiscuzConstants {
         } else {
             die(_e('Hacker?', 'wpdiscuz'));
         }
-        include_once 'html-tools.php';
+        include_once WPDISCUZ_DIR_PATH . '/options/html-tools.php';
     }
 
     public function addons() {
-        include_once 'html-addons.php';
+        include_once WPDISCUZ_DIR_PATH . '/options/html-addons.php';
     }
 
     private function initAddons() {
@@ -384,7 +386,7 @@ class WpdiscuzOptions implements WpDiscuzConstants {
             'subscriptions' => array('version' => '1.0.0', 'requires' => '5.1.0', 'class' => 'wpdSubscribeManager', 'title' => 'Subscription Manager', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'subscriptions' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Total control over comment subscriptions. Full list, monitor, manage, filter, unsubscribe, confirm...', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-subscribe-manager/'),
             'ads-manager' => array('version' => '1.0.0', 'requires' => '5.1.0', 'class' => 'WpdiscuzAdsManager', 'title' => 'Ads Manager', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'ads-manager' . WPDISCUZ_DS . 'header.png'), 'desc' => __('A full-fledged tool-kit for advertising in comment section of your website. Separate banner and ad managment.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-ads-manager/'),
             'user-mention' => array('version' => '1.0.0', 'requires' => '5.1.0', 'class' => 'Wpdiscuz_UCM', 'title' => 'User &amp; Comment Mentioning', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'user-mention' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Allows to mention comments and users in comment text using #comment-id and @username tags.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-user-comment-mentioning/'),
-            'likers' => array('version' => '1.0.0', 'requires' => '5.1.0', 'class' => 'WpdiscuzVoters', 'title' => 'Advanced Likers', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'likers' . WPDISCUZ_DS . 'header.png'), 'desc' => __('See comment likers and voters of each comment. Adds user reputation and badges based on received likes.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-advanced-likers/'),
+            'likers' => array('version' => '1.0.0', 'requires' => '5.3.0', 'class' => 'WpdiscuzVoters', 'title' => 'Advanced Likers', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'likers' . WPDISCUZ_DS . 'header.png'), 'desc' => __('See comment likers and voters of each comment. Adds user reputation and badges based on received likes.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-advanced-likers/'),
             'report-flagging' => array('version' => '1.1.5', 'requires' => '5.1.0', 'class' => 'wpDiscuzFlagComment', 'title' => 'Report and Flagging', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'report' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Comment reporting tools. Auto-moderates comments based on number of flags and dislikes.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-report-flagging/'),
             'translate' => array('version' => '1.0.3', 'requires' => '5.1.0', 'class' => 'WpDiscuzTranslate', 'title' => 'Comment Translate', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'translate' . WPDISCUZ_DS . 'header.png'), 'desc' => __('Adds a smart and intuitive AJAX "Translate" button with 60 language options. Uses free translation API.', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-comment-translation/'),
             'search' => array('version' => '1.1.0', 'requires' => '5.1.0', 'class' => 'wpDiscuzCommentSearch', 'title' => 'Comment Search', 'thumb' => plugins_url(WPDISCUZ_DIR_NAME . WPDISCUZ_DS . 'assets' . WPDISCUZ_DS . 'addons' . WPDISCUZ_DS . 'search' . WPDISCUZ_DS . 'header.png'), 'desc' => __('AJAX powered front-end comment search. It starts searching while you type search words. ', 'wpdiscuz'), 'url' => 'https://gvectors.com/product/wpdiscuz-comment-search/'),
@@ -450,89 +452,93 @@ class WpdiscuzOptions implements WpDiscuzConstants {
     }
 
     public function addonNote() {
-
-        $lastHash = get_option('wpdiscuz-addon-note-dismissed');
-        //if (!$lastHash) return false;
-        $lastHashArray = explode(',', $lastHash);
-        //$currentHash = $this->addonHash();
-        $currentHash = 'wpDiscuz Addon Bundle';
-        if (strpos($_SERVER['REQUEST_URI'], 'edit-comments.php?') === FALSE && strpos($_SERVER['REQUEST_URI'], 'edit.php?post_type=wpdiscuz_form') === FALSE) {
-            return false;
-        }
-        if ($lastHash != $currentHash && !in_array('Addons Bundle', $lastHashArray) ) {
-            ?>
-            <div class="updated notice wpdiscuz_addon_note is-dismissible" style="margin-top:10px;">
-                <p style="font-weight:normal; font-size:15px; border-bottom:1px dotted #DCDCDC; padding-bottom:10px; clear: both;">
-                    <?php //_e('New Addons are available for wpDiscuz Comments Plugin'); ?>
-                    <?php _e('Finally wpDiscuz Addons Bundle is ready for You!', 'wpdiscuz'); ?>
-                </p>
-                <div style="font-size:14px;">
-                    <?php
-                    foreach ($this->addons as $key => $addon) {
-                        if( $addon['class'] != 'Bundle' ) continue;
-                        if (in_array($addon['title'], $lastHashArray))
-                            continue;
-                        ?>
-                        <div style="display:inline-block; min-width:27%; padding-right:10px; margin-bottom:10px;"><img src="<?php echo $addon['thumb'] ?>" style="height:40px; width:auto; vertical-align:middle; margin:0px 10px; text-decoration:none;" />  <a href="<?php echo esc_url( $addon['url'] ) ?>" target="_blank" style="color:#444; text-decoration:none;" title="<?php _e('View Addons Bundle', 'wpdiscuz'); ?>"><?php echo $addon['title']; ?></a></div>
+        if (current_user_can('manage_options')) {
+            $lastHash = get_option('wpdiscuz-addon-note-dismissed');
+            //if (!$lastHash) return false;
+            $lastHashArray = explode(',', $lastHash);
+            //$currentHash = $this->addonHash();
+            $currentHash = 'wpDiscuz Addon Bundle';
+            if (strpos($_SERVER['REQUEST_URI'], 'edit-comments.php?') === FALSE && strpos($_SERVER['REQUEST_URI'], 'edit.php?post_type=wpdiscuz_form') === FALSE) {
+                return false;
+            }
+            if ($lastHash != $currentHash && !in_array('Addons Bundle', $lastHashArray)) {
+                ?>
+                <div class="updated notice wpdiscuz_addon_note is-dismissible" style="margin-top:10px;">
+                    <p style="font-weight:normal; font-size:15px; border-bottom:1px dotted #DCDCDC; padding-bottom:10px; clear: both;">
+                        <?php //_e('New Addons are available for wpDiscuz Comments Plugin'); ?>
+                        <?php _e('Finally wpDiscuz Addons Bundle is ready for You!', 'wpdiscuz'); ?>
+                    </p>
+                    <div style="font-size:14px;">
                         <?php
-                    }
-                    ?>
-                    <div style="clear:both;"></div>
+                        foreach ($this->addons as $key => $addon) {
+                            if ($addon['class'] != 'Bundle')
+                                continue;
+                            if (in_array($addon['title'], $lastHashArray))
+                                continue;
+                            ?>
+                            <div style="display:inline-block; min-width:27%; padding-right:10px; margin-bottom:10px;"><img src="<?php echo $addon['thumb'] ?>" style="height:40px; width:auto; vertical-align:middle; margin:0px 10px; text-decoration:none;" />  <a href="<?php echo esc_url($addon['url']) ?>" target="_blank" style="color:#444; text-decoration:none;" title="<?php _e('View Addons Bundle', 'wpdiscuz'); ?>"><?php echo $addon['title']; ?></a></div>
+                            <?php
+                        }
+                        ?>
+                        <div style="clear:both;"></div>
+                    </div>
+                    <p>&nbsp;&nbsp;&nbsp;<a href="<?php echo admin_url('edit-comments.php?page=' . self::PAGE_ADDONS) ?>"><?php _e('Go to wpDiscuz Addons subMenu'); ?> &raquo;</a></p>
                 </div>
-                <p>&nbsp;&nbsp;&nbsp;<a href="<?php echo admin_url('edit-comments.php?page=' . self::PAGE_ADDONS) ?>"><?php _e('Go to wpDiscuz Addons subMenu'); ?> &raquo;</a></p>
-            </div>
-            <?php
+                <?php
+            }
         }
     }
 
     public function tipNote() {
-        if (isset($this->optionsSerialized->disableTips) && $this->optionsSerialized->disableTips) {
-            return false;
-        }
-        if (strpos($_SERVER['REQUEST_URI'], 'edit-comments.php?') === FALSE && strpos($_SERVER['REQUEST_URI'], 'edit.php?post_type=wpdiscuz_form') === FALSE) {
-            return false;
-        } else {
-            $show = mt_rand(1, 5);
-            if ($show != 1)
+        if (current_user_can('manage_options')) {
+            if (isset($this->optionsSerialized->disableTips) && $this->optionsSerialized->disableTips) {
                 return false;
-        }
-        $lastHash = get_option('wpdiscuz-tip-note-dismissed');
-        $lastHashArray = explode(',', $lastHash);
-        $currentHash = $this->tipHash();
-        if ($lastHash != $currentHash) {
-            foreach ($this->tips as $key => $tip) {
-                if (in_array($tip['title'], $lastHashArray)) {
-                    continue;
+            }
+            if (strpos($_SERVER['REQUEST_URI'], 'edit-comments.php?') === FALSE && strpos($_SERVER['REQUEST_URI'], 'edit.php?post_type=wpdiscuz_form') === FALSE) {
+                return false;
+            } else {
+                $show = mt_rand(1, 5);
+                if ($show != 1)
+                    return false;
+            }
+            $lastHash = get_option('wpdiscuz-tip-note-dismissed');
+            $lastHashArray = explode(',', $lastHash);
+            $currentHash = $this->tipHash();
+            if ($lastHash != $currentHash) {
+                foreach ($this->tips as $key => $tip) {
+                    if (in_array($tip['title'], $lastHashArray)) {
+                        continue;
+                    }
+                    $notDisplayedTips[] = $tip;
                 }
-                $notDisplayedTips[] = $tip;
-            }
-            if (empty($notDisplayedTips)) {
-                return false;
-            }
-            ?>
-            <div class="updated notice wpdiscuz_tip_note is-dismissible" style="margin-top:10px;">
-                <p style="font-weight: 600; font-size:15px; border-bottom:1px dotted #DCDCDC; padding-bottom:10px; width:95%;"><?php _e('Do you know?', 'wpdiscuz'); ?></p>
-                <div style="font-size:14px;">
-                    <?php
-                    $cTipKey = array_rand($notDisplayedTips, 1);
-                    $cTip = $notDisplayedTips[$cTipKey];
-                    ?>
-                    <div style="display:inline-block; width:100%; padding-right:10px; margin-bottom:10px;">
-                        <input type="hidden" value="<?php echo esc_attr($cTip['title']) ?>" name="wpdiscuz_tip_note_value" id="wpdiscuz_tip_note_value" />
-                        <table style="width:100%" width="100%" border="0" cellspacing="0" cellpadding="0">
-                            <tbody>
-                                <tr>
-                                    <td style="width:50px; vertical-align:middle; text-align:center;"><img src="<?php echo esc_url($cTip['thumb']) ?>" style="height:45px; width:auto; vertical-align:middle; margin:0px 10px; text-decoration:none;" /></td>
-                                    <td style="vertical-align:middle;"><?php echo $cTip['text']; ?></td>
-                                    <td style="width:100px; text-align:center; vertical-align:middle;"><a href="<?php echo esc_url($cTip['url']); ?>" class="button button-primary button-large" target="_blank"><?php _e('More info', 'wpdiscuz') ?></a></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                if (empty($notDisplayedTips)) {
+                    return false;
+                }
+                ?>
+                <div class="updated notice wpdiscuz_tip_note is-dismissible" style="margin-top:10px;">
+                    <p style="font-weight: 600; font-size:15px; border-bottom:1px dotted #DCDCDC; padding-bottom:10px; width:95%;"><?php _e('Do you know?', 'wpdiscuz'); ?></p>
+                    <div style="font-size:14px;">
+                        <?php
+                        $cTipKey = array_rand($notDisplayedTips, 1);
+                        $cTip = $notDisplayedTips[$cTipKey];
+                        ?>
+                        <div style="display:inline-block; width:100%; padding-right:10px; margin-bottom:10px;">
+                            <input type="hidden" value="<?php echo esc_attr($cTip['title']) ?>" name="wpdiscuz_tip_note_value" id="wpdiscuz_tip_note_value" />
+                            <table style="width:100%" width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <tbody>
+                                    <tr>
+                                        <td style="width:50px; vertical-align:middle; text-align:center;"><img src="<?php echo esc_url($cTip['thumb']) ?>" style="height:45px; width:auto; vertical-align:middle; margin:0px 10px; text-decoration:none;" /></td>
+                                        <td style="vertical-align:middle;"><?php echo $cTip['text']; ?></td>
+                                        <td style="width:100px; text-align:center; vertical-align:middle;"><a href="<?php echo esc_url($cTip['url']); ?>" class="button button-primary button-large" target="_blank"><?php _e('More info', 'wpdiscuz') ?></a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div style="clear:both;"></div>
                     </div>
-                    <div style="clear:both;"></div>
                 </div>
-            </div>
-            <?php
+                <?php
+            }
         }
     }
 

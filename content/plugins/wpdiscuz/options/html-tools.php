@@ -19,10 +19,10 @@ if (!defined('ABSPATH')) {
         </ul>
         <div class="resp-tabs-container tools_tab_id">
             <?php
-            include 'tools-layouts/options-export.php';
-            include 'tools-layouts/options-import.php';
-            include 'tools-layouts/subscriptions-import.php';
-            include 'tools-layouts/tools-other.php';
+            include_once WPDISCUZ_DIR_PATH . '/options/tools-layouts/options-export.php';
+            include_once WPDISCUZ_DIR_PATH . '/options/tools-layouts/options-import.php';
+            include_once WPDISCUZ_DIR_PATH . '/options/tools-layouts/subscriptions-import.php';
+            include_once WPDISCUZ_DIR_PATH . '/options/tools-layouts/tools-other.php';
             ?>
         </div>
     </div>

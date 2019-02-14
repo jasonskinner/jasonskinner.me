@@ -57,7 +57,7 @@ if (!defined('ABSPATH')) {
                 } elseif ($roleName == 'post_author') {
                     $roleTitle = isset($this->optionsSerialized->phrases['wc_blog_role_' . $roleName]) ? $this->optionsSerialized->phrases['wc_blog_role_' . $roleName] : __('Author', 'wpdiscuz');
                 } elseif ($roleName == 'editor') {
-                    $roleTitle = isset($this->optionsSerialized->phrases['wc_blog_role_' . $roleName]) ? $this->optionsSerialized->phrases['wc_blog_role_' . $roleName] : ucfirst(str_replace('_', ' ', $roleName));
+                    $roleTitle = isset($this->optionsSerialized->phrases['wc_blog_role_' . $roleName]) ? $this->optionsSerialized->phrases['wc_blog_role_' . $roleName] : __('Editor', 'wpdiscuz');
                 } elseif ($roleName == 'guest') {
                     $roleTitle = isset($this->optionsSerialized->phrases['wc_blog_role_' . $roleName]) ? $this->optionsSerialized->phrases['wc_blog_role_' . $roleName] : __('Guest', 'wpdiscuz');
                 } else {

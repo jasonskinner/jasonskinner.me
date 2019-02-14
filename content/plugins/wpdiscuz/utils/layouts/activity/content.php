@@ -22,7 +22,7 @@ if ($items && is_array($items)) {
     $pageCount = ($itemsCount % $perPage == 0) ? $pCount : $pCount + 1;
     $page = 0;
     foreach ($items as $item) {
-        include 'item.php';
+        include WPDISCUZ_DIR_PATH . '/utils/layouts/activity/item.php';
     }
     include WPDISCUZ_DIR_PATH . '/utils/layouts/pagination.php';
     ?>

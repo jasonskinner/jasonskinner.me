@@ -473,7 +473,8 @@ body {
 	position: relative;
 }
 
-#wpforms-builder .wpforms-panel-sidebar-section.upgrade-modal {
+#wpforms-builder .wpforms-panel-sidebar-section.upgrade-modal,
+#wpforms-builder .wpforms-panel-sidebar-section.education-modal {
 	opacity: 0.5;
 }
 

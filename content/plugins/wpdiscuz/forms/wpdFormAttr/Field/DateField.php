@@ -59,12 +59,12 @@ class DateField extends Field {
         if($comment->comment_parent && !$data['is_show_sform']){
             return '';
         }
-        $html = '<tr><td class="first">';
-        $html .= '<label for = "' . $key . '">' . $data['name'] . ': </label>';
+        $html = '<tr class="' . $key . '-wrapper"><td class="first">';
+        $html .= '<label for="' . $key . '">' . $data['name'] . ': </label>';
         $html .= '</td><td>';
         $html .= '<div class="wpdiscuz-item">';
         $required = $data['required'] ? 'required="required"' : '';
-        $html .= '<input  ' . $required . ' class="wpd-field  wpd-field-date" type="date" id="' . $key . '" value="' . $value . '"  name="' . $key . '" pattern="^(1[0-2]|0[1-9])/(3[01]|[12][0-9]|0[1-9])/[0-9]{4}$" title="03/28/2016">';
+        $html .= '<input  ' . $required . ' class="wpd-field wpd-field-date" type="date" id="' . $key . '" value="' . $value . '"  name="' . $key . '" pattern="^(1[0-2]|0[1-9])/(3[01]|[12][0-9]|0[1-9])/[0-9]{4}$" title="03/28/2016">';
         $html .= '</div>';
         $html .= '</td></tr >';
         return $html;
@@ -77,7 +77,7 @@ class DateField extends Field {
         $hasIcon = $args['icon'] ? true : false;
         $hasDesc = $args['desc'] ? true : false;
         ?>
-        <div class="wpdiscuz-item wpd-field-date <?php echo $hasIcon ? 'wpd-has-icon' : '' ?> <?php echo $hasDesc ? 'wpd-has-desc' : '' ?>">
+        <div class="wpdiscuz-item wpd-field-date <?php echo $name, '-wrapper', ($hasIcon ? ' wpd-has-icon' : ''), ($hasDesc ? ' wpd-has-desc' : ''); ?>">
             <div class="wpd-field-title">
                 <?php echo $args['name']; ?>
             </div>
@@ -94,9 +94,6 @@ class DateField extends Field {
     }
 
     public function frontHtml($value, $args) {
-        if(!$args['is_show_on_comment']){
-            return '';
-        }
         $html = '<div class="wpd-custom-field wpd-cf-text">';
         $html .= '<div class="wpd-cf-label">' . $args['name'] . '</div> <div class="wpd-cf-value"> ' . apply_filters('wpdiscuz_custom_field_date', $value , $args) . '</div>';
         $html .= '</div>';
@@ -124,7 +121,8 @@ class DateField extends Field {
             'icon' => 'fa-calendar-alt',
             'required' => '0',
             'loc' => 'bottom',
-            'is_show_on_comment' => 1
+            'is_show_on_comment' => 1,
+            'is_show_sform' => 1,
         );
     }
 

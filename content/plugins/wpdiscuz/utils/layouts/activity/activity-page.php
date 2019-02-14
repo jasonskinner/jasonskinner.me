@@ -33,7 +33,7 @@ if ($action && $currentUserEmail) {
         $pCount = intval($allComments / $perPage);
         $pageCount = ($allComments % $perPage == 0) ? $pCount : $pCount + 1;
         foreach ($items as $item) {
-            include 'item.php';
+            include WPDISCUZ_DIR_PATH . '/utils/layouts/activity/item.php';
         }
         include WPDISCUZ_DIR_PATH . '/utils/layouts/pagination.php';
         ?>

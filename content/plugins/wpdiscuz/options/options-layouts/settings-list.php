@@ -188,6 +188,15 @@ if (!defined('ABSPATH')) {
                     <a href="https://wpdiscuz.com/docs/wpdiscuz-documentation/settings/comment-list-settings/#disable_profiles_URL" title="<?php _e('Read the documentation', 'wpdiscuz') ?>" target="_blank"><i class="far fa-question-circle"></i></a>
                 </td>
             </tr>
+            <tr valign="top">
+                <th scope="row">
+                    <label for="enableLastVisitCookie"><?php _e('Highlight Unread Comments', 'wpdiscuz'); ?></label>
+                </th>
+                <td>
+                    <input type="checkbox" <?php checked($this->optionsSerialized->enableLastVisitCookie == 1) ?> value="1" name="enableLastVisitCookie" id="enableLastVisitCookie" />
+                    <label for="enableLastVisitCookie"></label>
+                </td>
+            </tr>
 
         </tbody>
     </table>

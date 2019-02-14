@@ -623,13 +623,13 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
             if ($stat && isset($stat[self::POSTMETA_THREADS])) {
                 $threads = intval($stat[self::POSTMETA_THREADS]);
             } else {
-                $sql = $this->db->prepare("SELECT COUNT(*) FROM `{$this->db->comments}` WHERE `comment_post_ID` = %d AND `comment_approved` = 1 AND `comment_parent` = 0;", $postId);
+                $sql = $this->db->prepare("SELECT COUNT(*) FROM `{$this->db->comments}` WHERE `comment_post_ID` = %d AND `comment_approved` = '1' AND `comment_parent` = 0;", $postId);
                 $threads = intval($this->db->get_var($sql));
                 $stat[self::POSTMETA_THREADS] = $threads;
                 update_post_meta($postId, self::POSTMETA_STATISTICS, $stat);
             }
         } else {
-            $sql = $this->db->prepare("SELECT COUNT(*) FROM `{$this->db->comments}` WHERE `comment_post_ID` = %d AND `comment_approved` = 1 AND `comment_parent` = 0;", $postId);
+            $sql = $this->db->prepare("SELECT COUNT(*) FROM `{$this->db->comments}` WHERE `comment_post_ID` = %d AND `comment_approved` = '1' AND `comment_parent` = 0;", $postId);
             $threads = intval($this->db->get_var($sql));
         }
         return $threads;
@@ -643,13 +643,13 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
             if ($stat && isset($stat[self::POSTMETA_REPLIES])) {
                 $replies = intval($stat[self::POSTMETA_REPLIES]);
             } else {
-                $sql = $this->db->prepare("SELECT COUNT(*) FROM `{$this->db->comments}` WHERE `comment_post_ID` = %d AND `comment_approved` = 1 AND `comment_parent` != 0;", $postId);
+                $sql = $this->db->prepare("SELECT COUNT(*) FROM `{$this->db->comments}` WHERE `comment_post_ID` = %d AND `comment_approved` = '1' AND `comment_parent` != 0;", $postId);
                 $replies = intval($this->db->get_var($sql));
                 $stat[self::POSTMETA_REPLIES] = $replies;
                 update_post_meta($postId, self::POSTMETA_STATISTICS, $stat);
             }
         } else {
-            $sql = $this->db->prepare("SELECT COUNT(*) FROM `{$this->db->comments}` WHERE `comment_post_ID` = %d AND `comment_approved` = 1 AND `comment_parent` != 0;", $postId);
+            $sql = $this->db->prepare("SELECT COUNT(*) FROM `{$this->db->comments}` WHERE `comment_post_ID` = %d AND `comment_approved` = '1' AND `comment_parent` != 0;", $postId);
             $replies = intval($this->db->get_var($sql));
         }
         return $replies;
@@ -683,13 +683,13 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
             if ($stat && isset($stat[self::POSTMETA_REACTED])) {
                 $reacted = intval($stat[self::POSTMETA_REACTED]);
             } else {
-                $sql = $this->db->prepare("SELECT v.`comment_id` FROM `$this->users_voted` AS `v` INNER JOIN `{$this->db->comments}` AS `c` ON `v`.`comment_id` = `c`.`comment_ID` WHERE `c`.`comment_post_ID`  = %d AND `c`.`comment_approved` = 1 GROUP BY `v`.`comment_id` ORDER BY COUNT(`v`.`comment_id`) DESC, `c`.`comment_date_gmt` DESC LIMIT 1;", $postId);
+                $sql = $this->db->prepare("SELECT v.`comment_id` FROM `$this->users_voted` AS `v` INNER JOIN `{$this->db->comments}` AS `c` ON `v`.`comment_id` = `c`.`comment_ID` WHERE `c`.`comment_post_ID`  = %d AND `c`.`comment_approved` = '1' GROUP BY `v`.`comment_id` ORDER BY COUNT(`v`.`comment_id`) DESC, `c`.`comment_date_gmt` DESC LIMIT 1;", $postId);
                 $reacted = intval($this->db->get_var($sql));
                 $stat[self::POSTMETA_REACTED] = $reacted;
                 update_post_meta($postId, self::POSTMETA_STATISTICS, $stat);
             }
         } else {
-            $sql = $this->db->prepare("SELECT v.`comment_id` FROM `$this->users_voted` AS `v` INNER JOIN `{$this->db->comments}` AS `c` ON `v`.`comment_id` = `c`.`comment_ID` WHERE `c`.`comment_post_ID`  = %d AND `c`.`comment_approved` = 1 GROUP BY `v`.`comment_id` ORDER BY COUNT(`v`.`comment_id`) DESC, `c`.`comment_date_gmt` DESC LIMIT 1;", $postId);
+            $sql = $this->db->prepare("SELECT v.`comment_id` FROM `$this->users_voted` AS `v` INNER JOIN `{$this->db->comments}` AS `c` ON `v`.`comment_id` = `c`.`comment_ID` WHERE `c`.`comment_post_ID`  = %d AND `c`.`comment_approved` = '1' GROUP BY `v`.`comment_id` ORDER BY COUNT(`v`.`comment_id`) DESC, `c`.`comment_date_gmt` DESC LIMIT 1;", $postId);
             $reacted = intval($this->db->get_var($sql));
         }
         return $reacted;
@@ -709,13 +709,13 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
             if ($stat && isset($stat[self::POSTMETA_AUTHORS])) {
                 $authors = intval($stat[self::POSTMETA_AUTHORS]);
             } else {
-                $sql = $this->db->prepare("SELECT COUNT(DISTINCT `comment_author_email`) FROM `{$this->db->comments}` WHERE `comment_post_ID` = %d AND `comment_author_email` != '' AND `comment_approved` = 1;", $postId);
+                $sql = $this->db->prepare("SELECT COUNT(DISTINCT `comment_author_email`) FROM `{$this->db->comments}` WHERE `comment_post_ID` = %d AND `comment_author_email` != '' AND `comment_approved` = '1';", $postId);
                 $authors = intval($this->db->get_var($sql));
                 $stat[self::POSTMETA_AUTHORS] = $authors;
                 update_post_meta($postId, self::POSTMETA_STATISTICS, $stat);
             }
         } else {
-            $sql = $this->db->prepare("SELECT COUNT(DISTINCT `comment_author_email`) FROM `{$this->db->comments}` WHERE `comment_post_ID` = %d AND `comment_author_email` != '' AND `comment_approved` = 1;", $postId);
+            $sql = $this->db->prepare("SELECT COUNT(DISTINCT `comment_author_email`) FROM `{$this->db->comments}` WHERE `comment_post_ID` = %d AND `comment_author_email` != '' AND `comment_approved` = '1';", $postId);
             $authors = intval($this->db->get_var($sql));
         }
         return $authors;
@@ -730,13 +730,13 @@ class WpdiscuzDBManager implements WpDiscuzConstants {
             if ($stat && isset($stat[self::POSTMETA_RECENT_AUTHORS])) {
                 $recentAuthors = $stat[self::POSTMETA_RECENT_AUTHORS];
             } else {
-                $sql = $this->db->prepare("SELECT DISTINCT `comment_author_email`, `comment_author`, user_id FROM `{$this->db->comments}` WHERE `comment_post_ID` = %d AND `comment_approved` = 1 ORDER BY `comment_ID` DESC LIMIT %d;", $postId, $limit);
+                $sql = $this->db->prepare("SELECT DISTINCT `comment_author_email`, `comment_author`, user_id FROM `{$this->db->comments}` WHERE `comment_post_ID` = %d AND `comment_approved` = '1' ORDER BY `comment_ID` DESC LIMIT %d;", $postId, $limit);
                 $recentAuthors = $this->db->get_results($sql);
                 $stat[self::POSTMETA_RECENT_AUTHORS] = $recentAuthors;
                 update_post_meta($postId, self::POSTMETA_STATISTICS, $stat);
             }
         } else {
-            $sql = $this->db->prepare("SELECT DISTINCT `comment_author_email`, `comment_author`, user_id FROM `{$this->db->comments}` WHERE `comment_post_ID` = %d AND `comment_approved` = 1 AND `comment_author_email` != '' ORDER BY `comment_ID` DESC LIMIT %d;", $postId, $limit);
+            $sql = $this->db->prepare("SELECT DISTINCT `comment_author_email`, `comment_author`, user_id FROM `{$this->db->comments}` WHERE `comment_post_ID` = %d AND `comment_approved` = '1' AND `comment_author_email` != '' ORDER BY `comment_ID` DESC LIMIT %d;", $postId, $limit);
             $recentAuthors = $this->db->get_results($sql);
         }
         return $recentAuthors;

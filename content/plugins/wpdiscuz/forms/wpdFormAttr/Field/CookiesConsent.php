@@ -40,7 +40,7 @@ class CookiesConsent extends Field {
         $commenter = wp_get_current_commenter();
         $consent = empty($commenter['comment_author_email']) ? '' : ' checked="checked"';
         ?>
-        <div class="wpdiscuz-item wpd-field-group wpd-field-checkbox wpd-field-cookies-consent wpd-field-single  <?php echo $hasDesc ? 'wpd-has-desc' : '' ?>">
+        <div class="wpdiscuz-item wpd-field-group wpd-field-checkbox wpd-field-cookies-consent wpd-field-single <?php echo $name, '-wrapper', ($hasDesc ? ' wpd-has-desc' : ''); ?>">
             <div class="wpd-field-group-title">
                 <div class="wpd-item">
                     <input id="<?php echo $name . '-1_' . $uniqueId; ?>" name="<?php echo $name; ?>" type="checkbox" value="1" <?php echo $consent; ?> class="<?php echo $name; ?> wpd-field wpd-cookies-checkbox" />
