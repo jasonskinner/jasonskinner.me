@@ -66,13 +66,15 @@ CSS file.
 
 // Import your custom styles
 @import "mixins";
+@import "global";
+@import "variables";
 @import "header";
 @import "animations";
-@import "global";
-@import "font-awesome/fontawesome";
-@import "variables";
+
+
 @import "main";
 @import "home";
 @import "page";
 @import "footer";
+@import "font-awesome/fontawesome";
 

@@ -18,6 +18,7 @@ function site_scripts() {
 	//typed
 	if ( is_front_page() ){
 		wp_enqueue_script( 'type-js', get_template_directory_uri() . '/assets/scripts/typed.min.js' , array( 'site-js' ), '2.0.6', true );
+		wp_enqueue_script( 'homepage-js', get_template_directory_uri() . '/assets/scripts/homepage.js' , array( 'site-js' ), '1', true );
 	}
 
 	//waypoint

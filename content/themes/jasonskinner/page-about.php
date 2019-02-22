@@ -14,6 +14,8 @@
 
 					<?php get_template_part( 'parts/about/content', 'instagram' ); ?>
 
+					<?php get_template_part( 'parts/about/content', 'spotify' ); ?>
+
 					<?php get_template_part( 'parts/about/content', 'resume' ); ?>
 
 				<?php endwhile; endif; ?>

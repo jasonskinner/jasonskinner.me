@@ -14,6 +14,7 @@ wordfence-waf.php
 .gitkeep
 content/plugins/crayon-syntax-highlighter/log.txt
 content/w3tc-config/
+node_modules
 
 nginx.conf
 content/w3tc-config/master.php

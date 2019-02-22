@@ -6,8 +6,9 @@ font-family: 'Open Sans', sans-serif;
 /*----------------------------------------------------------------------------------------------------------------------
 GLOBAL PAGE
 ----------------------------------------------------------------------------------------------------------------------*/
-.no-js{
+body.no-js{
   #typed-container{ display: none; }
+  header.header{ display: none; }
 }
 
 h1,h2,h3,h4,h5,h6, h1 a, h2 a, h3 a, h4 a, h5 a, h6 a{
@@ -27,6 +28,18 @@ body.home, body.page-contact{
     @include breakpoint ( small down ) {
       font-size: 2.25rem;
     }
+  }
+}
+
+.off-canvas-wrapper{
+  z-index: 1;
+
+  #off-canvas-menu{
+    z-index: 3;
+  }
+
+  .js-off-canvas-overlay{
+    z-index: 2;
   }
 }
 

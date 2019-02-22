@@ -9,7 +9,7 @@
 <div class="off-canvas position-top" id="off-canvas-menu" data-off-canvas data-transition="overlap">
 	<div class="grid-container">
 		<div class="grid-x grid-padding-x grid-margin-x">
-			<button class="nav-close" data-close="off-canvas-menu"><i class="fas fa-times"></i></button>
+<!--			<button class="nav-close" data-close="off-canvas-menu"><i class="fas fa-times"></i></button>-->
 			<div class="cell medium-4 off-canvas-social">
 				<h6>Social</h6>
 				<ul class="menu vertical">

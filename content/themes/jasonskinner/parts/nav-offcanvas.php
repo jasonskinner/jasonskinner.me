@@ -5,8 +5,8 @@
  * For more info: http://jointswp.com/docs/off-canvas-menu/
  */
 ?>
-<div data-sticky-container>
-<div class="top-bar" data-sticky data-options="marginTop:0;" style="margin-right: 1px;" id="top-bar-menu">
+<div id="sticky-container" data-sticky-container>
+<div class="top-bar" data-sticky id="top-bar-menu">
 	<div class="top-bar-left">
 		<ul class="menu">
 			<li><a href="<?php echo home_url(); ?>">
@@ -19,14 +19,12 @@
 		</ul>
 	</div>
 	<div class="top-bar-right">
-		<ul class="menu">
-			<!-- <li><button class="menu-icon" type="button" data-toggle="off-canvas"></button></li> -->
-			<li>
-				<a data-toggle="off-canvas-menu">
-					<button class="menu-icon" type="button" data-toggle></button>
-				</a>
-			</li>
-		</ul>
+		<a class="curtain-menu-button" data-curtain-menu-button data-toggle="off-canvas-menu">
+			<div class="curtain-menu-button-toggle">
+				<div class="bar1"></div>
+				<div class="bar2"></div>
+			</div>
+		</a>
 	</div>
 </div>
 </div>

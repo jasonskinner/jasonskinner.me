@@ -2,16 +2,12 @@ var $j = jQuery.noConflict()
 
 $j( document ).ready(function() {
 	/*
-	TYPED
+	MENU
 	 */
-	var typed = new Typed('#typed', {
-		stringsElement: '#typed-strings',
-		typeSpeed: 80,
-		backSpeed: 70,
-		loop: true,
-		loopCount: Infinity,
-		cursorChar: "|",
-	});
+	$j('[data-curtain-menu-button]').click(function(){
+		$j('body').toggleClass('curtain-menu-open');
+	})
+
 
 	/*
 	WOW
