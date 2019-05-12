@@ -8,10 +8,10 @@ if ( file_exists( dirname( __FILE__ ) . '/local-config.php' ) ) {
 	include( dirname( __FILE__ ) . '/local-config.php' );
 } else {
 	define( 'WP_LOCAL_DEV', false );
-	define( 'DB_NAME', 'jasonskinner_dot' );
+	define( 'DB_NAME', 'jasonskinner_me' );
 	define( 'DB_USER', 'jasonskinner' );
 	define( 'DB_PASSWORD', 'Jss587469!' );
-	define( 'DB_HOST', 'localhost' ); // Probably 'localhost'
+	define( 'DB_HOST', 'mysql.jasonskinner.me' ); // Probably 'localhost'
 }
 
 // ========================
